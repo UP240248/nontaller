@@ -13,6 +13,8 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { AuditModule } from './audit/audit.module';
 import { FleetModule } from './fleet/fleet.module';
+import { IncidentsModule } from './incidents/incidents.module';
+import { WorkOrdersModule } from './work-orders/work-orders.module';
 import { settings } from './config';
 @Catch()
 class Errors implements ExceptionFilter {
@@ -27,7 +29,7 @@ class Errors implements ExceptionFilter {
     res.status(status).json({statusCode:status,message,requestId:res.getHeader('X-Request-Id')});
   }
 }
-@Module({imports:[DatabaseModule,AuthModule,UsersModule,AuditModule,FleetModule],controllers:[HealthController]})
+@Module({imports:[DatabaseModule,AuthModule,UsersModule,AuditModule,FleetModule,IncidentsModule,WorkOrdersModule],controllers:[HealthController]})
 export class AppModule {}
 export async function createApp() {
   const config = settings();

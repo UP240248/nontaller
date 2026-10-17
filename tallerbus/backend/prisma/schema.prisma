@@ -22,6 +22,12 @@ model User {
   version Int @default(1)
   createdAt DateTime @default(now()) @db.DateTime(3)
   updatedAt DateTime @updatedAt @db.DateTime(3)
+  reportes Falla[] @relation("ReportanteFalla")
+  evaluaciones Falla[] @relation("EvaluadorFalla")
+  evidencias EvidenciaFalla[]
+  asignaciones AsignacionMecanico[] @relation("MecanicoAsignado")
+  asignacionesRealizadas AsignacionMecanico[] @relation("Asignador")
+  finalizaciones FinalizacionOrden[]
   sessions Session[]
   events AuditEvent[]
   @@index([active, role])
@@ -39,6 +45,10 @@ model Session {
 }
 model AuditEvent {
   id String @id @default(uuid()) @db.Char(36)
+  ordenId String? @db.Char(36)
+  orden OrdenTrabajo? @relation(fields:[ordenId], references:[id], onDelete:Restrict)
+  fallaId String? @db.Char(36)
+  falla Falla? @relation(fields:[fallaId], references:[id], onDelete:Restrict)
   busId String? @db.Char(36)
   bus Autobus? @relation(fields:[busId], references:[id], onDelete:Restrict)
   actorId String? @db.Char(36)
@@ -51,6 +61,8 @@ model AuditEvent {
   @@index([entity, entityId, createdAt])
   @@index([createdAt, id])
   @@index([busId, createdAt, id])
+  @@index([fallaId, createdAt, id])
+  @@index([ordenId, createdAt, id])
 }
 // Mutex transaccional para bootstrap, roles y desactivación del último administrador.
 model AdminLock {
@@ -76,6 +88,124 @@ model Autobus {
   createdAt DateTime @default(now()) @db.DateTime(3)
   updatedAt DateTime @updatedAt @db.DateTime(3)
   events AuditEvent[]
+  fallas Falla[]
+  ordenes OrdenTrabajo[]
   @@index([activo, estadoOperativo])
   @@index([createdAt, id])
+}
+
+enum EstadoFalla {
+  PENDIENTE
+  EN_PROCESO
+  FINALIZADA
+}
+enum PrioridadFalla {
+  BAJA
+  MEDIA
+  ALTA
+  CRITICA
+}
+model Falla {
+  ordenId String? @db.Char(36)
+  orden OrdenTrabajo? @relation(fields:[ordenId, autobusId], references:[id, autobusId], onDelete:Restrict)
+  id String @id @default(uuid()) @db.Char(36)
+  autobusId String @db.Char(36)
+  autobus Autobus @relation(fields:[autobusId], references:[id], onDelete:Restrict)
+  reportanteId String @db.Char(36)
+  reportante User @relation("ReportanteFalla", fields:[reportanteId], references:[id], onDelete:Restrict)
+  descripcion String @db.Text
+  tipo String @db.VarChar(60)
+  estado EstadoFalla @default(PENDIENTE)
+  prioridad PrioridadFalla?
+  evaluacion String? @db.Text
+  evaluadoPorId String? @db.Char(36)
+  evaluadoPor User? @relation("EvaluadorFalla", fields:[evaluadoPorId], references:[id], onDelete:Restrict)
+  evaluadoAt DateTime? @db.DateTime(3)
+  version Int @default(1)
+  createdAt DateTime @default(now()) @db.DateTime(3)
+  updatedAt DateTime @updatedAt @db.DateTime(3)
+  evidencias EvidenciaFalla[]
+  events AuditEvent[]
+  @@index([autobusId, estado, createdAt])
+  @@index([reportanteId, createdAt, id])
+  @@index([estado, prioridad, createdAt])
+  @@index([ordenId, estado])
+}
+model EvidenciaFalla {
+  id String @id @default(uuid()) @db.Char(36)
+  fallaId String @db.Char(36)
+  falla Falla @relation(fields:[fallaId], references:[id], onDelete:Restrict)
+  autorId String @db.Char(36)
+  autor User @relation(fields:[autorId], references:[id], onDelete:Restrict)
+  storageKey String @unique @db.VarChar(45)
+  checksum String @db.Char(64)
+  mime String @db.VarChar(40)
+  size Int
+  createdAt DateTime @default(now()) @db.DateTime(3)
+  @@unique([fallaId, checksum])
+  @@index([fallaId, createdAt])
+}
+
+enum EstadoOrden {
+  ABIERTA
+  EN_PROCESO
+  FINALIZADA
+}
+model OrdenTrabajo {
+  id String @id @default(uuid()) @db.Char(36)
+  autobusId String @db.Char(36)
+  autobus Autobus @relation(fields:[autobusId], references:[id], onDelete:Restrict)
+  titulo String @db.VarChar(120)
+  estado EstadoOrden @default(ABIERTA)
+  diagnostico String? @db.Text
+  esperaRefacciones Boolean @default(false)
+  startedAt DateTime? @db.DateTime(3)
+  createdAt DateTime @default(now()) @db.DateTime(3)
+  updatedAt DateTime @updatedAt @db.DateTime(3)
+  version Int @default(1)
+  fallas Falla[]
+  asignaciones AsignacionMecanico[]
+  finalizacion FinalizacionOrden?
+  events AuditEvent[]
+  @@unique([id, autobusId])
+  @@index([autobusId, estado, createdAt])
+  @@index([estado, createdAt, id])
+}
+model AsignacionMecanico {
+  id String @id @default(uuid()) @db.Char(36)
+  ordenId String @db.Char(36)
+  orden OrdenTrabajo @relation(fields:[ordenId], references:[id], onDelete:Restrict)
+  mecanicoId String @db.Char(36)
+  mecanico User @relation("MecanicoAsignado",fields:[mecanicoId], references:[id], onDelete:Restrict)
+  asignadoPorId String @db.Char(36)
+  asignadoPor User @relation("Asignador",fields:[asignadoPorId], references:[id], onDelete:Restrict)
+  activeKey String? @unique @db.VarChar(73)
+  createdAt DateTime @default(now()) @db.DateTime(3)
+  retiradoAt DateTime? @db.DateTime(3)
+  @@index([ordenId, retiradoAt])
+  @@index([mecanicoId, retiradoAt])
+}
+model FinalizacionOrden {
+  id String @id @default(uuid()) @db.Char(36)
+  ordenId String @unique @db.Char(36)
+  orden OrdenTrabajo @relation(fields:[ordenId], references:[id], onDelete:Restrict)
+  responsableId String @db.Char(36)
+  responsable User @relation(fields:[responsableId], references:[id], onDelete:Restrict)
+  trabajoRealizado String @db.Text
+  observaciones String @db.Text
+  fechaFinalizacion DateTime @default(now()) @db.DateTime(3)
+  aplicoManoObra Boolean
+  manoObraMinutos Int
+  aplicaronRefacciones Boolean
+  refacciones RefaccionDescriptiva[]
+}
+// Registro descriptivo previo a inventario: sin movimientos ni importes ficticios.
+model RefaccionDescriptiva {
+  id String @id @default(uuid()) @db.Char(36)
+  finalizacionId String @db.Char(36)
+  finalizacion FinalizacionOrden @relation(fields:[finalizacionId], references:[id], onDelete:Restrict)
+  descripcion String @db.VarChar(200)
+  cantidad Decimal @db.Decimal(12,3)
+  unidad String @db.VarChar(30)
+  @@index([finalizacionId])
 }

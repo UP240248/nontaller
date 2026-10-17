@@ -77,3 +77,15 @@ El schema y la migración inicial implementan User, enum Role, Session, AuditEve
 Autobus y enum EstadoOperativo están en schema y migración `20261017200000_fleet`. Placas y número económico únicos, índices activo/estado y fecha/ID. AuditEvent incorpora busId opcional y FK restrictiva para las mutaciones de unidades, conservando compatibilidad con los eventos de identidad existentes. `20261017200100_fleet_checks` añade CHECK de kilometraje no negativo y versión positiva, que Prisma no representa en schema.
 
 La activación no afecta el estado; todos los cambios usan version y eventos con antes/después, actor, UTC y motivo. No se implementaron aún Falla, OrdenTrabajo, costos ni mantenimiento. El detalle solo muestra resumen e historial reales; no presenta pestañas vacías para dominios futuros.
+
+## Implementado en Fase 3
+
+Migración `20261017210000_incidents_orders`: Falla, EvidenciaFalla, OrdenTrabajo, AsignacionMecanico, FinalizacionOrden y RefaccionDescriptiva. AuditEvent incorpora fallaId y ordenId opcionales con FK restrictivas. User y Autobus conservan sus IDs y registros previos.
+
+Cardinalidades aprobadas: autobús 1:N fallas/órdenes, orden 1:N fallas, falla 0:1 orden. FK compuesta (ordenId, autobusId) → orden (id, autobusId) impide agrupar unidades distintas también desde SQL. Orden 1:N asignaciones históricas; activeKey nullable único evita dos asignaciones vigentes del mismo mecánico a una orden, conservando múltiples periodos retirados. Orden 0:1 finalización mediante índice único; cada finalización tiene responsable, fecha, labor y 0:N piezas descriptivas.
+
+Prioridad es nullable hasta evaluación mecánica. EstadoFalla solo PENDIENTE/EN_PROCESO/FINALIZADA; EstadoOrden ABIERTA/EN_PROCESO/FINALIZADA y esperaRefacciones como condición independiente. La finalización cierra todas las fallas vinculadas en una transacción y termina la condición de espera, conservándola en auditoría.
+
+CHECKs SQL validan versiones positivas, texto/fecha de evaluación cuando hay prioridad, tamaño de evidencia, coherencia de minutos con labor declarada y cantidades positivas. La autoría de evaluación se valida en servicio y FK; MySQL no admite su columna con acción referencial CASCADE dentro del CHECK. No hay borrados físicos ni reaperturas implementados.
+
+No existe aún catálogo/movimiento real de refacciones ni fuente de costos monetarios en este cierre. RefaccionDescriptiva es un registro de uso declarado; no debe descontarse nuevamente como si ya hubiera generado movimiento. Preparar mapeo explícito al implementar inventario.

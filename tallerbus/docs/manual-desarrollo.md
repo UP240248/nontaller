@@ -43,3 +43,11 @@ El entorno cloud ya está aislado: usar el checkout existente, sin crear worktre
 ## Desarrollo de flota
 
 `npm run setup` aplica también las migraciones de Fase 2. `npm run test:integration` ejecuta identidad y flota secuencialmente sobre tallerbus_test; las fixtures eliminan auditoría antes de unidades por su FK restrictiva. `tests/e2e/fleet.spec.mjs` recorre flota con Logística, Mecánico y Administración, además de denegar Operador/Contabilidad. Ningún seed añade autobuses a la base de desarrollo; registrarlos desde UI/API con datos autorizados. No se cambió el lockfile ni se añadieron dependencias para esta fase.
+
+## Desarrollo de Fase 3
+
+`incidents` y `work-orders` se instalan con el mismo `npm ci` y `npm run setup`, sin dependencias nuevas ni cambios de lockfile. La migración aditiva crea relaciones e índices/checks. Los fixtures eliminan eventos, evidencias, piezas descriptivas, cierres, asignaciones, fallas y órdenes en orden seguro, exclusivamente en tallerbus_test. También eliminan solo los archivos de evidencia referenciados por esa base de prueba. Nunca ejecutar fixtures contra desarrollo o producción.
+
+`npm run test:integration` añade workflow.integration.test.mjs; prueba API/MySQL, archivos, autorizaciones y concurrencia. `tests/e2e/workflow.spec.mjs` recorre los tres perfiles y el ciclo con fotos y cantidades reales de prueba, sin mocks. Su grupo serial representa el flujo completo y posterior verificación de alcance.
+
+Evidencias de desarrollo en `.local/evidence`, de pruebas en `.local/evidence-test`; EVIDENCE_DIR permite una carpeta privada alternativa. Guardar archivos con permisos restringidos. No moverlos a frontend/public ni versionarlos. Un proceso puede reiniciarse conservando sus archivos; no asumir que un respaldo de BD incluye esos binarios.

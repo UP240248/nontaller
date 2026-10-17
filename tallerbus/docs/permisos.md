@@ -1,15 +1,15 @@
 # Matriz inicial de permisos
 
-**Permisos base de Fase 1 aprobados por el usuario el 17 de octubre de 2026 e implementados. Los permisos de flota de Fase 2 fueron aprobados posteriormente por el usuario; Fases 3–7 siguen como propuesta.** C = crear, R = leer, U = editar. No se propone borrado físico. «Propio» requiere filtro en consultas y comprobación al acceder por ID. «Asignado» exige relación vigente en servidor. Toda acción no concedida se deniega. Las columnas incluyen acciones especiales por separado.
+**Permisos base de Fase 1 aprobados por el usuario el 17 de octubre de 2026 e implementados. Los permisos de flota de Fase 2 fueron aprobados posteriormente por el usuario; Las decisiones de asignación, agrupación y finalización de Fase 3 fueron confirmadas por el usuario; Fases 4–7 siguen como propuesta.** C = crear, R = leer, U = editar. No se propone borrado físico. «Propio» requiere filtro en consultas y comprobación al acceder por ID. «Asignado» exige relación vigente en servidor. Toda acción no concedida se deniega. Las columnas incluyen acciones especiales por separado.
 
 | Entidad / acción | Administración | Logística | Mecánico | Operador | Contabilidad |
 |---|---|---|---|---|---|
 | Usuarios / roles | C/R/U, activar/desactivar, asignar rol y revocar sesiones (aprobado) | Perfil propio | Perfil propio | Perfil propio | Perfil propio |
 | Flota | C/R/U; activar/desactivar y estado operativo (aprobado) | C/R/U; activar/desactivar y estado operativo (aprobado) | R, historial y estado operativo (aprobado); sin C/U de datos ni activar | Sin acceso hasta definir unidades autorizadas | Sin acceso hasta aprobar consultas financieras |
-| Reporte de falla | R | R/U operativo propuesto | C/R/U autorizado | C/R propio | Sin acceso salvo reporte agregado autorizado |
-| Priorizar falla | R | R | Acción propuesta | No | No |
-| Asignar/aceptar orden | R | Coordinación; asignar pendiente | Aceptar propia; asignar pendiente | No | No |
-| Trabajo y finalización | R | R operativo | C/U/finalizar asignado, pendiente de política | R estado propio sin datos internos | R costos autorizados |
+| Reporte de falla | R general | R general | C/R; evaluación de prioridad | C/R propios; fotos propias | Sin acceso |
+| Priorizar falla | R | R | Evaluar/actualizar antes de finalizar, con versión y motivo | No | No |
+| Asignar/aceptar orden | Crear y asignar (aprobado) | Crear y asignar (aprobado) | Iniciar asignada; sin asignación | No | No |
+| Trabajo y finalización | R, sin finalizar | R, sin finalizar | Iniciar/espera/finalizar solo asignado (aprobado) | R estado de sus fallas; sin órdenes internas | Sin acceso hasta aprobar costos |
 | Inventario | R; ajustes pendientes | R disponibilidad | R disponibilidad; consumo asignado pendiente | No | R costos |
 | Proveedores/compras | R; C/U/aprobar pendientes | Solicitud pendiente | Solicitud pendiente | No | R; edición pendiente |
 | Mantenimiento | R | R; configurar pendiente | R/ejecutar asignado propuesto | No | R costos autorizados |
@@ -30,3 +30,14 @@ Ocultar módulos en UI solo facilita navegación. Backend aplica políticas, alc
 El usuario confirmó que Administración y Logística crean/editan y activan/desactivan autobuses, las placas son únicas y los tres roles (incluido Mecánico) cambian estado operativo. La lectura de flota, indicadores e historial está habilitada para esos tres roles; Operador y Contabilidad siguen sin acceso.
 
 Cambios generales: PATCH /autobuses/:id solo campos de identificación, marca/modelo y kilometraje. Estado y activación tienen endpoints separados; no pueden cambiarse mediante ese PATCH. Mecánico recibe 403 al intentar alta, edición de datos o activación, aunque construya la petición fuera de la UI. Cada mutación revalida al actor activo en la transacción. Se aplica CSRF/origen, versión y auditoría atómica. No existe endpoint de borrado.
+
+## Fase 3: permisos implementados
+
+- Administración/Logística: consulta general de fallas, evidencias e historial; creación de órdenes con fallas evaluadas de una unidad; asignación de mecánicos activos y cambios de asignación trazables. No evalúan prioridad ni finalizan órdenes.
+- Mecánico: reporta fallas, consulta fallas/órdenes, confirma prioridad y evaluación, adjunta evidencia. Solo siendo mecánico activo y asignado inicia, registra espera o finaliza la orden. No puede asignarse ni asignar a otros.
+- Operador: crea reporte de unidad activa por económico conocido; lista, detalle, métricas, fotos e historial exclusivamente propios. No puede cambiar prioridad, reportante, unidad, estado ni acceder a órdenes. Adivinar un ID ajeno devuelve 404 y no permite descargar su evidencia.
+- Contabilidad: sin acceso nuevo; mantiene solo su perfil.
+
+Directorio `/ordenes/mecanicos` solo para coordinadores; expone ID y nombre de mecánicos activos, nunca correos, hashes o acceso a gestión de usuarios. El reporte inicial permanece inmutable; la evaluación se puede actualizar por Mecánico antes de finalizar. Cierres finalizados no se reabren ni reasignan sin una futura política explícita.
+
+La finalización exige trabajo, observaciones, responsable asignado, fecha UTC y declaración expresa de labor/piezas aplicables. Minutos y cantidades deben ser coherentes con esas declaraciones. No habilita automáticamente el autobús y, por decisión expresa del usuario, una falla abierta no impide su habilitación manual.

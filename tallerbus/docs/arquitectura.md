@@ -13,7 +13,7 @@ tallerbus/
   scripts/
 ```
 
-Fase 1 implementa core, shared, layout y features de Angular, módulos Nest auth/users/audit, Prisma, migraciones y scripts. Fase 2 añade módulo Nest fleet, vistas de autobuses y dashboard real. Los demás dominios siguen propuestos.
+Fase 1 implementa core, shared, layout y features de Angular, módulos Nest auth/users/audit, Prisma, migraciones y scripts. Fase 2 añade módulo Nest fleet, vistas de autobuses y dashboard real. Fase 3 añade incidents y work-orders, evidencia privada y seguimiento. Inventario/compras/mantenimiento y reportes financieros siguen propuestos.
 
 | Módulo | Responsabilidad | Dependencias |
 |---|---|---|
@@ -53,3 +53,27 @@ Total = todas las unidades; activos/inactivos = bandera administrativa. Disponib
 Placas canónicas: uppercase y eliminación de espacios/guiones, con índice único; económico uppercase/trim único. Kilometraje entero 0–2147483647, validado por DTO y CHECK SQL de no negatividad. No se impone incremento monótono para permitir correcciones auditadas; el motivo acompaña las ediciones.
 
 Indicadores implementados: total, activos, inactivos, disponibles, en taller y distribución por estado (todas las unidades). Provienen de un groupBy de MySQL, sin datos demo implícitos. No se muestran fallas abiertas hasta implementar ese dominio. Desactivación no altera estado operativo. No hay automatismos de habilitación.
+
+## Flujo de Fase 3
+
+```mermaid
+flowchart LR
+ A[Operador o Mecánico reporta] --> B[Falla Pendiente]
+ B --> C[Mecánico evalúa prioridad]
+ C --> D[Administración o Logística agrupa y asigna orden]
+ D --> E[Mecánico asignado inicia]
+ E --> F[Fallas En proceso]
+ F --> G[Condición de espera de refacciones opcional]
+ G --> H[Trabajo realizado y declaración de labor/piezas]
+ F --> H
+ H --> I[Mecánico asignado finaliza]
+ I --> J[Orden y fallas Finalizadas]
+```
+
+No se altera el estado de Falla para la espera. La unidad mantiene su estado operativo hasta que un rol autorizado lo cambie manualmente; las fallas no bloquean habilitarla, conforme a la decisión del usuario. No hay cambios silenciosos a la máquina de estados.
+
+Incidents aplica alcance por propietario en servidor para Operador. Work-orders revalida actor y asignación dentro de la transacción. Las mutaciones cruzadas bloquean en orden unidad → orden/falla y usan aislamiento ReadCommitted para releer después de bloquear, evitando que una instantánea antigua permita decisiones obsoletas. Versiones, índices únicos y auditoría en la misma transacción evitan sobrescrituras y cierres duplicados. Una FK compuesta de Falla a OrdenTrabajo obliga a que ambas pertenezcan al mismo autobús.
+
+Evidencias PNG/JPEG de hasta 5 MB: firma básica y MIME concordantes; claves aleatorias, hash SHA-256, carpeta privada y descarga autenticada como attachment con no-sniff. No se usan nombres originales como rutas ni URLs públicas. Al descargar se comprueban tamaño y hash. Esto no constituye antivirus ni validación completa del códec. Un fallo transaccional elimina el archivo recién creado; un corte abrupto puede dejar un huérfano que requiere conciliación operacional.
+
+El cierre guarda minutos enteros de trabajo y cantidades Decimal(12,3) como cadenas JSON, con responsable y fecha del servidor. Las piezas son registro descriptivo de procedencia, sin descuentos de stock ni importes supuestos. La Fase 4 deberá enlazar estos registros a catálogo/movimientos sin duplicar consumos o costos.

@@ -31,3 +31,7 @@ El único fallo inicial de preparación fue intentar comparar con un archivo tem
 `install_script` existente ya ejecuta setup con las migraciones nuevas. Se actualizó `start_skill` y su persistencia fue confirmada (status saved), con permisos y validación de Fase 2. Revisar/guardar y publicar desde configuración del entorno para reutilizar el borrador; no se ha demostrado publicación o restauración en una tarea nueva.
 
 Los cambios siguen locales en tallerbus/. No se creó commit ni se hizo push durante esta entrega. Configuración privada, dependencias y artefactos continúan ignorados. No se modificó el repositorio anterior.
+
+## Guardado posterior
+
+Por solicitud del usuario, Fases 1 y 2 quedaron guardadas en commit local `da104eb`, rama work. No se hizo push. La Fase 3 se desarrolla sobre ese punto sin modificar el commit.

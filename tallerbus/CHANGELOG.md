@@ -30,3 +30,15 @@
 - Angular: listado, registro, edición, detalle, historial y dashboard con datos reales.
 - Pruebas de flota API/E2E, roles, concurrencia, métricas, móvil y accesibilidad automatizada.
 - Sin módulos de Fases 3–7 ni migración de datos anteriores.
+
+## 2026-10-17 — Guardado Fases 1/2 e implementación de Fase 3
+
+- Commit local `da104eb` de fundamentos y flota, solicitado por el usuario; sin push ni credenciales/artefactos.
+- Reglas recibidas: Administración/Logística asignan; varias fallas de una unidad por orden; Mecánico finaliza; sin bloqueo de habilitación por fallas.
+- Reporte y evaluación de fallas con alcance propio de Operador, fotos privadas y auditoría.
+- Órdenes agrupadas, asignaciones históricas, diagnóstico/inicio, condición de espera y finalización transaccional por mecánico asignado.
+- Cierre con trabajo, observaciones, tiempo y piezas descriptivas exactas, sin inventario ni importes no aprobados.
+- Integración con dashboard/unidad y mejora de acceso por teclado a tablas desplazables.
+- Pruebas de API, archivos, roles, concurrencia y recorrido real de navegador; resultados finales en validacion-fase-3.
+
+- Validación final conjunta: 63 pruebas pasadas, lint/typecheck/build correctos; start_skill actualizado en borrador cloud, sin publicación.
