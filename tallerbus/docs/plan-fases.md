@@ -1,0 +1,20 @@
+# Plan de fases y criterios de aceptación
+
+Cada entrega sigue una vertical: esquema/migración → servicio/DTO/política → API → Angular → pruebas → documentación. Cambios acotados, sin migraciones productivas ni borrados. La Fase 0 es documental; las fases de implementación requieren demostración de extremo a extremo.
+
+| Fase | Alcance y archivos previstos | Criterios de aceptación |
+|---|---|---|
+| 0 Descubrimiento | README y docs: auditoría, arquitectura, modelo, permisos y plan | Evidencia de inventario, propuestas diferenciadas de hechos, pendientes y alcance de Fase 1 explícitos. Auditoría anterior pendiente de acceso |
+| 1 Fundamentos | frontend/core/shared/layout, backend/auth/users/audit, Prisma inicial, scripts y configuración ejemplo | Instalación reproducible con versiones fijadas; MySQL aislado y migraciones; login real, perfil, logout y revocación; navegación por rol; hash seguro y usuario local sin credenciales versionadas; validación, logs, OpenAPI; lint/typecheck/build y tests unitarios, integración de sesiones/permisos y E2E login/logout pasan |
+| 2 Flota | fleet/autobuses, dashboard e historial | Alta, consulta, edición y activación real; número económico único y kilometraje válido; filtro/orden/paginación servidor; auditoría y conflicto de versión; KPIs consultan BD; E2E del ciclo de unidad y denegación por rol |
+| 3 Fallas/órdenes | incidents, work-orders, evidencia y asignaciones | Reporte hasta finalización con campos obligatorios; estados preservados, evidencia protegida, trazabilidad y concurrencia; pruebas de cierre inválido, acceso ajeno y otras fallas bloqueantes |
+| 4 Inventario/compras | inventory, suppliers, purchasing, costos de consumo | Reglas aprobadas previamente; movimientos y recepción parcial atómicos; no negativos; idempotencia y concurrencia probadas; costo histórico sin doble contabilización; E2E recepción/consumo/devolución |
+| 5 Preventivo | maintenance y vínculos a órdenes | Frecuencias configurables, checklist histórico, vencimiento verificable con reloj controlado; ejecución no duplica consumos; E2E plan→ejecución |
+| 6 Vistas/reportes | operator/logistics/accounting, reports/export | Alcances por rol; filtros combinados y CSV seguro; totales reconciliados con orígenes y costos exactos; check-in/out solo si aprobado; E2E y acceso a exportación |
+| 7 Consolidación | Auditoría transversal, documentación y operación | E2E críticos completos, revisión manual y automatizada WCAG 2.2 AA, pruebas de rendimiento con carga acordada, hardening, restauración demostrada y manuales probados |
+
+## Protocolo de validación
+
+En cada fase de código ejecutar lint, typecheck, build, unitarias relevantes, integración backend con base aislada y autorización por rol, más recorridos E2E de lo implementado. Registrar comandos exactos, versiones, cantidades y resultados: pasados, fallidos, omitidos y no ejecutados. Un build o cero pruebas no acredita funcionalidad. No desactivar assertions ni usar datos demo como evidencia de producción.
+
+No empezar un módulo financiero sin sus reglas aprobadas. Las dependencias pueden reordenarse con justificación registrada; no omitir criterios. Fase 1 implementada; evidencia de cierre en validacion-fase-1. Fase 2 implementada; evidencia en validacion-fase-2. Fases 3–7 **no iniciadas**. Fase 0 entrega propuesta documental; auditoría del anterior no completada por falta de acceso.

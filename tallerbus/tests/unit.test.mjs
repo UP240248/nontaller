@@ -1,0 +1,10 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url);
+const security=require('../backend/dist/security.js');
+const {settings}=require('../backend/dist/config.js');
+test('Argon2id verifica la contraseña y rechaza otra',async()=>{const hash=await security.hashPassword('Password de prueba 2026');assert.match(hash,/^\$argon2id\$/);assert.notEqual(hash,'Password de prueba 2026');assert.equal(await security.verifyPassword(hash,'Password de prueba 2026'),true);assert.equal(await security.verifyPassword(hash,'Otra contraseña'),false);});
+test('tokens aleatorios y CSRF distintos, con comparación exacta',()=>{const a=security.newToken();const b=security.newToken();assert.notEqual(a,b);assert.equal(a.length,64);assert.notEqual(security.hashToken(a),a);assert.notEqual(security.csrfToken(a),security.hashToken(a));assert.equal(security.equalToken(a,a),true);assert.equal(security.equalToken(a,b),false);assert.equal(security.equalToken(a,''),false);});
+test('política de contraseña limita longitud',()=>{assert.equal(security.validPassword('corta'),false);assert.equal(security.validPassword('x'.repeat(12)),true);assert.equal(security.validPassword('x'.repeat(129)),false);});
+test('configuración falla cerrada para producción insegura y números inválidos',()=>{const previous={...process.env};try{process.env.DATABASE_URL='mysql://placeholder';process.env.FRONTEND_ORIGIN='http://localhost:4200';process.env.NODE_ENV='production';process.env.COOKIE_SECURE='false';assert.throws(settings,/HTTPS/);process.env.NODE_ENV='test';process.env.SESSION_HOURS='0';assert.throws(settings,/numérica/);process.env.SESSION_HOURS='8';process.env.COOKIE_SECURE='yes';assert.throws(settings,/COOKIE_SECURE/);}finally{for(const key of Object.keys(process.env))if(!(key in previous))delete process.env[key];Object.assign(process.env,previous);}});

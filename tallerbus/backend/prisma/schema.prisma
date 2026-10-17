@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+  engineType = "client"
+}
+datasource db {
+  provider = "mysql"
+}
+enum Role {
+  ADMINISTRACION
+  LOGISTICA
+  MECANICO
+  OPERADOR
+  CONTABILIDAD
+}
+model User {
+  id String @id @default(uuid()) @db.Char(36)
+  name String @db.VarChar(100)
+  email String @unique @db.VarChar(190)
+  passwordHash String @db.VarChar(255)
+  role Role
+  active Boolean @default(true)
+  version Int @default(1)
+  createdAt DateTime @default(now()) @db.DateTime(3)
+  updatedAt DateTime @updatedAt @db.DateTime(3)
+  sessions Session[]
+  events AuditEvent[]
+  @@index([active, role])
+}
+model Session {
+  id String @id @default(uuid()) @db.Char(36)
+  tokenHash String @unique @db.Char(64)
+  userId String @db.Char(36)
+  user User @relation(fields:[userId], references:[id], onDelete:Restrict)
+  expiresAt DateTime @db.DateTime(3)
+  revokedAt DateTime? @db.DateTime(3)
+  createdAt DateTime @default(now()) @db.DateTime(3)
+  @@index([userId, revokedAt])
+  @@index([expiresAt])
+}
+model AuditEvent {
+  id String @id @default(uuid()) @db.Char(36)
+  busId String? @db.Char(36)
+  bus Autobus? @relation(fields:[busId], references:[id], onDelete:Restrict)
+  actorId String? @db.Char(36)
+  actor User? @relation(fields:[actorId], references:[id], onDelete:Restrict)
+  entity String @db.VarChar(40)
+  entityId String @db.Char(36)
+  action String @db.VarChar(60)
+  changes Json?
+  createdAt DateTime @default(now()) @db.DateTime(3)
+  @@index([entity, entityId, createdAt])
+  @@index([createdAt, id])
+  @@index([busId, createdAt, id])
+}
+// Mutex transaccional para bootstrap, roles y desactivación del último administrador.
+model AdminLock {
+  id Int @id
+}
+
+enum EstadoOperativo {
+  HABILITADO
+  EN_REPARACION
+  EN_ESPERA_REFACCIONES
+  FUERA_DE_SERVICIO
+}
+model Autobus {
+  id String @id @default(uuid()) @db.Char(36)
+  numeroEconomico String @unique @db.VarChar(30)
+  placas String @unique @db.VarChar(16)
+  marca String @db.VarChar(80)
+  modelo String @db.VarChar(80)
+  kilometraje Int
+  estadoOperativo EstadoOperativo
+  activo Boolean @default(true)
+  version Int @default(1)
+  createdAt DateTime @default(now()) @db.DateTime(3)
+  updatedAt DateTime @updatedAt @db.DateTime(3)
+  events AuditEvent[]
+  @@index([activo, estadoOperativo])
+  @@index([createdAt, id])
+}
