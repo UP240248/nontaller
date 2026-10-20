@@ -42,7 +42,9 @@ export class FleetService {
  private async change(id:string,version:number,motivo:string,patch:Prisma.AutobusUpdateManyMutationInput,actorId:string,allowed:Role[],action:string) {
   return this.db.$transaction(async tx=>{
    await this.authorize(tx,actorId,allowed);
+   await tx.$queryRaw`SELECT id FROM Autobus WHERE id = ${id} FOR UPDATE`;
    const before=await tx.autobus.findUnique({where:{id}});
+   if(typeof patch.kilometraje==='number'){const latest=await tx.planPreventivo.aggregate({where:{autobusId:id},_max:{ultimoServicioKm:true}});if(latest._max.ultimoServicioKm!==null&&patch.kilometraje<latest._max.ultimoServicioKm)throw new ConflictException('El kilometraje no puede ser menor al último servicio preventivo registrado');}
    if(!before)throw new NotFoundException('Autobús no encontrado');
    if(before.version!==version)throw new ConflictException('La unidad cambió. Actualiza los datos antes de guardar.');
    const result=await tx.autobus.updateMany({where:{id,version},data:{...patch,version:{increment:1}}});
@@ -50,7 +52,7 @@ export class FleetService {
    const after=await tx.autobus.findUniqueOrThrow({where:{id}});
    await tx.auditEvent.create({data:{actorId,busId:id,entity:'Autobus',entityId:id,action,changes:{before:busSnapshot(before),after:busSnapshot(after),motivo}}});
    return after;
-  });
+  },{isolationLevel:Prisma.TransactionIsolationLevel.ReadCommitted});
  }
  update(id:string,input:UpdateBusDto,actorId:string) {const {version,motivo,...patch}=input;return this.change(id,version,motivo,patch,actorId,managers,'BUS_UPDATE');}
  state(id:string,input:BusStateDto,actorId:string) {return this.change(id,input.version,input.motivo,{estadoOperativo:input.estadoOperativo},actorId,fleetReaders,'BUS_STATE');}

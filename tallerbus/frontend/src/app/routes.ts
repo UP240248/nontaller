@@ -17,6 +17,7 @@ export const routes: Routes = [
   {path:'ordenes',canActivate:[fleetAccess],loadComponent:()=>import('./features/work-orders/order-list.component').then(m=>m.OrderListComponent)},
   {path:'ordenes/nueva',canActivate:[fleetManager],loadComponent:()=>import('./features/work-orders/order-create.component').then(m=>m.OrderCreateComponent)},
   {path:'ordenes/:id',canActivate:[fleetAccess],loadComponent:()=>import('./features/work-orders/order-detail.component').then(m=>m.OrderDetailComponent)},
+  {path:'mantenimiento',canActivate:[fleetAccess],loadComponent:()=>import('./features/maintenance/plans.component').then(m=>m.PlansComponent)},
   {path:'inventario',canActivate:[partsAccess],loadComponent:()=>import('./features/inventory/stock.component').then(m=>m.StockComponent)},
   {path:'refacciones',canActivate:[partsAccess],data:{kind:'parts'},loadComponent:()=>import('./features/inventory/catalog.component').then(m=>m.CatalogComponent)},
   {path:'proveedores',canActivate:[logisticsAccess],data:{kind:'suppliers'},loadComponent:()=>import('./features/inventory/catalog.component').then(m=>m.CatalogComponent)},

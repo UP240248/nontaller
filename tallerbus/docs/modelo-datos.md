@@ -99,3 +99,11 @@ Refaccion 0:1 saldo materializado por almacén único, 1:N movimientos y líneas
 Saldo usa Decimal(15,3) y valor Decimal(30,6); costo unitario de compra Decimal(18,6), cantidades de línea Decimal(12,3). No usar punto flotante para dinero. CHECKs exigen mínimo/saldo no negativos, saldo sin valor residual cuando cantidad es cero, versiones positivas, recibido entre cero y pedido, cantidades y signos coherentes en el ledger. FK restrictivas conservan trazabilidad. La inmovilidad del ledger se impone mediante la API (sin edición/borrado), no mediante privilegios de solo inserción del usuario SQL de desarrollo.
 
 Un bloqueo de almacén protege cambios de catálogo, saldo, compras e idempotencia; operaciones financieras READ COMMITTED. Las entregas coordinan bloqueo de autobús/orden con su finalización. No hay reservas, multi-almacén, impuestos, pagos, costos laborales o migración de históricos implementados. Las descripciones de cierre siguen siendo evidencia del trabajo, separada de la fuente contable de inventario.
+
+## Implementado en Fase 5
+
+`PlanPreventivo` pertenece a un autobús; contiene nombre único por unidad, intervalo entero en kilómetros, lectura del último servicio, checklist plantilla JSON validado, activo y versión. No se replica un catálogo de intervalos supuestos ni se programa por calendario.
+
+`EjecucionPreventiva` pertenece a un plan y una orden única y copia nombre, intervalo, base y objetivo al programar. FK compuestas con autobusId impiden vincular plan/orden de unidades distintas. `activeKey` única nullable contiene ID del plan mientras está abierta y se libera al finalizar; CHECK impone coherencia de cierre, lectura y clave. `PasoPreventivo` conserva posición/texto histórico, estado y observaciones; no hay edición después del cierre por API. La orden mantiene sus asignaciones y responsable de finalización existentes.
+
+El cierre registra kilometrajeCierre/UTC, actualiza último servicio/version del plan y finaliza la orden en una transacción sin stock nuevo. Cambios posteriores de plantilla no alteran snapshots. El siguiente objetivo usa la lectura real de cierre y el intervalo vigente del plan. La auditoría genérica de plan incluye busId/ordenId cuando procede, actor, acción y motivo; no incluye importes. No hay borrado por API; ejecuciones tienen FK restrictivas hacia plan y orden.

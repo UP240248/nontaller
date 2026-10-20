@@ -86,6 +86,7 @@ enum EstadoOperativo {
   FUERA_DE_SERVICIO
 }
 model Autobus {
+  planes PlanPreventivo[]
   id String @id @default(uuid()) @db.Char(36)
   numeroEconomico String @unique @db.VarChar(30)
   placas String @unique @db.VarChar(16)
@@ -162,6 +163,7 @@ enum EstadoOrden {
   FINALIZADA
 }
 model OrdenTrabajo {
+  preventivo EjecucionPreventiva?
   movimientos MovimientoInventario[]
   id String @id @default(uuid()) @db.Char(36)
   autobusId String @db.Char(36)
@@ -351,4 +353,51 @@ model RegistroCompra {
  motivo String @db.VarChar(500)
  createdAt DateTime @default(now()) @db.DateTime(3)
  @@index([compraId,createdAt,id])
+}
+
+model PlanPreventivo {
+ id String @id @default(uuid()) @db.Char(36)
+ autobusId String @db.Char(36)
+ autobus Autobus @relation(fields:[autobusId],references:[id],onDelete:Restrict)
+ nombre String @db.VarChar(100)
+ intervaloKm Int
+ ultimoServicioKm Int
+ checklist Json
+ activo Boolean @default(true)
+ version Int @default(1)
+ createdAt DateTime @default(now()) @db.DateTime(3)
+ updatedAt DateTime @updatedAt @db.DateTime(3)
+ ejecuciones EjecucionPreventiva[]
+ @@unique([id,autobusId])
+ @@unique([autobusId,nombre])
+ @@index([activo,autobusId])
+}
+model EjecucionPreventiva {
+ id String @id @default(uuid()) @db.Char(36)
+ planId String @db.Char(36)
+ autobusId String @db.Char(36)
+ plan PlanPreventivo @relation(fields:[planId,autobusId],references:[id,autobusId],onDelete:Restrict)
+ ordenId String @unique @db.Char(36)
+ orden OrdenTrabajo @relation(fields:[ordenId,autobusId],references:[id,autobusId],onDelete:Restrict)
+ activeKey String? @unique @db.Char(36)
+ nombre String @db.VarChar(100)
+ intervaloKm Int
+ baseKm Int
+ objetivoKm Int
+ kilometrajeCierre Int?
+ createdAt DateTime @default(now()) @db.DateTime(3)
+ finalizadaAt DateTime? @db.DateTime(3)
+ pasos PasoPreventivo[]
+ @@unique([ordenId,autobusId])
+ @@index([planId,createdAt,id])
+}
+model PasoPreventivo {
+ id String @id @default(uuid()) @db.Char(36)
+ ejecucionId String @db.Char(36)
+ ejecucion EjecucionPreventiva @relation(fields:[ejecucionId],references:[id],onDelete:Restrict)
+ posicion Int
+ texto String @db.VarChar(200)
+ completado Boolean @default(false)
+ observaciones String? @db.VarChar(500)
+ @@unique([ejecucionId,posicion])
 }

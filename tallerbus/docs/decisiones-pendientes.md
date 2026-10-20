@@ -18,7 +18,7 @@ Versiones y scripts de Fase 1 están fijados y documentados. MySQL local usa con
 | Inventario | **Resuelto:** un almacén; descontar al entregar, sin reservas ni negativos; Logística opera; promedio ponderado MXN | Cantidades hasta 3 decimales y valores internos a 6; unidades históricas fijas tras uso |
 | Compras | **Resuelto:** Logística aprueba incluso propias; recepción parcial hasta cantidad pedida. Fiscalidad y devolución a proveedor pendientes | Borrador, aprobación explícita, parcial/recibida y cancelación antes de recibir; sin impuestos/descuentos |
 | Costos | ¿Moneda, escala, redondeo, tarifas, estimado vs real y acceso? | Decimal; sin inventar tarifas ni exponer importes a otros roles |
-| Mantenimiento | ¿Intervalos, tolerancias, checklists y responsables? | Parámetros configurables sin umbrales ficticios |
+| Mantenimiento | **Resuelto:** solo kilometraje; Logística crea planes y asigna; servicios/intervalos aún desconocidos | Captura explícita por unidad, sin presets; checklist editable para futuras ejecuciones; mecánico asignado ejecuta |
 | Seguridad | ¿Duración de sesión, bloqueo, retención, evidencias, responsables de respaldo? | Denegación por defecto; límites documentados y por validar |
 | Operación | ¿Zona horaria empresarial, servidores, sistema operativo, usuarios finales, presupuesto y SLAs? | UTC interno; operación local; sin promesas de capacidad |
 | Integraciones | ¿Notificaciones externas, GPS, ERP y formatos oficiales? | Solo coordinación interna; sin WhatsApp ni integraciones no autorizadas |
@@ -44,3 +44,11 @@ El usuario confirmó un almacén, operación por Logística y moneda MXN con cos
 La precisión técnica es de 3 decimales para cantidades y 6 para costo/valor, con redondeo HALF_UP. Una salida total absorbe el residuo de valoración. Las devoluciones de piezas no usadas restituyen la valoración original de su entrega, con límite acumulado. Las compras se reciben hasta lo pendiente, sin excedentes; pueden cancelarse antes de recibir. Estos son controles conservadores de implementación, no reglas fiscales aprobadas.
 
 Pendiente para fases posteriores: tarifas de mano de obra, impuestos/descuentos, pagos, devolución a proveedor, importación de históricos y permisos financieros de Contabilidad/Administración. Las piezas descriptivas anteriores no se convierten automáticamente en stock ni en costos.
+
+## Decisiones recibidas para Fase 5 — 20 de octubre de 2026
+
+El usuario respondió «por kilometraje», «si» a gestión/asignación por Logística y «no tengo ni idea» respecto de servicios e intervalos. Después autorizó continuar. No se inventan valores, frecuencias de fabricante ni un catálogo precargado. Logística debe consultar manual/historial/taller y capturar servicio, intervalo en kilómetros, última lectura conocida de servicio y checklist.
+
+El vencimiento se calcula al alcanzar último servicio + intervalo, sin tolerancias supuestas ni dependencia del calendario. Se permite programación anticipada explícita con motivo; hay una sola ejecución abierta por plan. Cada ejecución conserva copia de nombre/intervalo/base/objetivo y tareas. Ediciones del plan se aplican a futuros servicios; el cierre usa el kilometraje actual de flota revisado y el siguiente vencimiento usa el intervalo vigente del plan. No habilita/deshabilita unidades ni genera consumos adicionales.
+
+Pendientes para una política futura: programación por tiempo, tolerancias/avisos anticipados, cambio de odómetro o corrección de cierres, cancelación/reapertura de ejecuciones y servicios normativos específicos. No bloquear la implementación configurable por esos valores no proporcionados. La captura inicial del último servicio no se edita después desde el plan; si fue incorrecta, requiere una futura política de corrección trazable, no alterar historia mediante SQL.

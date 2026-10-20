@@ -53,3 +53,13 @@
 - Pantallas Angular, disponibilidad sin costos para Administración/Mecánico y operaciones/costos solo para Logística.
 - Pruebas API/MySQL, concurrencia, reintentos, devoluciones/redondeo y recorridos E2E con accesibilidad automatizada y móvil. Sin nuevas dependencias.
 - Sin fiscalidad, pagos, reservas, tarifas laborales, devolución a proveedor ni permisos financieros de Contabilidad.
+
+## 2026-10-20 — Fase 5: preventivo por kilometraje
+
+- Reglas confirmadas: solo kilometraje; Logística configura planes y asigna mecánicos; sin servicios/intervalos precargados.
+- Plan por unidad con última lectura conocida, intervalo/checklist, versión, activación, filtros y vencimiento exacto en servidor.
+- Programación atómica de orden/asignaciones/ejecución, una abierta por plan y snapshot histórico de tareas/intervalo.
+- Checklist por mecánico asignado con avances/versiones; cierre exige tareas completas y lectura actual revisada de flota.
+- Registro de servicio y siguiente objetivo sin doble consumo/costo ni cambio automático de estado de unidad.
+- Lecturas de flota protegidas frente a retroceso anterior al servicio registrado; consultas operativas sin nuevos permisos financieros.
+- Pruebas API/MySQL, carreras, recorridos E2E, móvil/accesibilidad y documentación. Sin nuevas dependencias.

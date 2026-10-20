@@ -66,3 +66,17 @@ En la compra aprobada, escribe la cantidad que llega en cada partida; deja vací
 Ante una respuesta de red incierta, reintenta el mismo formulario sin alterar los datos: conserva su clave para evitar duplicados. Antes de recargar o iniciar otro registro consulta el historial. Los errores de stock/estado o versión no registran movimientos parciales; vuelve a consultar los datos antes de corregirlos.
 
 En el detalle de la orden, **Entregas y devoluciones de almacén** muestra los movimientos. Solo Logística ve el costo neto de piezas; compras y cierre no lo suman de nuevo. Mecánico documenta el uso real en el cierre, sin volver a descontar stock. Las piezas descriptivas de órdenes antiguas no adquieren costos automáticamente. El costo mostrado es de refacciones entregadas menos devueltas; no incluye tarifas de mano de obra todavía.
+
+## Mantenimiento preventivo por kilometraje
+
+En **Mantenimiento**, Logística crea un plan por autobús: nombre del servicio, intervalo en kilómetros, kilometraje del último servicio conocido y tareas del checklist (una por línea). No se proponen servicios o intervalos automáticos. Consulta el manual del fabricante, historial de la unidad o al responsable del taller antes de capturarlos.
+
+Los planes muestran kilometraje actual de flota, próximo servicio y estado. Se considera vencido al alcanzar el objetivo; solo cuentan planes y autobuses activos. Puedes buscar por servicio/unidad y filtrar planes activos o vencidos. Administración y Mecánico consultan, pero no configuran.
+
+En **Ver plan**, Logística elige mecánicos activos e indica motivo para **Crear orden preventiva**. Puede anticipar un servicio con motivo. Solo hay una ejecución abierta por plan; si la operación ya se registró, usa el enlace a su orden. Desactivar un plan impide nuevas programaciones y conserva historia/órdenes abiertas. Editar nombre, intervalo o checklist conserva la copia histórica de las ejecuciones existentes.
+
+El mecánico asignado abre la orden e inicia trabajo con diagnóstico/motivo. En **Checklist preventivo** marca las tareas realizadas, agrega observaciones opcionales y guarda con motivo. Puedes guardar avances; para cerrar todas las tareas deben estar completas. La versión evita sobrescribir cambios de otro mecánico asignado.
+
+Antes de finalizar, Logística debe actualizar el kilometraje en Autobuses. El mecánico revisa esa lectura en la orden y confirma el cierre habitual, con trabajo/observaciones y labor/piezas cuando apliquen. Si cambió la lectura, recarga y revísala; no se cierra con una lectura obsoleta. El servicio queda registrado con ese kilometraje; el siguiente vencimiento es lectura de cierre + intervalo vigente del plan.
+
+Las piezas se entregan/devuelven desde Inventario como en otras órdenes. El checklist y el cierre no vuelven a descontarlas ni sumar costos. Tampoco habilitan o deshabilitan el autobús automáticamente. El checklist finalizado queda de consulta. No hay cancelación/reapertura de ejecuciones ni corrección de lecturas de cierre implementada todavía; conserva registros correctos desde su captura.
