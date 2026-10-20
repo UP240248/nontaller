@@ -1,5 +1,7 @@
 # Operación local y Windows
 
+Guía directa para el alcance personal confirmado: [Uso local personal](uso-local-personal.md).
+
 ## Requisitos
 
 Node 24.19.0, npm 11.9.0, Git y Docker Engine/Desktop con contenedores Linux y puerto 3307 libre. Windows: habilitar el backend Linux/WSL2 de Docker Desktop antes de ejecutar los mismos comandos en PowerShell. Los scripts Node evitan dependencias de Bash del host; los comandos `sh` se ejecutan dentro del contenedor Linux. La ejecución en Windows no ha sido comprobada en esta entrega.

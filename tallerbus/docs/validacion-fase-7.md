@@ -41,3 +41,11 @@ Es una referencia breve de lecturas HTTP locales con caché caliente, no un SLA 
 E2E comprueba acceso por teclado, salto al contenido, diálogo modal, Escape con restauración de foco, desplazamiento de tablas y ausencia de desbordamiento global a 320 px; incluye análisis axe. No equivale a certificación WCAG 2.2 AA ni reemplaza revisión con lectores de pantalla y usuarios finales.
 
 La consolidación local está validada. El cierre productivo de Fase 7 requiere servidor definido, HTTPS/proxy, TLS y privilegios mínimos de BD remota, respaldo externo cifrado y prueba de recuperación allí, frecuencia/retención/RPO/RTO/responsables acordados, rendimiento en destino y aceptación manual. Publicar Git no despliega la aplicación ni publica el entorno cloud.
+
+## Continuación: uso personal local
+
+El usuario aclaró que no desplegará en la red empresarial por ahora. Se preparó la guía de uso personal y `npm run status:local`, que valida destinos loopback, no sigue redirecciones y comprueba salud API/BD, interfaz y proxy con lecturas HTTP. Lint y 13 pruebas unitarias aprobados (8 previas y 5 nuevas de estado local); no se repitieron integración/E2E porque no cambió la lógica de aplicación. El resultado de 146 pruebas de la sección anterior pertenece a la validación completa previa; no se afirma una nueva ejecución completa de 151 pruebas.
+
+La preparación productiva sigue sin realizarse y queda fuera del alcance actual; el pendiente para uso personal es su instalación/aceptación en el equipo del usuario.
+
+El diagnóstico se ejecutó además contra los servicios reales de desarrollo: con aplicaciones detenidas devolvió código 1 y tres comprobaciones fallidas, como se esperaba. Tras `npm run db:local` y `npm run dev`, devolvió código 0 y las tres comprobaciones OK. No se modificaron datos comerciales ni se crearon cuentas para esta verificación.

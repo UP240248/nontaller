@@ -36,7 +36,11 @@ Se fijaron overrides de Vite 7.3.7 y MCP SDK 1.32.0, conservando Angular 21.2.27
 
 Con npm 11.9.0, `npm ls` muestra ELSPROBLEMS al comparar los pines internos originales de Angular con estos overrides de workspace. Se observó esa incidencia de diagnóstico; no se afirma un árbol sin advertencias de herramientas. `npm ci` con el lockfile, auditoría y build/servidor/pruebas validan las versiones efectivamente instaladas. No ejecutar `npm audit fix --force` ni actualizar a otra versión mayor sin revisar compatibilidad.
 
-## Antes de exponer a usuarios reales
+## Para uso personal local
+
+El usuario confirmó este alcance, sin despliegue empresarial por ahora. Ver [uso local personal](uso-local-personal.md). `npm run status:local`, con dev iniciado, comprueba API/BD, interfaz y proxy con lecturas HTTP locales. No valida login ni permisos y no inicia servicios.
+
+## Ante un futuro despliegue empresarial
 
 Esta entrega sigue siendo local. En el servidor elegido deben verificarse HTTPS y cookies Secure reales, proxy/IP de confianza, CORS/origen exacto, acceso MySQL mínimo y TLS si es remoto, almacenamiento privado de fotos y respaldo externo cifrado. Separar migrador con DDL del usuario de aplicación. Swagger se deshabilita con NODE_ENV production, pero eso solo no constituye un despliegue seguro.
 

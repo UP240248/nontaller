@@ -17,7 +17,7 @@
     "build": "npm run build -w backend && npm run build -w frontend",
     "typecheck": "npm run typecheck -w backend && npm run typecheck -w frontend",
     "lint": "eslint backend/src frontend/src scripts tests",
-    "test:unit": "npm run build -w backend && node --test tests/unit.test.mjs",
+    "test:unit": "npm run build -w backend && node --test tests/unit.test.mjs tests/local-status.test.mjs",
     "test:integration": "node scripts/test-integration.mjs",
     "test:e2e": "playwright test",
     "dev:api": "node --env-file=.local/backend.env backend/dist/main.js",
@@ -28,7 +28,8 @@
     "setup": "node scripts/setup.mjs",
     "backup:local": "node --env-file=.local/backend.env scripts/backup-local.mjs",
     "backup:verify": "node --env-file=.local/backend.env scripts/verify-backup.mjs",
-    "test:load": "node --env-file=.local/test.env scripts/benchmark-local.mjs"
+    "test:load": "node --env-file=.local/test.env scripts/benchmark-local.mjs",
+    "status:local": "node --env-file=.local/backend.env scripts/status-local.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",

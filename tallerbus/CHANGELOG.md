@@ -83,3 +83,10 @@
 - Pruebas de seguridad, recuperación, teclado y pantalla de 320 px: suite completa de 146 pruebas aprobada.
 - Referencia local de carga acordada: 50 autobuses, 10 usuarios, 200 consultas sin errores; p95 65,05 ms.
 - Manuales operativos actualizados; despliegue, respaldo externo y aceptación productiva/manual pendientes.
+
+## 2026-10-20 — Cierre técnico para uso personal local
+
+- Alcance confirmado: equipo personal, sin despliegue en la red de la empresa; infraestructura productiva queda fuera de la entrega actual.
+- Guía de primera cuenta, roles, arranque, parada, respaldo y actualización sin pérdida de datos.
+- `npm run status:local`: diagnóstico de API/MySQL, interfaz y proxy por HTTP de loopback, sin escrituras ni redirecciones.
+- Lint y 13 unitarias aprobados, incluyendo cinco casos del diagnóstico local; la suite completa anterior de 146 pruebas conserva su evidencia histórica.

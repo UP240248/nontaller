@@ -66,3 +66,7 @@ CSV exporta todo el conjunto filtrado hasta 10000 filas; encima exige reducir fi
 Capacidad inicial confirmada por el usuario: hasta **50 autobuses y 10 usuarios simultáneos**. El escenario local ejecutado coincide con esa escala; sus resultados están en [validación de Fase 7](validacion-fase-7.md). No constituye SLA ni validación del servidor definitivo.
 
 Siguen pendientes servidor/proveedor, HTTPS y proxy, TLS y usuarios mínimos de BD remota, respaldo externo cifrado, frecuencia/retención, RPO/RTO y responsable, aceptación con usuarios y tecnologías de asistencia. No se fijan políticas comerciales sin confirmación.
+
+## Alcance de operación aclarado — 20 de octubre de 2026
+
+El usuario dispone de servidor interno empresarial, pero confirma que por ahora lo usará personalmente de manera local y no lo publicará en la red de la empresa. Servidor, dominio, HTTPS/proxy y despliegue empresarial quedan fuera del alcance vigente. El cierre técnico local de Fase 7 se evalúa separadamente; queda aceptación en su propio equipo y decidir cómo conservar copias personales fuera del disco. La existencia de un servidor no autoriza conectarse ni instalar ahí. Ver [uso local personal](uso-local-personal.md).

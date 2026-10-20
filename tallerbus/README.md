@@ -44,8 +44,12 @@ La entrega incluye las Fases 1–6 y mejoras locales de consolidación de Fase 7
 
 Las Fases 1–5 se integraron en main mediante `c507a16`; la rama de entrega de Fase 6 es `tallerbus/fase-6`. La validación completa de Fase 6 pasó 127 pruebas. La rama de consolidación `tallerbus/fase-7` registra 146 pruebas aprobadas y el ensayo de recuperación local. Consulta las referencias remotas para confirmar la publicación de cada versión. Publicar código en GitHub no equivale a desplegar la aplicación ni a publicar el entorno cloud.
 
+## Uso personal local
+
+El alcance actual confirmado es uso personal en el equipo del usuario, sin publicar en la red de la empresa. Sigue [la guía de instalación, arranque y respaldo](docs/uso-local-personal.md). Con la aplicación iniciada, `npm run status:local` comprueba API/MySQL, interfaz y proxy sin modificar datos. No necesitas dominio para ese uso.
+
 ## Consolidación y recuperación local
 
 `npm run backup:local -- --offline` crea copia privada de MySQL/fotos con la API detenida; `npm run backup:verify -- RUTA` demuestra restauración en base/carpeta temporal, concilia filas/relaciones/costos y revoca sesiones solo en copia. No sustituye datos existentes ni implementa respaldos externos automáticos. Ver [procedimiento y límites](docs/respaldos.md).
 
-La operación productiva, HTTPS/proxy/BD remota, almacenamiento externo, RPO/RTO y aceptación con usuarios deben validarse en el servidor definitivo. La Fase 7 local no acredita esos puntos ni certificación completa de accesibilidad/rendimiento.
+Un eventual despliegue empresarial/productivo requiere validar HTTPS/proxy/BD remota, almacenamiento externo, RPO/RTO y aceptación con usuarios en el servidor definitivo. Está fuera del alcance local personal confirmado. La Fase 7 local no acredita esos puntos ni certificación completa de accesibilidad/rendimiento.
