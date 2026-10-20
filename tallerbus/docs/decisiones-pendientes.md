@@ -15,8 +15,8 @@ Versiones y scripts de Fase 1 están fijados y documentados. MySQL local usa con
 | Flota | **Resuelto:** placas únicas; Administración/Logística gestionan datos y activación; los tres roles cambian estado | Implementado. Normalización técnica: mayúsculas, sin espacios/guiones; número económico en mayúsculas y trim; sin borrado |
 | Fallas/órdenes | **Resuelto:** varias fallas de una unidad por orden; Administración/Logística asignan; Mecánico finaliza; fallas abiertas no impiden habilitar | Implementado con finalización del mecánico asignado, prioridad confirmada por Mecánico y espera como condición de orden; sin cambio automático del autobús |
 | Operadores | ¿Relación permanente o temporal con unidad? ¿Cómo son entrada/salida? | Reporta una unidad activa por económico conocido y consulta sus propios reportes/fotos; no enumera flota. Asignaciones operador-unidad y check-in/out pendientes |
-| Inventario | ¿Uno o varios almacenes? ¿Reserva o descuento? ¿Unidad fraccionaria? ¿Valoración? ¿Quién ajusta? | No stock negativo; no implementar política financiera sin aprobación |
-| Compras | ¿Estados, aprobadores, recepción excedente, devoluciones, impuestos y descuentos? | Sin aprobación automática ni reglas fiscales |
+| Inventario | **Resuelto:** un almacén; descontar al entregar, sin reservas ni negativos; Logística opera; promedio ponderado MXN | Cantidades hasta 3 decimales y valores internos a 6; unidades históricas fijas tras uso |
+| Compras | **Resuelto:** Logística aprueba incluso propias; recepción parcial hasta cantidad pedida. Fiscalidad y devolución a proveedor pendientes | Borrador, aprobación explícita, parcial/recibida y cancelación antes de recibir; sin impuestos/descuentos |
 | Costos | ¿Moneda, escala, redondeo, tarifas, estimado vs real y acceso? | Decimal; sin inventar tarifas ni exponer importes a otros roles |
 | Mantenimiento | ¿Intervalos, tolerancias, checklists y responsables? | Parámetros configurables sin umbrales ficticios |
 | Seguridad | ¿Duración de sesión, bloqueo, retención, evidencias, responsables de respaldo? | Denegación por defecto; límites documentados y por validar |
@@ -35,4 +35,12 @@ El usuario respondió: «administracion y logistica, si, el mecanico, no» a asi
 
 Administración/Logística crean y coordinan órdenes; el mecánico actualmente asignado puede iniciar, registrar espera y finalizar, quedando como responsable del cierre. Una orden agrupa varias fallas del mismo autobús; una falla pertenece como máximo a una orden. La espera no añade un estado nuevo a Falla.
 
-Antes de Fase 4: confirmar almacenes, reserva vs descuento, valoración de inventario, moneda/redondeo, costos laborales, estados/aprobaciones de compras y recepciones. La Fase 3 solo registra tiempo y piezas descriptivas exactas; no inventa importes, impuestos, stock ni autorizaciones financieras.
+Las reglas de inventario y aprobación de Fase 4 se resolvieron posteriormente; tarifas laborales y fiscalidad siguen pendientes. La Fase 3 solo registra tiempo y piezas descriptivas exactas; no inventa importes, impuestos, stock ni autorizaciones financieras.
+
+## Decisiones recibidas para Fase 4 — 20 de octubre de 2026
+
+El usuario confirmó un almacén, operación por Logística y moneda MXN con costo promedio ponderado. Aclaró expresamente: «Descontar al entregar; sin negativos» y «Aprueba Logística, incluso compras propias». No se implementan reservas ni descuento automático al finalizar reparaciones.
+
+La precisión técnica es de 3 decimales para cantidades y 6 para costo/valor, con redondeo HALF_UP. Una salida total absorbe el residuo de valoración. Las devoluciones de piezas no usadas restituyen la valoración original de su entrega, con límite acumulado. Las compras se reciben hasta lo pendiente, sin excedentes; pueden cancelarse antes de recibir. Estos son controles conservadores de implementación, no reglas fiscales aprobadas.
+
+Pendiente para fases posteriores: tarifas de mano de obra, impuestos/descuentos, pagos, devolución a proveedor, importación de históricos y permisos financieros de Contabilidad/Administración. Las piezas descriptivas anteriores no se convierten automáticamente en stock ni en costos.

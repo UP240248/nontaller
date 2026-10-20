@@ -62,7 +62,7 @@ FK restrictivas para unidades, usuarios, piezas, órdenes y documentos con histo
 
 Falla mantiene **Pendiente → En_proceso → Finalizada**. Propuesta: espera de refacciones como condición de la orden, con eventos de inicio/fin; no añadir un cuarto estado de falla sin aprobación. Finalizar exige trabajo, observaciones, fecha, responsable y declaración explícita de piezas/mano de obra aplicables. No habilita automáticamente la unidad mientras falte política de fallas bloqueantes.
 
-Fuente de costos: consumo real proviene de movimientos de salida vinculados; mano de obra de registros aprobados. Compra/recepción es adquisición, no un segundo gasto por autobús. Estimaciones separadas. No sumar compra y consumo como costo operativo duplicado. Reserva frente a descuento, método de valoración y redondeo pendientes.
+Fuente de costos: consumo real proviene de movimientos de salida vinculados; mano de obra de registros aprobados. Compra/recepción es adquisición, no un segundo gasto por autobús. Estimaciones separadas. No sumar compra y consumo como costo operativo duplicado. La implementación de Fase 4 resuelve descuento al entregar y promedio ponderado MXN, según la sección posterior.
 
 Stock se deriva de movimientos o saldo materializado validado dentro de la misma transacción; impedir negativos mediante bloqueo/actualización condicional y comprobar filas afectadas. Recepción y consumo tienen claves de idempotencia únicas; reintentar no duplica efectos. Pruebas de concurrencia requeridas antes de considerar listo el módulo.
 
@@ -88,4 +88,14 @@ Prioridad es nullable hasta evaluación mecánica. EstadoFalla solo PENDIENTE/EN
 
 CHECKs SQL validan versiones positivas, texto/fecha de evaluación cuando hay prioridad, tamaño de evidencia, coherencia de minutos con labor declarada y cantidades positivas. La autoría de evaluación se valida en servicio y FK; MySQL no admite su columna con acción referencial CASCADE dentro del CHECK. No hay borrados físicos ni reaperturas implementados.
 
-No existe aún catálogo/movimiento real de refacciones ni fuente de costos monetarios en este cierre. RefaccionDescriptiva es un registro de uso declarado; no debe descontarse nuevamente como si ya hubiera generado movimiento. Preparar mapeo explícito al implementar inventario.
+En la entrega original de Fase 3 no existía catálogo/movimiento real de refacciones. RefaccionDescriptiva sigue siendo registro de uso declarado; Fase 4 añade ledger separado y no la transforma automáticamente en movimientos ni costos.
+
+## Implementado en Fase 4
+
+La migración aditiva `20261020120000_inventory_catalog` añade Refaccion, Proveedor, SaldoInventario, MovimientoInventario, Compra, LineaCompra, RegistroCompra, OperacionInventario e InventoryLock. No cambia ni valoriza automáticamente RefaccionDescriptiva. AuditEvent incorpora FK restrictivas opcionales de pieza/proveedor. El costo neto de una orden procede exclusivamente del valor de ENTREGAS menos DEVOLUCIONES relacionadas.
+
+Refaccion 0:1 saldo materializado por almacén único, 1:N movimientos y líneas de compra. Proveedor 1:N compras; compra 1:N líneas y registros privados. Una línea por pieza/compra evita duplicados ambiguos. Línea 1:N movimientos de recepción; recibida se actualiza con el movimiento dentro de la misma transacción. Compra tiene versión y aprobador/fecha; RegistroCompra conserva acción, motivo privado, actor y UTC. Movimientos guardan actor, descripción/unidad, valor/costo histórico, saldo posterior y vínculos opcionales a orden, recepción u origen de devolución.
+
+Saldo usa Decimal(15,3) y valor Decimal(30,6); costo unitario de compra Decimal(18,6), cantidades de línea Decimal(12,3). No usar punto flotante para dinero. CHECKs exigen mínimo/saldo no negativos, saldo sin valor residual cuando cantidad es cero, versiones positivas, recibido entre cero y pedido, cantidades y signos coherentes en el ledger. FK restrictivas conservan trazabilidad. La inmovilidad del ledger se impone mediante la API (sin edición/borrado), no mediante privilegios de solo inserción del usuario SQL de desarrollo.
+
+Un bloqueo de almacén protege cambios de catálogo, saldo, compras e idempotencia; operaciones financieras READ COMMITTED. Las entregas coordinan bloqueo de autobús/orden con su finalización. No hay reservas, multi-almacén, impuestos, pagos, costos laborales o migración de históricos implementados. Las descripciones de cierre siguen siendo evidencia del trabajo, separada de la fuente contable de inventario.

@@ -42,3 +42,14 @@
 - Pruebas de API, archivos, roles, concurrencia y recorrido real de navegador; resultados finales en validacion-fase-3.
 
 - Validación final conjunta: 63 pruebas pasadas, lint/typecheck/build correctos; start_skill actualizado en borrador cloud, sin publicación.
+
+## 2026-10-20 — Fase 4: inventario y compras
+
+- Reglas confirmadas: almacén único, descuento al entregar sin negativos, Logística opera y aprueba incluso compras propias, MXN y promedio ponderado.
+- Catálogos de refacciones/proveedores con validación, control de versión, activación e historia; unidad fija después del uso.
+- Entradas, entregas a órdenes, devoluciones con costo original y ajustes; ledger/saldo transaccionales y claves idempotentes.
+- Compras multipieza, aprobación explícita, recepción parcial/completa atómica y cancelación antes de recibir; historia privada.
+- Costos exactos con Decimal; cantidades/costos transportados como cadenas. Cierre de reparación sin doble descuento ni doble costo por compra.
+- Pantallas Angular, disponibilidad sin costos para Administración/Mecánico y operaciones/costos solo para Logística.
+- Pruebas API/MySQL, concurrencia, reintentos, devoluciones/redondeo y recorridos E2E con accesibilidad automatizada y móvil. Sin nuevas dependencias.
+- Sin fiscalidad, pagos, reservas, tarifas laborales, devolución a proveedor ni permisos financieros de Contabilidad.

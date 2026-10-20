@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { fleetAccess, fleetManager } from './core/fleet';
 import { incidentAccess, reportAccess } from './core/workflow';
+import { partsAccess, logisticsAccess } from './core/inventory';
 import { administrator, signedIn } from './core/session';
 export const routes: Routes = [
  {path:'login',loadComponent:()=>import('./features/login.component').then(m=>m.LoginComponent)},
@@ -16,6 +17,9 @@ export const routes: Routes = [
   {path:'ordenes',canActivate:[fleetAccess],loadComponent:()=>import('./features/work-orders/order-list.component').then(m=>m.OrderListComponent)},
   {path:'ordenes/nueva',canActivate:[fleetManager],loadComponent:()=>import('./features/work-orders/order-create.component').then(m=>m.OrderCreateComponent)},
   {path:'ordenes/:id',canActivate:[fleetAccess],loadComponent:()=>import('./features/work-orders/order-detail.component').then(m=>m.OrderDetailComponent)},
+  {path:'inventario',canActivate:[partsAccess],loadComponent:()=>import('./features/inventory/stock.component').then(m=>m.StockComponent)},
+  {path:'refacciones',canActivate:[partsAccess],data:{kind:'parts'},loadComponent:()=>import('./features/inventory/catalog.component').then(m=>m.CatalogComponent)},
+  {path:'proveedores',canActivate:[logisticsAccess],data:{kind:'suppliers'},loadComponent:()=>import('./features/inventory/catalog.component').then(m=>m.CatalogComponent)},
   {path:'usuarios',canActivate:[administrator],loadComponent:()=>import('./features/users.component').then(m=>m.UsersComponent)},
   {path:'auditoria',canActivate:[administrator],loadComponent:()=>import('./features/audit.component').then(m=>m.AuditComponent)}
  ]},

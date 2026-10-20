@@ -16,7 +16,7 @@ En Auditoría se registran accesos, cierres de sesión, altas, ediciones y revoc
 
 ## Otros roles
 
-En Fase 1 los cuatro roles no administrativos consultaban solo su perfil. Fase 2 amplía flota para Logística y Mecánico; En Fase 3 Operador también reporta fallas y consulta sus propios reportes; Contabilidad sigue solo con perfil. No tienen acceso a usuarios, auditoría, datos financieros ni módulos de flota todavía. Los módulos futuros se habilitarán cuando sus permisos y reglas se validen.
+En Fase 1 los cuatro roles no administrativos consultaban solo su perfil. Fase 2 amplía flota para Logística y Mecánico; En Fase 3 Operador también reporta fallas y consulta sus propios reportes; Contabilidad sigue solo con perfil. Solo Administración gestiona usuarios y auditoría. Logística y Mecánico acceden a flota según sus permisos; Fase 4 habilita costos/operación de inventario únicamente para Logística. Los demás módulos futuros requieren sus reglas.
 
 ## Autobuses y dashboard
 
@@ -47,3 +47,22 @@ El mecánico asignado abre la orden e inicia trabajo indicando diagnóstico y mo
 El mecánico asignado selecciona «Finalizar reparación» y registra trabajo, observaciones, si aplicó mano de obra y sus minutos, si utilizó refacciones y sus descripciones/cantidades/unidades, y motivo. No hay precios o stock en este formulario. Solo se confirma con datos coherentes. El servidor registra responsable y fecha UTC y finaliza orden y fallas vinculadas en una única operación.
 
 Una orden finalizada no puede reabrirse, reasignarse ni finalizarse de nuevo. No habilita automáticamente el autobús. Por decisión aprobada, las fallas abiertas tampoco impiden que un rol autorizado lo habilite manualmente. Si hay un conflicto de versión, recarga el detalle antes de reintentar; no se sobrescribe el trabajo de otra persona.
+
+## Inventario y compras — Logística
+
+En **Refacciones** registra el SKU, descripción, unidad, categoría opcional y mínimo. Las cantidades admiten hasta tres decimales con punto. En **Proveedores** registra código, nombre y contactos opcionales. Editar o activar/desactivar exige motivo y conserva historial. Una unidad de medida con movimientos o compras queda fija: registra otra pieza si necesitas otra unidad.
+
+En **Inventario** consulta existencias y alertas de mínimo. La búsqueda por SKU/descripción filtra existencias y actualiza las opciones de piezas activas en formularios. Para catálogos grandes usa una búsqueda específica; cada selección carga hasta 100 coincidencias, mientras las tablas tienen paginación de 20 registros. Administración y Mecánico consultan cantidades sin importes; solo Logística ve valoración y operaciones.
+
+- **Entrada directa:** indica pieza, cantidad positiva, costo unitario en MXN y comprobante/motivo. Úsala para ingresos que no provengan de una compra registrada, por ejemplo saldo inicial respaldado; no repitas una recepción como entrada directa.
+- **Entrega a orden:** busca la orden, selecciona pieza/cantidad e indica motivo. La existencia baja inmediatamente al entregar; si falta stock, la operación se rechaza completa. No se entregan piezas a órdenes finalizadas.
+- **Devolución:** en el historial localiza la entrega y pulsa «Devolver de esta entrega». Indica la cantidad no utilizada y motivo. Se repone su costo original, no el precio actual. No se puede devolver más de lo entregado sin devolver. Puede registrarse después del cierre y conserva su historia.
+- **Ajuste:** cantidad con signo y motivo del conteo. Los ajustes usan el promedio vigente y no pueden dejar stock negativo. Para incorporar piezas sin promedio previo registra una entrada con costo.
+
+Para comprar, elige proveedor activo, referencia y una o varias partidas de piezas distintas, con cantidades y costos unitarios MXN (hasta seis decimales). Guarda el borrador; este aún no altera existencias. Revisa el detalle, escribe motivo y pulsa **Aprobar compra**. Logística puede aprobar sus propias compras, según la regla autorizada.
+
+En la compra aprobada, escribe la cantidad que llega en cada partida; deja vacías las que no recibiste. Confirma con motivo/comprobante. La recepción es atómica: si una línea excede lo pendiente, ninguna se ingresa. La compra queda PARCIAL hasta completar todas las partidas, luego RECIBIDA. Solo se cancelan compras sin recepción; su historial conserva autor y motivo. No se calculan impuestos, descuentos ni pagos.
+
+Ante una respuesta de red incierta, reintenta el mismo formulario sin alterar los datos: conserva su clave para evitar duplicados. Antes de recargar o iniciar otro registro consulta el historial. Los errores de stock/estado o versión no registran movimientos parciales; vuelve a consultar los datos antes de corregirlos.
+
+En el detalle de la orden, **Entregas y devoluciones de almacén** muestra los movimientos. Solo Logística ve el costo neto de piezas; compras y cierre no lo suman de nuevo. Mecánico documenta el uso real en el cierre, sin volver a descontar stock. Las piezas descriptivas de órdenes antiguas no adquieren costos automáticamente. El costo mostrado es de refacciones entregadas menos devueltas; no incluye tarifas de mano de obra todavía.

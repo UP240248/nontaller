@@ -51,3 +51,13 @@ El entorno cloud ya está aislado: usar el checkout existente, sin crear worktre
 `npm run test:integration` añade workflow.integration.test.mjs; prueba API/MySQL, archivos, autorizaciones y concurrencia. `tests/e2e/workflow.spec.mjs` recorre los tres perfiles y el ciclo con fotos y cantidades reales de prueba, sin mocks. Su grupo serial representa el flujo completo y posterior verificación de alcance.
 
 Evidencias de desarrollo en `.local/evidence`, de pruebas en `.local/evidence-test`; EVIDENCE_DIR permite una carpeta privada alternativa. Guardar archivos con permisos restringidos. No moverlos a frontend/public ni versionarlos. Un proceso puede reiniciarse conservando sus archivos; no asumir que un respaldo de BD incluye esos binarios.
+
+## Desarrollo de Fase 4
+
+Módulo `inventory` y migración aditiva `20261020120000_inventory_catalog`, sin nuevas dependencias. `npm run setup` aplica las cinco migraciones conservando las bases existentes. Cantidades y dinero atraviesan API/Angular como cadenas; Prisma.Decimal usa precisión 50 y HALF_UP a seis decimales para valoración. No convertir importes a Number/parseFloat ni calcular costos en el navegador.
+
+`InventoryLock` tiene fila fija 1 insertada por migración. Todas las mutaciones de almacén, compras y catálogos toman ese bloqueo; se serializan inicialmente para un único almacén. Operaciones financieras usan READ COMMITTED y, cuando afectan una orden, también bloquean autobús → orden para coordinarse con su cierre. No introducir el orden inverso ni tomar InventoryLock desde el cierre existente. El cierre no descuenta stock. El esquema no pretende acreditar rendimiento de alto volumen; medir antes de cambiar la estrategia.
+
+`OperacionInventario` conserva hash SHA-256 canónico de ruta/actor/DTO y respuesta completada en la misma transacción que saldos y ledger. Los intentos fallidos no consumen la clave. Una clave reutilizada con otros datos recibe 409. `MovimientoInventario` es inmutable por API y captura cantidad/valor firmados, costo, descripción/unidad y saldo posterior. Las devoluciones siguen la proporción acumulada del valor original para no crear centavos por redondeos sucesivos; la devolución final recupera exactamente el resto.
+
+`npm run test:integration` incluye `inventory.integration.test.mjs`; `tests/e2e/inventory.spec.mjs` recorre catálogos, compra/aprobación/recepción parcial, entrega, devolución, cierre sin doble descuento y acceso por rol. Ambas suites usan la misma base aislada y deben ejecutarse secuencialmente. Los fixtures eliminan devoluciones antes de entregas, ledger/saldos, registros/partidas/compras y claves antes de piezas, proveedores, órdenes y usuarios. No borrar filas de InventoryLock.

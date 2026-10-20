@@ -2,9 +2,9 @@
 
 Sistema interno de la flota propia y el taller de Terrabus. Implementación nueva autorizada por el usuario, independiente del proyecto anterior.
 
-## Fases 1–3: fundamentos, flota y atención de fallas
+## Fases 1–4: flota, taller e inventario
 
-Angular standalone + NestJS modular + Prisma + MySQL. Incluye acceso real, perfil, sesiones revocables y gestión de usuarios/auditoría exclusiva de Administración. Administración y Logística gestionan autobuses; ambos y Mecánico consultan flota/historial y cambian estado operativo. Operador reporta fallas y consulta únicamente sus reportes; Contabilidad conserva solo perfil propio. Incluye dashboard con indicadores de MySQL, filtros, paginación y edición con control de versión. Incluye reporte/evaluación de fallas, fotos privadas, órdenes agrupadas, asignación, espera de piezas y finalización por mecánico asignado. Inventario, compras y valoración económica siguen pendientes.
+Angular standalone + NestJS modular + Prisma + MySQL. Incluye acceso real, perfil, sesiones revocables y gestión de usuarios/auditoría exclusiva de Administración. Administración y Logística gestionan autobuses; ambos y Mecánico consultan flota/historial y cambian estado operativo. Operador reporta fallas y consulta únicamente sus reportes; Contabilidad conserva solo perfil propio. Incluye dashboard con indicadores de MySQL, filtros, paginación y edición con control de versión. Incluye reporte/evaluación de fallas, fotos privadas, órdenes agrupadas, asignación, espera de piezas y finalización por mecánico asignado. Logística gestiona refacciones/proveedores, entradas, entregas a órdenes, devoluciones, ajustes y compras con aprobación propia y recepción parcial. Un almacén, descuento al entregar sin negativos y costo promedio ponderado en MXN; los demás roles operativos autorizados ven existencias sin importes.
 
 ## Inicio local
 
@@ -25,7 +25,7 @@ Configuración privada generada en `.local/`; `.env.example` solo documenta vari
 npm run check
 ```
 
-El check ejecuta lint, TypeScript, builds, unitarias, integración MySQL y E2E reales. Las pruebas usan exclusivamente `tallerbus_test` local y eliminan sus fixtures; no ejecutarlas en paralelo ni apuntarlas a otra base. No modifican datos de desarrollo. Consulte los resultados de [Fase 1](docs/validacion-fase-1.md), [Fase 2](docs/validacion-fase-2.md) y [Fase 3](docs/validacion-fase-3.md).
+El check ejecuta lint, TypeScript, builds, unitarias, integración MySQL y E2E reales. Las pruebas usan exclusivamente `tallerbus_test` local y eliminan sus fixtures; no ejecutarlas en paralelo ni apuntarlas a otra base. No modifican datos de desarrollo. Consulte los resultados de [Fase 1](docs/validacion-fase-1.md), [Fase 2](docs/validacion-fase-2.md), [Fase 3](docs/validacion-fase-3.md) y [Fase 4](docs/validacion-fase-4.md).
 
 ## Documentación
 
@@ -40,4 +40,4 @@ El anterior `UP240248/taller-autobuses` no se pudo leer (HTTP 403); el ZIP aport
 
 ## Estado Git
 
-Las Fases 1 y 2 fueron guardadas por petición del usuario en el commit local `da104eb` de la rama `work`. No se hizo push. La Fase 3 se guarda en un commit separado sobre ese punto. La rama de entrega en GitHub es `tallerbus/fases-1-3`; los informes de validación conservan el estado de cada entrega antes de su publicación posterior.
+Las Fases 1–3 fueron publicadas e integradas en `main` mediante `639bcb5`. La Fase 4 se desarrolla en la rama local `tallerbus/fase-4`; su existencia local no equivale a publicación en GitHub. Los informes anteriores conservan los resultados y el estado Git en el momento de cada entrega.

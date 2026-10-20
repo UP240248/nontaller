@@ -1,5 +1,7 @@
 import { Component, input } from '@angular/core';
 const paths = {
+ parts:'M3 7 12 2l9 5v10l-9 5-9-5z M3 7l9 5 9-5 M12 12v10 M7 4.8l10 5.6',
+ supplier:'M3 21V7l9-4v18 M12 10h9v11 M6 10h2 M6 14h2 M6 18h2 M16 13h2 M16 17h2 M1 21h22',
  incident:'M12 3 2 21h20z M12 9v5 M12 17h.01',
  tools:'M14 6a4 4 0 0 0-5 5L3 17v4h4l6-6a4 4 0 0 0 5-5l-3 2-3-3 2-3z',
  bus:'M4 17h16V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2z M4 10h16 M8 3v7 M16 3v7 M6 17v4 M18 17v4 M7 14h1 M16 14h1',
