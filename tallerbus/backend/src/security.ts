@@ -5,7 +5,8 @@ export const hashToken = (token: string): string => createHash('sha256').update(
 export const csrfToken = (token: string): string => hashToken(`csrf:${token}`);
 export const newToken = (): string => randomBytes(32).toString('hex');
 export function equalToken(a: string, b: string): boolean {
-  return a.length === b.length && timingSafeEqual(Buffer.from(a), Buffer.from(b));
+  const left=Buffer.from(a),right=Buffer.from(b);
+  return left.length === right.length && timingSafeEqual(left,right);
 }
 export function hashPassword(password: string): Promise<string> {
   return argon2.hash(password, { type: argon2.argon2id, memoryCost: 65536, timeCost: 3, parallelism: 1 });

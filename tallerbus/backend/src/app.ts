@@ -27,7 +27,8 @@ class Errors implements ExceptionFilter {
     if (error instanceof HttpException) {
       status = error.getStatus(); const body = error.getResponse();
       message = typeof body === 'object' && body !== null && 'message' in body ? (body as {message:string|string[]}).message : error.message;
-    } else if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {status=409;message='Ya existe un registro con ese identificador';}
+    } else if (typeof error==='object'&&error!==null&&'type' in error&&'status' in error&&error.type==='entity.too.large'&&error.status===413) {status=413;message='El cuerpo de la solicitud supera el límite permitido';}
+    else if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {status=409;message='Ya existe un registro con ese identificador';}
     else if (error instanceof Prisma.PrismaClientKnownRequestError && ['P2034','P2025'].includes(error.code)) {status=409;message='Conflicto de actualización; vuelve a intentar';}
     res.status(status).json({statusCode:status,message,requestId:res.getHeader('X-Request-Id')});
   }

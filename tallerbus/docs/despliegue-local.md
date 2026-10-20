@@ -19,6 +19,7 @@ Para detener aplicaciones usar Ctrl+C; para detener únicamente MySQL local, `do
 
 | Variable | Uso / valor local |
 |---|---|
+| DATABASE_PUBLIC_KEY_FILE | Clave pública RSA local fijada desde el contenedor; db:local añade la variable si falta; no es TLS remoto |
 | DATABASE_URL | Conexión privada MySQL; nunca versionar valor real |
 | PORT | 3000 desarrollo, 3101 pruebas |
 | FRONTEND_ORIGIN | Origen exacto, sin ruta ni slash final |
@@ -29,3 +30,8 @@ Para detener aplicaciones usar Ctrl+C; para detener únicamente MySQL local, `do
 | NODE_ENV | development, test o production |
 
 Duración y límites son valores técnicos iniciales configurables, no SLAs ni políticas comerciales aprobadas. Límite de acceso en memoria para una sola instancia; reinicia con el proceso. Producción exige revisar política, HTTPS, reverse proxy de confianza, despliegue de estáticos, TLS de BD remota, permisos MySQL mínimos, restauración y observabilidad. No se declara preparación productiva ni se impone proveedor cloud. La API se enlaza a loopback para uso local; una exposición futura requiere revisión explícita.
+
+
+## Respaldo y revisión operativa
+
+Ver [Respaldos y restauración local](respaldos.md) y [Guía de operación](operacion.md). Los helpers incorporados solo trabajan con Docker/MySQL local y verifican en una base temporal nueva; no reemplazan desarrollo ni producción. Conservar el origen y una copia externa cifrada conforme a política definida por Terrabus. La compatibilidad Windows sigue sin comprobarse: permisos de archivos deben sustituirse por ACL adecuadas allí.

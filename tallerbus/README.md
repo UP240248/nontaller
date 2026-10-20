@@ -2,7 +2,7 @@
 
 Sistema interno de la flota propia y el taller de Terrabus. Implementación nueva autorizada por el usuario, independiente del proyecto anterior.
 
-## Fases 1–6: operación, mantenimiento y reportes
+## Fases 1–6 y consolidación local de Fase 7
 
 Angular standalone + NestJS modular + Prisma + MySQL. Incluye acceso real, perfil, sesiones revocables y gestión de usuarios/auditoría exclusiva de Administración. Administración y Logística gestionan autobuses; ambos y Mecánico consultan flota/historial y cambian estado operativo. Operador reporta fallas y consulta únicamente sus reportes; Contabilidad consulta y exporta reportes financieros autorizados, sin operaciones de escritura. Incluye dashboard con indicadores de MySQL, filtros, paginación y edición con control de versión. Incluye reporte/evaluación de fallas, fotos privadas, órdenes agrupadas, asignación, espera de piezas y finalización por mecánico asignado. Logística gestiona refacciones/proveedores, entradas, entregas a órdenes, devoluciones, ajustes y compras con aprobación propia y recepción parcial. Un almacén, descuento al entregar sin negativos y costo promedio ponderado en MXN; los demás roles operativos autorizados ven existencias sin importes. Incluye mantenimiento preventivo por kilometraje: Logística configura planes e intervalos por unidad y asigna mecánicos; checklist histórico, órdenes y cierre sin doble consumo. No se precargan servicios o intervalos supuestos. Reportes de flota, fallas, órdenes, preventivos, compras, valoración y costos netos por autobús, con filtros y CSV seguro. Importes solo para Logística/Contabilidad; reportes propios de Operador y órdenes asignadas de Mecánico.
 
@@ -25,7 +25,7 @@ Configuración privada generada en `.local/`; `.env.example` solo documenta vari
 npm run check
 ```
 
-El check ejecuta lint, TypeScript, builds, unitarias, integración MySQL y E2E reales. Las pruebas usan exclusivamente `tallerbus_test` local y eliminan sus fixtures; no ejecutarlas en paralelo ni apuntarlas a otra base. No modifican datos de desarrollo. Consulte los resultados de [Fase 1](docs/validacion-fase-1.md), [Fase 2](docs/validacion-fase-2.md), [Fase 3](docs/validacion-fase-3.md), [Fase 4](docs/validacion-fase-4.md), [Fase 5](docs/validacion-fase-5.md) y [Fase 6](docs/validacion-fase-6.md).
+El check ejecuta lint, TypeScript, builds, unitarias, integración MySQL y E2E reales. Las pruebas usan exclusivamente `tallerbus_test` local y eliminan sus fixtures; no ejecutarlas en paralelo ni apuntarlas a otra base. No modifican datos de desarrollo. Consulte los resultados de [Fase 1](docs/validacion-fase-1.md), [Fase 2](docs/validacion-fase-2.md), [Fase 3](docs/validacion-fase-3.md), [Fase 4](docs/validacion-fase-4.md), [Fase 5](docs/validacion-fase-5.md), [Fase 6](docs/validacion-fase-6.md) y [revisión local de Fase 7](docs/validacion-fase-7.md).
 
 ## Documentación
 
@@ -34,12 +34,18 @@ El check ejecuta lint, TypeScript, builds, unitarias, integración MySQL y E2E r
 - [Arquitectura](docs/arquitectura.md) · [Modelo de datos](docs/modelo-datos.md)
 - [Decisiones pendientes](docs/decisiones-pendientes.md) · [Fases](docs/plan-fases.md)
 - [Auditoría anterior](docs/auditoria-repositorio-anterior.md) · [Reutilización](docs/plan-migracion.md)
-- [Respaldos](docs/respaldos.md) · [Cambios](CHANGELOG.md)
+- [Operación](docs/operacion.md) · [Respaldos](docs/respaldos.md) · [Cambios](CHANGELOG.md)
 
 El anterior `UP240248/taller-autobuses` no se pudo leer (HTTP 403); el ZIP aportado excede el límite de transferencia de 32 MiB. No se reutilizó código no inspeccionado, no se migraron datos y no se hicieron cambios en el anterior.
 
 ## Estado Git
 
-La entrega incluye las Fases 1–6. Fundamentos/flota/fallas se integraron mediante `639bcb5`; inventario/compras están en `211fc10` y preventivo por kilometraje en `b3c50c1`. Las ramas `tallerbus/fase-4` y `tallerbus/fase-5` conservan los puntos de entrega. Los informes de validación documentan los resultados y el estado local al finalizar cada fase, antes de su integración posterior.
+La entrega incluye las Fases 1–6 y mejoras locales de consolidación de Fase 7. Fundamentos/flota/fallas se integraron mediante `639bcb5`; inventario/compras están en `211fc10` y preventivo por kilometraje en `b3c50c1`. Las ramas `tallerbus/fase-4` y `tallerbus/fase-5` conservan los puntos de entrega. Los informes de validación documentan los resultados y el estado local al finalizar cada fase, antes de su integración posterior.
 
-Las Fases 1–5 se integraron en main mediante `c507a16`; la rama de entrega de Fase 6 es `tallerbus/fase-6`. La validación completa de Fase 6 pasó 127 pruebas. Consulta las referencias remotas para confirmar la publicación de cada versión. Publicar código en GitHub no equivale a desplegar la aplicación ni a publicar el entorno cloud.
+Las Fases 1–5 se integraron en main mediante `c507a16`; la rama de entrega de Fase 6 es `tallerbus/fase-6`. La validación completa de Fase 6 pasó 127 pruebas. La rama de consolidación `tallerbus/fase-7` registra 146 pruebas aprobadas y el ensayo de recuperación local. Consulta las referencias remotas para confirmar la publicación de cada versión. Publicar código en GitHub no equivale a desplegar la aplicación ni a publicar el entorno cloud.
+
+## Consolidación y recuperación local
+
+`npm run backup:local -- --offline` crea copia privada de MySQL/fotos con la API detenida; `npm run backup:verify -- RUTA` demuestra restauración en base/carpeta temporal, concilia filas/relaciones/costos y revoca sesiones solo en copia. No sustituye datos existentes ni implementa respaldos externos automáticos. Ver [procedimiento y límites](docs/respaldos.md).
+
+La operación productiva, HTTPS/proxy/BD remota, almacenamiento externo, RPO/RTO y aceptación con usuarios deben validarse en el servidor definitivo. La Fase 7 local no acredita esos puntos ni certificación completa de accesibilidad/rendimiento.

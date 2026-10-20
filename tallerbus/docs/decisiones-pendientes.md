@@ -60,3 +60,9 @@ El usuario confirmó «Logística y Contabilidad» a lectura/exportación de com
 Fechas de reportes operativos: registro de falla/orden; compras: creación de compra y estado actual, con recepción acumulada de esas compras; costos: fecha de los movimientos de entrega/devolución. Inventario/flota/preventivos son consultas actuales, sin reconstrucción histórica por fecha. Los costos excluyen adquisiciones y tarifas laborales inexistentes. Un período de solo devoluciones puede dar neto negativo.
 
 CSV exporta todo el conjunto filtrado hasta 10000 filas; encima exige reducir filtros, nunca trunca silenciosamente. Este límite es técnico. Check-in/out, relación operador-unidad, reportes fiscales/pagos y tarifas laborales siguen pendientes; no se incluyen por suposición.
+
+## Decisión recibida para Fase 7 — 20 de octubre de 2026
+
+Capacidad inicial confirmada por el usuario: hasta **50 autobuses y 10 usuarios simultáneos**. El escenario local ejecutado coincide con esa escala; sus resultados están en [validación de Fase 7](validacion-fase-7.md). No constituye SLA ni validación del servidor definitivo.
+
+Siguen pendientes servidor/proveedor, HTTPS y proxy, TLS y usuarios mínimos de BD remota, respaldo externo cifrado, frecuencia/retención, RPO/RTO y responsable, aceptación con usuarios y tecnologías de asistencia. No se fijan políticas comerciales sin confirmación.

@@ -1,4 +1,5 @@
-import { randomBytes } from 'node:crypto';
+import { parseEnv } from 'node:util';
+import { createPublicKey, randomBytes } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -27,6 +28,10 @@ for(let n=0;n<60;n++){
  if(p.status===0){ready=true;break;}await new Promise(resolve=>setTimeout(resolve,1000));
 }
 if(!ready)throw new Error('MySQL no respondió en 60 segundos');
+// Clave pública desde el contenedor local identificado; no descargar claves por la red.
+const publicKey=docker(['exec',container,'cat','/var/lib/mysql/public_key.pem']);
+if(createPublicKey(publicKey).asymmetricKeyType!=='rsa')throw new Error('Clave pública MySQL inesperada');
+await writeFile(path.join(dir,'mysql-public-key.pem'),publicKey,{mode:0o600});
 const sql=`CREATE DATABASE IF NOT EXISTS tallerbus CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE DATABASE IF NOT EXISTS tallerbus_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER IF NOT EXISTS 'tallerbus'@'%' IDENTIFIED BY '${state.dev}';
@@ -40,5 +45,6 @@ for(const mode of ['dev','test']){
  // No sobrescribir configuración local existente.
  const content=`DATABASE_URL=mysql://${isTest?'tallerbus_test':'tallerbus'}:${state[mode]}@127.0.0.1:3307/${isTest?'tallerbus_test':'tallerbus'}\nPORT=${isTest?3101:3000}\nFRONTEND_ORIGIN=http://localhost:${isTest?4201:4200}\nCOOKIE_SECURE=false\nSESSION_HOURS=8\nLOGIN_LIMIT=${isTest?100:10}\nLOGIN_WINDOW_SECONDS=60\nNODE_ENV=${isTest?'test':'development'}\n`;
  try{await writeFile(file,content,{mode:0o600,flag:'wx'});}catch(e){if(e.code!=='EEXIST')throw e;}
+ const saved=await readFile(file,'utf8');if(!parseEnv(saved).DATABASE_PUBLIC_KEY_FILE)await writeFile(file,saved+(saved.endsWith('\n')?'':'\n')+'DATABASE_PUBLIC_KEY_FILE=.local/mysql-public-key.pem\n',{mode:0o600});
 }
 console.log('MySQL local disponible. Configuración privada en .local/. No se creó ningún usuario de aplicación.');

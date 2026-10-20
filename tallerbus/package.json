@@ -25,7 +25,10 @@
     "dev": "concurrently -k \"npm:dev:api\" \"npm:dev:web\"",
     "check": "npm run lint && npm run typecheck && npm run build && npm run test:unit && npm run test:integration && npm run test:e2e",
     "seed:dev": "node --env-file=.local/backend.env scripts/seed-dev.mjs",
-    "setup": "node scripts/setup.mjs"
+    "setup": "node scripts/setup.mjs",
+    "backup:local": "node --env-file=.local/backend.env scripts/backup-local.mjs",
+    "backup:verify": "node --env-file=.local/backend.env scripts/verify-backup.mjs",
+    "test:load": "node --env-file=.local/test.env scripts/benchmark-local.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",
@@ -40,5 +43,9 @@
     "prisma": "7.10.1",
     "typescript": "5.9.3",
     "typescript-eslint": "8.71.2"
+  },
+  "overrides": {
+    "vite": "7.3.7",
+    "@modelcontextprotocol/sdk": "1.32.0"
   }
 }

@@ -81,3 +81,11 @@ Las consultas de filas/conteo/agregados usan transacción REPEATABLE READ. Finan
 CSV comparte filtros, ignora la paginación para filas y limita exportación a 10000 sin truncado. Solo serializa columnas definidas, neutraliza fórmulas en texto/controles iniciales y conserva decimales numéricos negativos validados. Reportes/CSV no-store, attachment para descarga. AuditEvent guarda metadatos de exportación; no contenido ni importes. No escribir ledger/saldos desde un reporte.
 
 Unitarias de CSV están en unit.test.mjs; integración en reports.integration.test.mjs cubre permisos/alcances, filtros, totales/precisión, exportación excesiva y revocación. E2E reports.spec.mjs verifica descargas reales, filtros aplicados, páginas y móvil/axe. Fixtures exclusivamente en tallerbus_test; el caso masivo de 10001 filas vive solo ahí. Integración/E2E secuenciales como en fases anteriores.
+
+## Fase 7: consolidación local
+
+Pruebas nuevas de seguridad, respaldo/restauración y accesibilidad por teclado/320 px. `test:integration` incorpora security.integration.test.mjs y backup.integration.test.mjs; Docker/MySQL del proyecto es requisito. El ensayo usa cuenta temporal limitada a una base nueva y copia privada de fotos; limpia únicamente sus recursos. Los scripts no sirven para importación de respaldos ajenos ni reemplazo productivo. Consultar operacion.md/respaldos.md antes de ejecutarlos.
+
+`test:load` usa fixtures de tallerbus_test y valida respuestas/totales con usuarios de los cinco roles, sin ejecutar escrituras de negocio durante la medición. No ejecutar junto con integración/E2E. `db:local` conserva credenciales existentes y fija la clave pública RSA para autenticar después de reinicios; no habilita allowPublicKeyRetrieval. Requests JSON mayores al límite de Express reciben 413 genérico y los tokens comparan longitud UTF-8 antes de timingSafeEqual.
+
+Se fijan únicamente dos overrides correctivos con el lockfile correspondiente. Ver operacion.md para el aviso observado de npm ls en workspaces, versiones instaladas y comprobaciones que sí pasaron. No cambiar hashes de artefactos o desactivar TLS para instalar.

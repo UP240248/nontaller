@@ -73,3 +73,13 @@
 - CSV completo filtrado hasta 10000 filas, sin truncado; escape de comillas/saltos, protección de fórmulas, UTF-8 y descarga auditada sin importes en auditoría.
 - Pantallas de consulta/exportación para los cinco roles, descargas reales y accesibilidad/móvil probadas. Sin nuevas dependencias o migraciones.
 - Sin check-in/out, permisos de escritura para Contabilidad, tarifas laborales, pagos/fiscalidad o reportes históricos de saldos.
+
+## 2026-10-20 — Fase 7: consolidación local
+
+- Autenticación MySQL local tras reinicio con clave RSA pública fijada del contenedor conocido; sin recuperación automática de claves de red.
+- Respuestas 413 para cuerpos excesivos y comparación segura de tokens Unicode.
+- Actualización transitiva de Vite/SDK mediante overrides y lockfile; auditoría completa sin vulnerabilidades conocidas al validar. Limitación de diagnóstico npm ls documentada.
+- Respaldo privado offline y restauración aislada con verificación de contenido, fotografías, relaciones, valoración y revocación de sesiones solo en copia.
+- Pruebas de seguridad, recuperación, teclado y pantalla de 320 px: suite completa de 146 pruebas aprobada.
+- Referencia local de carga acordada: 50 autobuses, 10 usuarios, 200 consultas sin errores; p95 65,05 ms.
+- Manuales operativos actualizados; despliegue, respaldo externo y aceptación productiva/manual pendientes.
