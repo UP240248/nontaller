@@ -40,4 +40,6 @@ El anterior `UP240248/taller-autobuses` no se pudo leer (HTTP 403); el ZIP aport
 
 ## Estado Git
 
-Las Fases 1–3 fueron publicadas e integradas en `main` mediante `639bcb5`. La Fase 4 está guardada localmente en `211fc10` (`tallerbus/fase-4`). La Fase 5 continúa sobre esa entrega en `tallerbus/fase-5`; las ramas locales no equivalen a publicación en GitHub. Los informes anteriores conservan los resultados y el estado Git en el momento de cada entrega.
+`main` incluye las Fases 1–5. Fundamentos/flota/fallas se integraron mediante `639bcb5`; inventario/compras están en `211fc10` y preventivo por kilometraje en `b3c50c1`. Las ramas `tallerbus/fase-4` y `tallerbus/fase-5` conservan los puntos de entrega. Los informes de validación documentan los resultados y el estado local al finalizar cada fase, antes de su integración posterior.
+
+La validación completa de Fase 5 pasó 105 pruebas. Publicar código en GitHub no equivale a desplegar la aplicación ni a publicar el entorno cloud.
