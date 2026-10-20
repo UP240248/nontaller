@@ -71,3 +71,13 @@ Las transacciones de programación, edición/activación de planes y checklist u
 Una clave activa única del plan impide dos ejecuciones abiertas; versión de plan evita duplicar programación por reintento. Snapshot y pasos se crean con la orden/asignaciones en la misma transacción. Checklist usa versión de orden, exige exactamente los IDs de esa ejecución y actor mecánico asignado. Cierre preventivo requiere kilometraje revisado igual al actual de flota; no concede a Mecánico edición del odómetro.
 
 `tests/maintenance.integration.test.mjs` cubre permisos, validación, vencimiento/filtros, concurrencia, snapshots, cierre y ledger sin duplicados. `tests/e2e/maintenance.spec.mjs` recorre programación y ejecución con Logística/Mecánico, incluidos móvil y axe. Los fixtures eliminan pasos/ejecuciones/planes antes de órdenes/unidades y usan exclusivamente tallerbus_test local. Nunca insertar intervalos demo en desarrollo mediante setup.
+
+## Desarrollo de Fase 6
+
+Módulo `reports`, sin migraciones ni nuevas dependencias. `npm run setup` conserva las seis migraciones. Todas las consultas de reporte comparten generación de JSON/CSV, autorización/alcance, validación de filtros y proyección explícita. El catálogo lo entrega el servidor; no hardcodear permisos financieros en el navegador. financialReportRoles limita importes a Logística/Contabilidad según aprobación recibida.
+
+Las consultas de filas/conteo/agregados usan transacción REPEATABLE READ. Finanzas usa Prisma.Decimal a precisión 50/HALF_UP; agregados grandes se resuelven en SQL parametrizado y la suma de pedidos redondea primero el total de cada documento. Costos se originan solo en entregas/devoluciones del ledger. No convertir dinero a Number ni mezclar cantidades de unidades diferentes. Los estados de las filas son actuales aunque se filtre fecha de registro/movimiento; no representar los reportes como reconstrucción histórica completa.
+
+CSV comparte filtros, ignora la paginación para filas y limita exportación a 10000 sin truncado. Solo serializa columnas definidas, neutraliza fórmulas en texto/controles iniciales y conserva decimales numéricos negativos validados. Reportes/CSV no-store, attachment para descarga. AuditEvent guarda metadatos de exportación; no contenido ni importes. No escribir ledger/saldos desde un reporte.
+
+Unitarias de CSV están en unit.test.mjs; integración en reports.integration.test.mjs cubre permisos/alcances, filtros, totales/precisión, exportación excesiva y revocación. E2E reports.spec.mjs verifica descargas reales, filtros aplicados, páginas y móvil/axe. Fixtures exclusivamente en tallerbus_test; el caso masivo de 10001 filas vive solo ahí. Integración/E2E secuenciales como en fases anteriores.

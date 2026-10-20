@@ -1,4 +1,4 @@
-# API REST — Fases 1–5
+# API REST — Fases 1–6
 
 Base `/api/v1`. OpenAPI generado por Nest/DTOs, disponible en desarrollo en `/api/docs` y `/api/docs-json`; deshabilitado en producción. No hay JWT ni tokens en localStorage.
 
@@ -20,7 +20,7 @@ Fechas UTC ISO 8601. Usuarios públicos: id, name, email, role, active, version.
 
 Errores: statusCode, message y requestId. 400 validación/campos desconocidos, 401 sesión inválida, 403 permiso/origen/CSRF, 404 recurso inexistente, 409 unicidad/versión/pérdida del último administrador, 429 intentos de acceso, 500 genérico sin detalles internos. Logs estructurados incluyen método, estado, duración y requestId; no cuerpos, cookies, URLs con consultas ni credenciales.
 
-Inventario y compras se describen en Fase 4. Todos los importes/cantidades decimales son cadenas; no enviar números JSON. Los reportes/exportaciones generales quedan para fases futuras.
+Inventario y compras se describen en Fase 4. Todos los importes/cantidades decimales son cadenas; no enviar números JSON. Los reportes y exportaciones de Fase 6 se describen al final.
 
 ## Autobuses (Fase 2)
 
@@ -121,3 +121,31 @@ Plan vencido = plan activo + unidad activa + kilometraje actual >= ultimoServici
 `GET /ordenes/:id` añade `preventivo: {id,planId}|null` y kilometraje actual en su proyección de autobús. Inicio, espera, asignación logística, piezas y cierre usan el flujo existente. Para una orden preventiva, `/ordenes/:id/finalizar` exige además `kilometrajePreventivo` entero igual al kilometraje actual revisado de flota y todos los pasos completos. La transacción cierra ejecución/orden, conserva lectura/UTC/responsable, libera la clave activa y actualiza ultimoServicioKm/version del plan. Si la lectura cambió o falta checklist:409 sin cierre parcial. No modifica odómetro ni estado de autobús y no registra otro consumo/costo.
 
 La edición de kilometraje en flota se serializa con programación/cierre y no puede retroceder por debajo de la mayor lectura de último servicio registrada en planes de esa unidad. No se permite corregir un cierre o reemplazar odómetro por este mecanismo. La reasignación de órdenes preventivas es solo de Logística; la política previa de órdenes correctivas se conserva.
+
+## Reportes y exportación — Fase 6
+
+| Método / recurso bajo /api/v1 | Contrato |
+|---|---|
+| GET /reportes/catalogo | Sesión activa; tipos/títulos/descripciones y flag financiero de los reportes permitidos al rol |
+| GET /reportes/:tipo | Columnas tipadas, data paginada, total, resumen de todo el conjunto filtrado, alcance, descripcion, generadoAt UTC, page/limit |
+| GET /reportes/:tipo/csv | Mismos permisos/filtros; exporta todas las filas filtradas, ignora paginación para filas. UTF-8 con BOM, comas, CRLF, comillas RFC 4180, attachment y no-store; X-Total-Count indica filas de datos |
+
+Tipos: flota, fallas, ordenes, preventivos, compras, inventario, costos. Desconocido:404. Compras/inventario/costos solo Logística/Contabilidad. Administración/Logística acceden a todos los operativos; Mecánico ve flota/preventivos, órdenes asignadas vigentes y fallas propias/asignadas; Operador solo fallas propias; Contabilidad solo los tres financieros. Rol insuficiente:403; sesión inválida:401.
+
+Todos aceptan search/page/limit (máximo 100 en JSON). Filtros específicos se combinan por intersección y se aplican antes de contar/paginar:
+
+| Tipo | Filtros adicionales | Totales / semántica |
+|---|---|---|
+| flota | autobusId, estado operativo, activo=true/false | unidades/activas/disponibles, situación actual |
+| fallas | autobusId, estado de falla, prioridad, mecanicoId vigente, desde/hasta | fallas/abiertas/finalizadas, fecha de registro |
+| ordenes | autobusId, estado de orden, mecanicoId vigente, desde/hasta | órdenes/finalizadas/minutos registrados, fecha de registro; sin tarifas |
+| preventivos | autobusId, activo, vencido=true/false | planes/vencidos, calculados con lectura actual y unidad/plan activos |
+| compras | proveedorId, estado de compra, desde/hasta | total pedido, pedido sin canceladas y valor recibido; fechas filtran creación de compra y recepción acumulada de esas compras |
+| inventario | refaccionId, activo | valor de existencias actual; incluye piezas sin saldo como cero, no suma cantidades de unidades de medida distintas |
+| costos | autobusId, estado de orden, refaccionId, desde/hasta | por autobús: entregado/devuelto/neto MXN; fecha del movimiento; solo ENTREGAS/DEVOLUCIONES de órdenes |
+
+Estados/rangos/filtros incompatibles o desconocidos:400. desde/hasta ISO 8601 inclusivos; frontend pide UTC explícito. Los importes/cantidades son cadenas decimales; valor a seis decimales HALF_UP. El total pedido se calcula por documento y después se suma, reconciliando el redondeo de cada fila; recepciones/consumos se reconcilian con el ledger, no con importes estimados. Puede haber costo neto negativo por devoluciones del período de entregas anteriores.
+
+Cada consulta usa una transacción REPEATABLE READ para que filas/conteo/totales correspondan al mismo snapshot. Una descarga es una nueva consulta y puede incluir cambios posteriores a lo mostrado. JSON sigue paginado; exportación de más de 10000 filas:400 con petición de reducir filtros, sin archivo parcial ni evento de éxito. No hay endpoints de exportación de escritura, xlsx/PDF, costos laborales estimados o reconstrucción de inventario histórico.
+
+CSV protege texto que empieza con =, +, -, @ tras blancos/controles mediante prefijo apóstrofo; escapa comillas, comas y saltos. Las columnas numéricas solo aceptan formato decimal/entero canónico, preservando negativos reales sin conversión a Number. Evento REPORT_EXPORT en AuditEvent incluye tipo/filas/alcance/actor, sin importes ni términos de búsqueda; consultas no modifican datos de negocio.

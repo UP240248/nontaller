@@ -15,6 +15,7 @@ import { AuditModule } from './audit/audit.module';
 import { FleetModule } from './fleet/fleet.module';
 import { IncidentsModule } from './incidents/incidents.module';
 import { WorkOrdersModule } from './work-orders/work-orders.module';
+import { ReportsModule } from './reports/reports.module';
 import { MaintenanceModule } from './maintenance/maintenance.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { settings } from './config';
@@ -31,7 +32,7 @@ class Errors implements ExceptionFilter {
     res.status(status).json({statusCode:status,message,requestId:res.getHeader('X-Request-Id')});
   }
 }
-@Module({imports:[DatabaseModule,AuthModule,UsersModule,AuditModule,FleetModule,IncidentsModule,WorkOrdersModule,InventoryModule,MaintenanceModule],controllers:[HealthController]})
+@Module({imports:[DatabaseModule,AuthModule,UsersModule,AuditModule,FleetModule,IncidentsModule,WorkOrdersModule,InventoryModule,MaintenanceModule,ReportsModule],controllers:[HealthController]})
 export class AppModule {}
 export async function createApp() {
   const config = settings();

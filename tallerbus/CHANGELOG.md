@@ -63,3 +63,13 @@
 - Registro de servicio y siguiente objetivo sin doble consumo/costo ni cambio automático de estado de unidad.
 - Lecturas de flota protegidas frente a retroceso anterior al servicio registrado; consultas operativas sin nuevos permisos financieros.
 - Pruebas API/MySQL, carreras, recorridos E2E, móvil/accesibilidad y documentación. Sin nuevas dependencias.
+
+## 2026-10-20 — Fase 6: vistas, reportes y CSV
+
+- Usuario confirma lectura/exportación financiera exclusivamente para Logística/Contabilidad; Administración permanece sin importes.
+- Siete reportes con filtros, paginación y resúmenes del conjunto completo; catálogo según rol y alcance propio/asignado.
+- Costos por autobús desde entregas menos devoluciones, sin sumar compras como segundo consumo; valoración actual de inventario y totales de pedido/recepción separados.
+- Cálculos exactos Decimal, redondeo de total por documento y snapshots consistentes de filas/conteo/agregados.
+- CSV completo filtrado hasta 10000 filas, sin truncado; escape de comillas/saltos, protección de fórmulas, UTF-8 y descarga auditada sin importes en auditoría.
+- Pantallas de consulta/exportación para los cinco roles, descargas reales y accesibilidad/móvil probadas. Sin nuevas dependencias o migraciones.
+- Sin check-in/out, permisos de escritura para Contabilidad, tarifas laborales, pagos/fiscalidad o reportes históricos de saldos.

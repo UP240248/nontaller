@@ -13,7 +13,7 @@ tallerbus/
   scripts/
 ```
 
-Fase 1 implementa core, shared, layout y features de Angular, módulos Nest auth/users/audit, Prisma, migraciones y scripts. Fase 2 añade módulo Nest fleet, vistas de autobuses y dashboard real. Fase 3 añade incidents y work-orders, evidencia privada y seguimiento. Inventario/compras/mantenimiento y reportes financieros siguen propuestos.
+Fase 1 implementa core, shared, layout y features de Angular, módulos Nest auth/users/audit, Prisma, migraciones y scripts. Fase 2 añade módulo Nest fleet, vistas de autobuses y dashboard real. Fase 3 añade incidents y work-orders, evidencia privada y seguimiento. Fase 4 implementa inventario/compras; Fase 5 preventivo por kilometraje con snapshots/checklist; Fase 6 incorpora reportes/exportaciones con alcance por rol e importes solo para Logística/Contabilidad.
 
 | Módulo | Responsabilidad | Dependencias |
 |---|---|---|

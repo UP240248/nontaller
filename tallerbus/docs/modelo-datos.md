@@ -107,3 +107,9 @@ Un bloqueo de almacén protege cambios de catálogo, saldo, compras e idempotenc
 `EjecucionPreventiva` pertenece a un plan y una orden única y copia nombre, intervalo, base y objetivo al programar. FK compuestas con autobusId impiden vincular plan/orden de unidades distintas. `activeKey` única nullable contiene ID del plan mientras está abierta y se libera al finalizar; CHECK impone coherencia de cierre, lectura y clave. `PasoPreventivo` conserva posición/texto histórico, estado y observaciones; no hay edición después del cierre por API. La orden mantiene sus asignaciones y responsable de finalización existentes.
 
 El cierre registra kilometrajeCierre/UTC, actualiza último servicio/version del plan y finaliza la orden en una transacción sin stock nuevo. Cambios posteriores de plantilla no alteran snapshots. El siguiente objetivo usa la lectura real de cierre y el intervalo vigente del plan. La auditoría genérica de plan incluye busId/ordenId cuando procede, actor, acción y motivo; no incluye importes. No hay borrado por API; ejecuciones tienen FK restrictivas hacia plan y orden.
+
+## Fase 6: proyecciones de reportes
+
+No añade tablas, columnas ni migraciones. Reportes usa Autobus/Falla/OrdenTrabajo/FinalizacionOrden/PlanPreventivo, compras/líneas y saldo/ledger existentes. Los totales se calculan sobre los mismos filtros y snapshot que las filas, antes de paginar. La fuente de costo por autobús sigue siendo movimiento ENTREGA/DEVOLUCION vinculado a orden; compras no se agregan como segundo consumo.
+
+La única escritura es AuditEvent REPORT_EXPORT con actor/tipo/filas/alcance, sin contenido de filas ni importes. Contabilidad obtiene acceso a proyecciones financieras limitadas, no nuevos permisos de escritura o relaciones de usuarios/operadores. No se crea una tabla de asignación operador-unidad ni check-in/out sin reglas aprobadas.

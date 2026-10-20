@@ -1,6 +1,6 @@
 # Matriz inicial de permisos
 
-**Permisos base de Fase 1 aprobados por el usuario el 17 de octubre de 2026 e implementados. Los permisos de flota de Fase 2 fueron aprobados posteriormente por el usuario; Las decisiones de asignación, agrupación y finalización de Fase 3 fueron confirmadas por el usuario; Fase 4 tiene reglas confirmadas el 20 de octubre de 2026; Fase 5 tiene aprobación de kilometraje y gestión por Logística; Fases 6–7 siguen como propuesta.** C = crear, R = leer, U = editar. No se propone borrado físico. «Propio» requiere filtro en consultas y comprobación al acceder por ID. «Asignado» exige relación vigente en servidor. Toda acción no concedida se deniega. Las columnas incluyen acciones especiales por separado.
+**Permisos base de Fase 1 aprobados por el usuario el 17 de octubre de 2026 e implementados. Los permisos de flota de Fase 2 fueron aprobados posteriormente por el usuario; Las decisiones de asignación, agrupación y finalización de Fase 3 fueron confirmadas por el usuario; Fase 4 tiene reglas confirmadas el 20 de octubre de 2026; Fase 5 tiene aprobación de kilometraje y gestión por Logística; Fase 6 confirma lectura/exportación financiera de Logística/Contabilidad; Fase 7 sigue pendiente.** C = crear, R = leer, U = editar. No se propone borrado físico. «Propio» requiere filtro en consultas y comprobación al acceder por ID. «Asignado» exige relación vigente en servidor. Toda acción no concedida se deniega. Las columnas incluyen acciones especiales por separado.
 
 | Entidad / acción | Administración | Logística | Mecánico | Operador | Contabilidad |
 |---|---|---|---|---|---|
@@ -10,11 +10,11 @@
 | Priorizar falla | R | R | Evaluar/actualizar antes de finalizar, con versión y motivo | No | No |
 | Asignar/aceptar orden | Crear y asignar (aprobado) | Crear y asignar (aprobado) | Iniciar asignada; sin asignación | No | No |
 | Trabajo y finalización | R, sin finalizar | R, sin finalizar | Iniciar/espera/finalizar solo asignado (aprobado) | R estado de sus fallas; sin órdenes internas | Sin acceso hasta aprobar costos |
-| Inventario | R catálogo y disponibilidad, sin importes | C/R/U catálogos; entradas, entregas, devoluciones y ajustes; R costos | R catálogo y disponibilidad, sin importes | No | No |
-| Proveedores/compras | No | C/R/U proveedores; crear/aprobar incluso propias, cancelar sin recepción y recibir compras | No | No | No |
+| Inventario | R catálogo y disponibilidad, sin importes | C/R/U catálogos; entradas, entregas, devoluciones y ajustes; R costos | R catálogo y disponibilidad, sin importes | No | R/exportar valoración solo en Reportes |
+| Proveedores/compras | No | C/R/U proveedores; crear/aprobar incluso propias, cancelar sin recepción y recibir compras | No | No | R/exportar resumen de compras en Reportes; sin contactos ni escritura |
 | Mantenimiento | R, sin configurar/asignar preventivos | C/R/U planes, activar/desactivar y crear/asignar órdenes preventivas | R; iniciar, checklist y finalizar solo asignado | No | No |
-| Costos/exportación financiera | Sin importes; R auditoría segura | R valuación, movimientos, compras y costo neto de refacciones por orden; sin exportación todavía | No importes | No | Sin acceso financiero aprobado todavía |
-| Reportes operativos | R | R | Asignados | Propios | Solo agregados autorizados |
+| Costos/exportación financiera | Sin importes; R auditoría segura | R/exportar compras, valoración y costos netos por autobús; conserva operaciones previas | No importes | No | R/exportar compras, valoración y costos netos por autobús |
+| Reportes operativos | R/exportar flota, fallas, órdenes y preventivos | R/exportar general | Flota/preventivos; órdenes asignadas; fallas propias/asignadas | R/exportar solo fallas propias | Solo reportes financieros aprobados |
 | Auditoría | R explícito | No por defecto | No | No | No por defecto |
 
 ## Acceso base de Fase 1 aprobado e implementado
@@ -53,3 +53,11 @@ El servidor verifica sesión/Origin/CSRF y revalida el actor activo de Logístic
 El usuario confirmó programación por kilometraje y que Logística cree planes y asigne mecánicos. No definió servicios ni intervalos, por lo que se capturan sin valores predeterminados. Administración y Mecánico consultan planes, ejecuciones e historial; solo Logística crea/edita/activa planes y programa/asigna preventivos. La autorización general de Administración para órdenes correctivas no permite reasignar órdenes preventivas.
 
 Solo el mecánico activo asignado registra el checklist de una orden en proceso y finaliza mediante el cierre existente. El servidor exige todas sus tareas completas y lectura de kilometraje de flota revisada. Mecánico no recibe permiso nuevo para editar el odómetro: Administración/Logística conservan la gestión de flota. Operador/Contabilidad no reciben acceso a mantenimiento. No hay permisos financieros nuevos.
+
+## Fase 6: reportes y exportación
+
+El usuario eligió expresamente «Logística y Contabilidad» para consultar/exportar compras, valoración de inventario y costos de refacciones por autobús. Administración no recibe importes. Contabilidad obtiene únicamente los tres reportes financieros: no accede a contactos de proveedores, ledger detallado, gestión de flota, órdenes completas ni escritura de inventario/compras.
+
+Todos los roles acceden al catálogo servidor de reportes permitidos. Administración/Logística consultan y exportan los cuatro operativos. Mecánico conserva flota/preventivos de consulta y obtiene órdenes con asignación vigente propia y fallas propias o de esas órdenes. Operador consulta/exporta exclusivamente fallas propias. IDs/filtros adicionales se intersectan con ese alcance; no permiten ampliarlo. JSON y CSV utilizan las mismas reglas, filtros y proyección.
+
+La exportación registra evento con actor/tipo/filas/alcance, sin importes, textos de búsqueda o contenido exportado en la auditoría administrativa. CSV y reportes usan no-store; sesión revocada invalida nuevas consultas/exportaciones. No se habilita check-in/out, asignación operador-unidad ni notificaciones externas.

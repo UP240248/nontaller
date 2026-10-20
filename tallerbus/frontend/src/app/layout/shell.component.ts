@@ -8,7 +8,7 @@ import { SessionService, roleLabels, errorMessage } from '../core/session';
 @Component({standalone:true,imports:[RouterLink,RouterLinkActive,RouterOutlet,IconComponent],template:`
 <a class="skip" href="#main">Saltar al contenido</a><div class="app-shell">
  <aside class="sidebar"><a class="brand" routerLink="/"><span class="brand-mark" aria-hidden="true">T</span><span>TALLERBUS<small>TERRABUS</small></span></a><p class="nav-label">ESPACIO DE TRABAJO</p>
- <nav aria-label="Navegación principal"><a routerLink="/" routerLinkActive="selected" [routerLinkActiveOptions]="{exact:true}"><app-icon name="grid" /> Mi espacio</a>
+ <nav aria-label="Navegación principal"><a routerLink="/reportes" routerLinkActive="selected"><app-icon name="audit" /> Reportes</a><a routerLink="/" routerLinkActive="selected" [routerLinkActiveOptions]="{exact:true}"><app-icon name="grid" /> Mi espacio</a>
  @if(canReadFleet(session.user()?.role)){<a routerLink="/autobuses" routerLinkActive="selected"><app-icon name="bus" /> Autobuses</a><a routerLink="/ordenes" routerLinkActive="selected"><app-icon name="tools" /> Órdenes de trabajo</a>}
  @if(canReadIncidents(session.user()?.role)){<a routerLink="/fallas" routerLinkActive="selected"><app-icon name="incident" /> {{session.user()?.role==='OPERADOR'?'Mis reportes':'Fallas'}}</a>}
  @if(canReadParts(session.user()?.role)){<a routerLink="/mantenimiento" routerLinkActive="selected"><app-icon name="tools" />Mantenimiento</a><a routerLink="/inventario" routerLinkActive="selected"><app-icon name="parts" />Inventario</a><a routerLink="/refacciones" routerLinkActive="selected"><app-icon name="parts" /> Refacciones</a>}

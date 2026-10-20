@@ -80,3 +80,15 @@ El mecánico asignado abre la orden e inicia trabajo con diagnóstico/motivo. En
 Antes de finalizar, Logística debe actualizar el kilometraje en Autobuses. El mecánico revisa esa lectura en la orden y confirma el cierre habitual, con trabajo/observaciones y labor/piezas cuando apliquen. Si cambió la lectura, recarga y revísala; no se cierra con una lectura obsoleta. El servicio queda registrado con ese kilometraje; el siguiente vencimiento es lectura de cierre + intervalo vigente del plan.
 
 Las piezas se entregan/devuelven desde Inventario como en otras órdenes. El checklist y el cierre no vuelven a descontarlas ni sumar costos. Tampoco habilitan o deshabilitan el autobús automáticamente. El checklist finalizado queda de consulta. No hay cancelación/reapertura de ejecuciones ni corrección de lecturas de cierre implementada todavía; conserva registros correctos desde su captura.
+
+## Reportes y exportaciones
+
+En **Reportes** aparece únicamente lo permitido para tu rol. Logística tiene los reportes operativos y financieros; Administración los operativos sin importes; Contabilidad compras, valoración y costos netos por autobús. Mecánico obtiene sus órdenes asignadas y fallas propias/asignadas, además de flota/preventivos; Operador solo sus fallas.
+
+Elige el reporte, combina búsqueda/estado/prioridad/fechas UTC o filtros de activos/vencidos cuando correspondan y pulsa **Consultar reporte**. Los indicadores suman todas las filas filtradas, aunque recorras varias páginas. **Limpiar filtros** vuelve a consultar sin esos criterios. No se suman cantidades de piezas de unidades distintas en un único total.
+
+**Exportar CSV con filtros** descarga todas las filas de la consulta aplicada, no solo la página. Editar un campo sin pulsar Consultar no cambia la descarga: consulta primero para aplicar los nuevos filtros. La descarga vuelve a consultar y puede reflejar registros nuevos. Más de 10000 filas exige filtros más específicos; no se genera un archivo truncado. Abrirlo como UTF-8 conserva acentos; textos con apariencia de fórmula reciben un apóstrofo protector.
+
+Las fechas de compras filtran la creación de la compra; su valor recibido es el acumulado de recepciones de esas compras hasta el momento. Pedidos cancelados se muestran separados del pedido sin canceladas. Son adquisiciones, no otro costo de autobús. Costos por autobús suma entregas menos devoluciones por fecha de movimiento; un período de solo devoluciones puede tener neto negativo. No incluye mano de obra monetaria porque no hay tarifas definidas. Inventario muestra la valoración actual, no un saldo reconstruido de una fecha pasada.
+
+Las descargas quedan registradas con autor y cantidad de filas. Contabilidad no puede registrar movimientos, aprobar/recibir compras ni consultar contactos privados de proveedores desde este acceso.
