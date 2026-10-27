@@ -71,3 +71,7 @@ La demo utiliza el mismo contenedor MySQL local, pero otro esquema/usuario y car
 ## Verificación técnica
 
 `npm.cmd run demo:check` comprueba el **dataset inicial**, conciliación de stock/valores, aislamiento SQL, reejecución sin duplicados, protección de la BD personal y acceso de los cinco roles. Ejecútalo antes de editar los ejemplos, pues después sus cantidades/estados pueden cambiar legítimamente. El test crea y cierra sesiones en la base demo; no reinicia bases ni carga fixtures personales. No se añade al runner de pruebas que limpia tallerbus_test.
+
+## Evidencia de esta entrega — 27 de octubre de 2026
+
+En el entorno Linux de desarrollo se ejecutaron correctamente lint, demo:setup (generación, seis migraciones, compilación y carga), seis casos de demo:check y un recorrido real con Chromium: login de Logística, flota, fallas, órdenes, inventario, mantenimiento, reportes, salud a través del proxy y logout. La repetición del seed conservó todos los hashes de tablas demo y personales; la cuenta SQL demo recibió denegación al intentar leer tallerbus y tallerbus_test. No se imprimieron contraseñas ni datos internos. No se afirma una ejecución en la computadora Windows del usuario. No cambió la lógica de negocio ni se repitió la suite completa de aplicación para esta carga aislada.
