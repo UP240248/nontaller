@@ -5,7 +5,8 @@
   "scripts": {
     "start": "ng serve --host 127.0.0.1 --port 4200 --proxy-config proxy.conf.json",
     "build": "ng build",
-    "typecheck": "ngc -p tsconfig.app.json --noEmit"
+    "typecheck": "ngc -p tsconfig.app.json --noEmit",
+    "start:demo": "ng serve --host 127.0.0.1 --port 4202 --proxy-config proxy.demo.conf.json"
   },
   "dependencies": {
     "@angular/common": "21.2.25",

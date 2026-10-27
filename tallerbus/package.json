@@ -29,7 +29,13 @@
     "backup:local": "node --env-file=.local/backend.env scripts/backup-local.mjs",
     "backup:verify": "node --env-file=.local/backend.env scripts/verify-backup.mjs",
     "test:load": "node --env-file=.local/test.env scripts/benchmark-local.mjs",
-    "status:local": "node --env-file=.local/backend.env scripts/status-local.mjs"
+    "status:local": "node --env-file=.local/backend.env scripts/status-local.mjs",
+    "demo:setup": "node scripts/demo-setup.mjs",
+    "demo:seed": "node --env-file=.local/demo.env scripts/seed-demo.mjs",
+    "demo:api": "node --env-file=.local/demo.env backend/dist/main.js",
+    "demo:web": "npm run start:demo -w frontend",
+    "demo": "concurrently -k \"npm:demo:api\" \"npm:demo:web\"",
+    "demo:check": "node --env-file=.local/demo.env --test tests/demo.test.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",

@@ -90,3 +90,10 @@
 - Guía de primera cuenta, roles, arranque, parada, respaldo y actualización sin pérdida de datos.
 - `npm run status:local`: diagnóstico de API/MySQL, interfaz y proxy por HTTP de loopback, sin escrituras ni redirecciones.
 - Lint y 13 unitarias aprobados, incluyendo cinco casos del diagnóstico local; la suite completa anterior de 146 pruebas conserva su evidencia histórica.
+
+## 2026-10-27 — Datos ficticios para demostración
+
+- Base/cuenta SQL demo independientes, sin limpiar o mezclar datos personales y sin cambiar permisos por rol.
+- Preparación repetible sin duplicar: 12 unidades, 12 fallas, 9 órdenes, 6 piezas, 3 proveedores, 5 compras y 6 planes.
+- Existencias y costos conciliados; cuentas aleatorias privadas de cinco roles; inicio local en 4202/3002 y guía de presentación.
+- Comprobaciones específicas de integridad, aislamiento, reejecución y acceso real por rol.

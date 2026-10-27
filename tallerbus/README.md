@@ -53,3 +53,7 @@ El alcance actual confirmado es uso personal en el equipo del usuario, sin publi
 `npm run backup:local -- --offline` crea copia privada de MySQL/fotos con la API detenida; `npm run backup:verify -- RUTA` demuestra restauración en base/carpeta temporal, concilia filas/relaciones/costos y revoca sesiones solo en copia. No sustituye datos existentes ni implementa respaldos externos automáticos. Ver [procedimiento y límites](docs/respaldos.md).
 
 Un eventual despliegue empresarial/productivo requiere validar HTTPS/proxy/BD remota, almacenamiento externo, RPO/RTO y aceptación con usuarios en el servidor definitivo. Está fuera del alcance local personal confirmado. La Fase 7 local no acredita esos puntos ni certificación completa de accesibilidad/rendimiento.
+
+## Datos para presentar la aplicación
+
+`npm run demo:setup` prepara una base **tallerbus_demo** separada y `npm run demo` inicia la presentación en localhost:4202. Incluye autobuses, fallas, órdenes, compras, inventario y preventivos ficticios con cuentas de los cinco roles; conserva los datos personales. Ver [demostración y credenciales privadas](docs/demostracion.md).
