@@ -4,9 +4,9 @@ import { Role } from '@prisma/client';
 import { PrismaService } from './prisma.service';
 import { COOKIE, csrfToken, equalToken, hashToken } from './security';
 import { settings } from './config';
-export interface Identity { id: string; name: string; email: string; role: Role; active: boolean; version: number }
+export interface Identity { id: string; name: string; username: string; role: Role; active: boolean; version: number }
 export interface AuthRequest extends Request { identity: Identity; sessionId: string; sessionToken: string }
-export const userFields = { id:true, name:true, email:true, role:true, active:true, version:true } as const;
+export const userFields = { id:true, name:true, username:true, role:true, active:true, version:true } as const;
 @Injectable()
 export class SessionGuard implements CanActivate {
   constructor(private readonly db: PrismaService) {}

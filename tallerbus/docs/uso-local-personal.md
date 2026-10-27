@@ -16,7 +16,7 @@ npm run setup
 npm run bootstrap
 ```
 
-`bootstrap` pide tus datos y contraseña oculta en la terminal; crea solo el primer administrador. Si ya existe uno, utiliza esa cuenta: no borres la base para repetirlo. No hace falta que el correo envíe mensajes: es tu identificador de acceso; no hay recuperación por correo. No pegues contraseñas en el chat ni las incluyas en comandos.
+`bootstrap` pide tus datos y contraseña oculta en la terminal; crea solo el primer administrador. Si ya existe uno, utiliza esa cuenta: no borres la base para repetirlo. Se solicita usuario de acceso, nombre del empleado y contraseña de 8–128 caracteres; no se pide correo. No pegues contraseñas en el chat ni las incluyas en comandos.
 
 Para usar módulos operativos, Administración puede crear cuentas propias con los roles correspondientes. Logística gestiona inventario, compras y planes; Mecánico ejecuta reparaciones y preventivos; Operador reporta fallas; Contabilidad consulta reportes financieros. Cada cuenta tiene un rol. No hay una cuenta con todos los permisos ni un cambio automático de rol; Administración continúa sin importes financieros. Consulta el manual de usuario para los flujos.
 
@@ -74,9 +74,11 @@ Detén la aplicación, crea y verifica una copia primero. Con el checkout limpio
 | API/MySQL falla | Terminal de dev, puerto 3000 libre y db:local; nunca regenerar secretos o borrar volumen |
 | Interfaz falla | Terminal de dev y puerto 4200 libre; usar la carpeta correcta |
 | Proxy falla | API activa y configuración original de frontend; no cambiar permisos de cookies |
-| No inicia sesión | Cuenta creada por bootstrap, contraseña y límite temporal de intentos; no borrar la BD |
+| No inicia sesión | Cuenta creada por bootstrap, usuario, contraseña y límite temporal de intentos; no borrar la BD |
 | Un módulo no aparece | Revisar el rol de la cuenta; es una restricción de acceso |
 
 ## Cierre de la fase 7 local
 
 El cierre técnico local incluye pruebas automatizadas, referencia de carga, respaldo/restauración aislada, revisión de teclado/pantalla estrecha y comprobación de arranque. Queda tu aceptación en el equipo donde vas a usarlo. El despliegue empresarial, HTTPS público, servidor interno y aceptación productiva se retoman únicamente si decides ampliar el alcance; no bloquean la entrega local personal ni se consideran realizados.
+
+Para una versión anterior con acceso por correo, sigue [migración a usuario](acceso-por-usuario.md) y consulta `npm run users:local` después de actualizar.

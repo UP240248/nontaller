@@ -1,6 +1,7 @@
 import { randomBytes } from 'node:crypto';
-import { readFile, writeFile, rm } from 'node:fs/promises';
+import { writeFile, rm } from 'node:fs/promises';
 import { createRequire } from 'node:module';
+import {readLocalAccounts} from './lib/local-accounts.mjs';
 const require=createRequire(import.meta.url);
 const {databaseClient}=require('../backend/dist/database.js');
 const {hashPassword}=require('../backend/dist/security.js');
@@ -10,13 +11,13 @@ const db=databaseClient();
 try {
  const file='.local/dev-accounts.json';
  try {
-  const accounts=JSON.parse(await readFile(file,'utf8'));
-  for(const account of accounts){if(!await db.user.findUnique({where:{email:account.email},select:{id:true}}))throw new Error('Fixture local incompleto. No se sobrescriben cuentas ni credenciales.');}
+  const accounts=await readLocalAccounts(file,db);
+  for(const account of accounts){if(!await db.user.findUnique({where:{username:account.username},select:{id:true}}))throw new Error('Fixture local incompleto. No se sobrescriben cuentas ni credenciales.');}
   console.log('Usuarios de desarrollo ya preparados. No se cambiaron contraseñas.');
  } catch(error) {
   if(error.code!=='ENOENT')throw error;
   const accounts=[];
-  for(const role of ['ADMINISTRACION','LOGISTICA','MECANICO','OPERADOR','CONTABILIDAD'])accounts.push({name:`Desarrollo ${role}`,email:`${role.toLowerCase()}@desarrollo.invalid`,role,password:randomBytes(24).toString('base64url')});
+  for(const role of ['ADMINISTRACION','LOGISTICA','MECANICO','OPERADOR','CONTABILIDAD'])accounts.push({name:`Desarrollo ${role}`,username:role.toLowerCase(),role,password:randomBytes(24).toString('base64url')});
   // Archivo privado escrito antes de la transacción: las claves no se pierden si el proceso termina después del commit.
   await writeFile(file,JSON.stringify(accounts,null,2)+'\n',{mode:0o600,flag:'wx'});
   try {

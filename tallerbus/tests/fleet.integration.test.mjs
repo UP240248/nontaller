@@ -9,7 +9,7 @@ async function request(path,{method='GET',data,session,csrf=true}={}){
  const headers={Origin:origin};if(data!==undefined)headers['Content-Type']='application/json';if(session){headers.Cookie=session.cookie;if(csrf)headers['X-CSRF-Token']=session.csrfToken;}
  const res=await fetch(base+path,{method,headers,body:data===undefined?undefined:JSON.stringify(data)});return {status:res.status,body:await res.json()};
 }
-async function login(role){const r=await fetch(base+'/auth/login',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({email:users[role].email,password})});assert.equal(r.status,200);const body=await r.json();return {cookie:r.headers.get('set-cookie').split(';')[0],csrfToken:body.csrfToken};}
+async function login(role){const r=await fetch(base+'/auth/login',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({username:users[role].username,password})});assert.equal(r.status,200);const body=await r.json();return {cookie:r.headers.get('set-cookie').split(';')[0],csrfToken:body.csrfToken};}
 const input={numeroEconomico:' tb-001 ',placas:' abc-123 ',marca:'Volvo',modelo:'9800',kilometraje:150000,estadoOperativo:'HABILITADO'};
 before(async()=>{users=await seed();app=await createApp();await app.listen(0,'127.0.0.1');base=(await app.getUrl())+'/api/v1';admin=await login('ADMINISTRACION');logistics=await login('LOGISTICA');mechanic=await login('MECANICO');});
 after(async()=>{if(app)await app.close();await db.$disconnect();});

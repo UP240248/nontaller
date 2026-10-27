@@ -1,17 +1,19 @@
 import {createRequire} from 'node:module';
 import {randomBytes,randomUUID} from 'node:crypto';
-import {readFile,writeFile} from 'node:fs/promises';
+import {writeFile} from 'node:fs/promises';
+import {readLocalAccounts} from './lib/local-accounts.mjs';
 const url=new URL(process.env.DATABASE_URL??'');
 if(process.env.NODE_ENV!=='development'||url.protocol!=='mysql:'||url.hostname!=='127.0.0.1'||url.port!=='3307'||url.pathname!=='/tallerbus_demo'||url.username!=='tallerbus_demo'||process.env.EVIDENCE_DIR!=='.local/evidence-demo')throw new Error('La carga solo admite tallerbus_demo local con cuenta y evidencia propias');
 const require=createRequire(import.meta.url);const {databaseClient}=require('../backend/dist/database.js');const {hashPassword}=require('../backend/dist/security.js');const {Prisma}=require('@prisma/client');
 const db=databaseClient();const marker='DEMO_SEED_FINISHED';const roles=['ADMINISTRACION','LOGISTICA','MECANICO','OPERADOR','CONTABILIDAD'];
 try{
+ try{await readLocalAccounts('.local/demo-accounts.json',db);}catch(e){if(e.code!=='ENOENT')throw e;}
  if(await db.auditEvent.findFirst({where:{action:marker}})){console.log('Demostración existente: se conserva todo, incluidas tus ediciones. No se duplicaron datos.');}
  else{
   const file='.local/demo-accounts.json';let accounts;
-  try{accounts=JSON.parse(await readFile(file,'utf8'));}catch(e){if(e.code!=='ENOENT')throw e;accounts=roles.map(role=>({name:'DEMO '+({ADMINISTRACION:'Administración',LOGISTICA:'Logística',MECANICO:'Mecánico',OPERADOR:'Operador',CONTABILIDAD:'Contabilidad'})[role],role,email:role.toLowerCase()+'@demo.invalid',password:randomBytes(18).toString('base64url')}));await writeFile(file,JSON.stringify(accounts,null,2)+'\n',{flag:'wx',mode:0o600});}
-  if(!Array.isArray(accounts)||accounts.length!==5||roles.some(role=>accounts.filter(a=>a.role===role&&a.email===role.toLowerCase()+'@demo.invalid'&&typeof a.password==='string'&&a.password.length>=12).length!==1))throw new Error('Archivo privado demo inválido');
-  const prepared=await Promise.all(accounts.map(async a=>({name:a.name,email:a.email,role:a.role,passwordHash:await hashPassword(a.password)})));
+  try{accounts=await readLocalAccounts(file,db);}catch(e){if(e.code!=='ENOENT')throw e;accounts=roles.map(role=>({name:'DEMO '+({ADMINISTRACION:'Administración',LOGISTICA:'Logística',MECANICO:'Mecánico',OPERADOR:'Operador',CONTABILIDAD:'Contabilidad'})[role],role,username:role.toLowerCase(),password:randomBytes(18).toString('base64url')}));await writeFile(file,JSON.stringify(accounts,null,2)+'\n',{flag:'wx',mode:0o600});}
+  if(!Array.isArray(accounts)||accounts.length!==5||roles.some(role=>accounts.filter(a=>a.role===role&&a.username===role.toLowerCase()&&typeof a.password==='string'&&a.password.length>=8).length!==1))throw new Error('Archivo privado demo inválido');
+  const prepared=await Promise.all(accounts.map(async a=>({name:a.name,username:a.username,role:a.role,passwordHash:await hashPassword(a.password)})));
   await db.$transaction(async tx=>{
    await tx.$queryRaw`SELECT id FROM AdminLock WHERE id = 1 FOR UPDATE`;
    if(await tx.auditEvent.findFirst({where:{action:marker}}))return;

@@ -13,7 +13,7 @@ export class UsersService {
     if (!actor?.active || actor.role !== Role.ADMINISTRACION) throw new ForbiddenException('Permiso de Administración requerido');
   }
   async list(query: UserQueryDto) {
-    const where: Prisma.UserWhereInput = { ...(query.role ? {role:query.role}:{}), ...(query.search ? {OR:[{name:{contains:query.search}},{email:{contains:query.search}}]}:{}) };
+    const where: Prisma.UserWhereInput = { ...(query.role ? {role:query.role}:{}), ...(query.search ? {OR:[{name:{contains:query.search}},{username:{contains:query.search}}]}:{}) };
     const [data,total] = await this.db.$transaction([
       this.db.user.findMany({where, select:userFields, skip:(query.page-1)*query.limit,take:query.limit,orderBy:[{createdAt:'desc'},{id:'desc'}]}),
       this.db.user.count({where})
@@ -24,7 +24,7 @@ export class UsersService {
     const passwordHash = await hashPassword(input.password);
     return this.db.$transaction(async tx => {
       await this.authorize(tx,actorId);
-      const user = await tx.user.create({data:{name:input.name,email:input.email,role:input.role,passwordHash},select:userFields});
+      const user = await tx.user.create({data:{name:input.name,username:input.username,role:input.role,passwordHash},select:userFields});
       await tx.auditEvent.create({data:{actorId,entity:'User',entityId:user.id,action:'CREATE',changes:{after:user}}});
       return user;
     });
@@ -40,7 +40,7 @@ export class UsersService {
       const {version: _version, ...patch} = input;
       void _version;
       const after = await tx.user.update({where:{id},data:{...patch,version:{increment:1}},select:userFields});
-      if (!after.active || after.role !== before.role) await tx.session.updateMany({where:{userId:id,revokedAt:null},data:{revokedAt:new Date()}});
+      if (!after.active || after.role !== before.role || after.username !== before.username) await tx.session.updateMany({where:{userId:id,revokedAt:null},data:{revokedAt:new Date()}});
       await tx.auditEvent.create({data:{actorId,entity:'User',entityId:id,action:'UPDATE',changes:{before,after}}});
       return after;
     });

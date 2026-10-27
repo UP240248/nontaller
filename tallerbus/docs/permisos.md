@@ -61,3 +61,7 @@ El usuario eligió expresamente «Logística y Contabilidad» para consultar/exp
 Todos los roles acceden al catálogo servidor de reportes permitidos. Administración/Logística consultan y exportan los cuatro operativos. Mecánico conserva flota/preventivos de consulta y obtiene órdenes con asignación vigente propia y fallas propias o de esas órdenes. Operador consulta/exporta exclusivamente fallas propias. IDs/filtros adicionales se intersectan con ese alcance; no permiten ampliarlo. JSON y CSV utilizan las mismas reglas, filtros y proyección.
 
 La exportación registra evento con actor/tipo/filas/alcance, sin importes, textos de búsqueda o contenido exportado en la auditoría administrativa. CSV y reportes usan no-store; sesión revocada invalida nuevas consultas/exportaciones. No se habilita check-in/out, asignación operador-unidad ni notificaciones externas.
+
+## Identificador de cuenta — 27 de octubre de 2026
+
+La gestión vigente usa nombre del empleado y username, no correo. Administración consulta y edita esos datos, rol y estado, sin lectura de contraseñas. El hash no se proyecta. Las menciones de correo en notas por fase son históricas. Contraseña inicial de mínimo 8; cambios de username revocan sesiones. Permisos de negocio conservados.

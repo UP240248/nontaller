@@ -1,6 +1,6 @@
 # Demostración con datos ficticios
 
-Esta opción crea una base **tallerbus_demo** y una cuenta MySQL exclusiva, separadas de **tallerbus** (tus datos) y **tallerbus_test** (pruebas). No cambia contraseñas ni datos de tus cuentas personales. Los registros se identifican como DEMO y los correos son ficticios `.invalid`.
+Esta opción crea una base **tallerbus_demo** y una cuenta MySQL exclusiva, separadas de **tallerbus** (tus datos) y **tallerbus_test** (pruebas). No cambia contraseñas ni datos de tus cuentas personales. Los registros se identifican como DEMO y las cuentas de acceso usan nombres de usuario.
 
 ## Preparar en Windows
 
@@ -27,7 +27,7 @@ Los cinco roles tienen contraseñas aleatorias propias, guardadas solo en tu com
 notepad .local\demo-accounts.json
 ```
 
-Cada objeto contiene `role`, `email` y `password`. Usa el correo/contraseña del rol que quieras mostrar. No compartas el archivo por chat, capturas, correo o Git. No son las credenciales de tu administrador personal.
+Cada objeto contiene `role`, `username` y `password`. Usa el usuario/contraseña del rol que quieras mostrar. No compartas el archivo por chat, capturas, correo o Git. No son las credenciales de tu administrador personal.
 
 | Rol | Qué puedes mostrar |
 |---|---|

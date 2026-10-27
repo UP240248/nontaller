@@ -16,11 +16,11 @@ export class AuthService implements OnModuleInit {
     if (entry.count >= settings().loginLimit || (!this.attempts.has(ip) && this.attempts.size >= 10000)) throw new HttpException('Demasiados intentos. Intenta más tarde.',HttpStatus.TOO_MANY_REQUESTS);
     entry.count++; this.attempts.set(ip,entry);
   }
-  async login(email: string, password: string, ip: string) {
+  async login(username: string, password: string, ip: string) {
     this.rateLimit(ip);
-    const user = await this.db.user.findUnique({where:{email}});
+    const user = await this.db.user.findUnique({where:{username}});
     const valid = await verifyPassword(user?.passwordHash ?? this.dummyHash, password);
-    if (!user || !valid || !user.active) throw new UnauthorizedException('Correo o contraseña incorrectos');
+    if (!user || !valid || !user.active) throw new UnauthorizedException('Usuario o contraseña incorrectos');
     const token = newToken(); const expiresAt = new Date(Date.now()+settings().sessionHours*3600000);
     const result = await this.db.$transaction(async tx => {
       // Serializa con cambios de rol/activación y revocaciones, sin carreras con login.

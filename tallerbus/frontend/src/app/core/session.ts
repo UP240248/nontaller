@@ -5,7 +5,7 @@ import { catchError, firstValueFrom, throwError } from 'rxjs';
 export const roles = ['ADMINISTRACION','LOGISTICA','MECANICO','OPERADOR','CONTABILIDAD'] as const;
 export type Role = typeof roles[number];
 export const roleLabels: Record<Role,string> = {ADMINISTRACION:'Administración',LOGISTICA:'Logística',MECANICO:'Mecánico',OPERADOR:'Operador',CONTABILIDAD:'Contabilidad'};
-export interface User { id:string;name:string;email:string;role:Role;active:boolean;version:number }
+export interface User { id:string;name:string;username:string;role:Role;active:boolean;version:number }
 interface Session {user:User;csrfToken:string}
 @Injectable({providedIn:'root'})
 export class SessionService {
@@ -21,8 +21,8 @@ export class SessionService {
     this.pending = firstValueFrom(this.http.get<Session>('/api/v1/auth/me')).then(s=>{this.user.set(s.user);this.csrf=s.csrfToken;return true;}).catch(()=>false).finally(()=>this.pending=null);
     return this.pending;
   }
-  async login(email:string,password:string): Promise<void> {
-    const s = await firstValueFrom(this.http.post<Session>('/api/v1/auth/login',{email,password}));
+  async login(username:string,password:string): Promise<void> {
+    const s = await firstValueFrom(this.http.post<Session>('/api/v1/auth/login',{username,password}));
     this.user.set(s.user);this.csrf=s.csrfToken;
   }
   async logout(): Promise<void> {await firstValueFrom(this.http.post('/api/v1/auth/logout',{}));this.clear();}

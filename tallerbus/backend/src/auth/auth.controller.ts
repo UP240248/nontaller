@@ -13,7 +13,7 @@ export class AuthController {
   @ApiOperation({summary:'Iniciar sesión; devuelve token CSRF, nunca el token de sesión'})
   async login(@Body() input: LoginDto, @Req() req: Request, @Res({passthrough:true}) res: Response) {
     if (req.get('Origin') !== settings().origin) throw new ForbiddenException('Origen no autorizado');
-    const result = await this.auth.login(input.email,input.password,req.ip ?? 'unknown');
+    const result = await this.auth.login(input.username,input.password,req.ip ?? 'unknown');
     res.cookie(COOKIE,result.token,{httpOnly:true,sameSite:'strict',secure:settings().secure,path:'/api',expires:result.expiresAt});
     return {user:result.user,csrfToken:csrfToken(result.token)};
   }

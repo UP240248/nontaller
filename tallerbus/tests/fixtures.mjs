@@ -17,7 +17,7 @@ export async function seed() {
  await db.adminLock.upsert({where:{id:1},create:{id:1},update:{}});
  const passwordHash=await hashPassword(password);const users={};
  for(const role of ['ADMINISTRACION','LOGISTICA','MECANICO','OPERADOR','CONTABILIDAD']){
-  users[role]=await db.user.create({data:{name:`Prueba ${role}`,email:`${role.toLowerCase()}@test.invalid`,passwordHash,role}});
+  users[role]=await db.user.create({data:{name:`Prueba ${role}`,username:`${role.toLowerCase()}.test`,passwordHash,role}});
  }
  return users;
 }

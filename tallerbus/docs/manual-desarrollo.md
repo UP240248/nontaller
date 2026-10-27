@@ -34,7 +34,7 @@ Después de cambiar backend, ejecutar `npm run build -w backend` y reiniciar API
 
 Chromium usa `/usr/bin/chromium` por defecto en este entorno. En otra máquina fijar `CHROMIUM_PATH` al ejecutable instalado o instalar Chromium con Playwright y apuntar a su ejecutable. Cada runner usa un proceso propio; integración y E2E regeneran fixtures en `tallerbus_test`, borrando únicamente sus registros. `fixtures.mjs` rechaza cualquier host/base fuera de localhost/tallerbus_test. No ejecutarlos simultáneamente.
 
-Fixtures de prueba tienen correos `.invalid` y contraseñas aleatorias generadas en memoria; no se imprimen. `seed:dev` es explícito y solo funciona en NODE_ENV development y base local `tallerbus`; no sobrescribe bases con usuarios. Repetirlo valida cuentas existentes sin cambiar claves. Si se interrumpe antes del commit puede quedar un archivo privado sin cuentas: revisar el estado antes de corregirlo manualmente. No copiar datos demo a producción.
+Fixtures de prueba tienen usuarios ficticios y contraseñas aleatorias generadas en memoria; no se imprimen. `seed:dev` es explícito y solo funciona en NODE_ENV development y base local `tallerbus`; no sobrescribe bases con usuarios. Repetirlo valida cuentas existentes sin cambiar claves. Si se interrumpe antes del commit puede quedar un archivo privado sin cuentas: revisar el estado antes de corregirlo manualmente. No copiar datos demo a producción.
 
 ## Trabajo seguro
 
@@ -64,7 +64,7 @@ Módulo `inventory` y migración aditiva `20261020120000_inventory_catalog`, sin
 
 ## Desarrollo de Fase 5
 
-Módulo `maintenance`, migración aditiva `20261020210000_preventive` y pantallas de planes/checklist. No se agregan dependencias. `npm run setup` aplica seis migraciones. El vencimiento depende exclusivamente de kilometraje; las pruebas controlan lecturas y cubren igualdad exacta al objetivo, no necesitan reloj simulado.
+Módulo `maintenance`, migración aditiva `20261020210000_preventive` y pantallas de planes/checklist. No se agregan dependencias. `npm run setup` aplica siete migraciones. El vencimiento depende exclusivamente de kilometraje; las pruebas controlan lecturas y cubren igualdad exacta al objetivo, no necesitan reloj simulado.
 
 Las transacciones de programación, edición/activación de planes y checklist usan READ COMMITTED y toman primero autobús, luego orden cuando procede. El cierre existente ya toma autobús → orden y actualiza ejecución/plan bajo ese bloqueo. La edición de flota toma autobús antes de consultar el máximo último servicio; evita una lectura incompatible con cierres concurrentes. No tomar InventoryLock dentro del cierre: las entregas usan InventoryLock → autobús → orden y el cierre no genera movimientos.
 
@@ -74,7 +74,7 @@ Una clave activa única del plan impide dos ejecuciones abiertas; versión de pl
 
 ## Desarrollo de Fase 6
 
-Módulo `reports`, sin migraciones ni nuevas dependencias. `npm run setup` conserva las seis migraciones. Todas las consultas de reporte comparten generación de JSON/CSV, autorización/alcance, validación de filtros y proyección explícita. El catálogo lo entrega el servidor; no hardcodear permisos financieros en el navegador. financialReportRoles limita importes a Logística/Contabilidad según aprobación recibida.
+Módulo `reports`, sin migraciones ni nuevas dependencias. `npm run setup` conserva las siete migraciones. Todas las consultas de reporte comparten generación de JSON/CSV, autorización/alcance, validación de filtros y proyección explícita. El catálogo lo entrega el servidor; no hardcodear permisos financieros en el navegador. financialReportRoles limita importes a Logística/Contabilidad según aprobación recibida.
 
 Las consultas de filas/conteo/agregados usan transacción REPEATABLE READ. Finanzas usa Prisma.Decimal a precisión 50/HALF_UP; agregados grandes se resuelven en SQL parametrizado y la suma de pedidos redondea primero el total de cada documento. Costos se originan solo en entregas/devoluciones del ledger. No convertir dinero a Number ni mezclar cantidades de unidades diferentes. Los estados de las filas son actuales aunque se filtre fecha de registro/movimiento; no representar los reportes como reconstrucción histórica completa.
 
@@ -89,3 +89,7 @@ Pruebas nuevas de seguridad, respaldo/restauración y accesibilidad por teclado/
 `test:load` usa fixtures de tallerbus_test y valida respuestas/totales con usuarios de los cinco roles, sin ejecutar escrituras de negocio durante la medición. No ejecutar junto con integración/E2E. `db:local` conserva credenciales existentes y fija la clave pública RSA para autenticar después de reinicios; no habilita allowPublicKeyRetrieval. Requests JSON mayores al límite de Express reciben 413 genérico y los tokens comparan longitud UTF-8 antes de timingSafeEqual.
 
 Se fijan únicamente dos overrides correctivos con el lockfile correspondiente. Ver operacion.md para el aviso observado de npm ls en workspaces, versiones instaladas y comprobaciones que sí pasaron. No cambiar hashes de artefactos o desactivar TLS para instalar.
+
+## Identidad actualizada
+
+User.username sustituye al correo de cuenta, con séptima migración conservando hashes/relaciones. DTOs, sesión pública, bootstrap y frontend usan username; mínimo de contraseña nueva 8. Ver acceso-por-usuario.md. Las pruebas incluyen cuentas de ocho caracteres, rechazo de correo/campos extra, normalización, duplicados y migración aislada con conservación de datos.

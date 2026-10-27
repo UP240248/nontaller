@@ -1,14 +1,14 @@
-# Manual de usuario — Fases 1–3
+# Manual de usuario — acceso por usuario y módulos actuales
 
 ## Ingresar y salir
 
-Usa el correo y contraseña proporcionados por Administración. Un error de credenciales no indica si existe la cuenta; tras demasiados intentos espera antes de reintentar. Si no tienes acceso, contacta a Administración. No existe recuperación por correo en esta fase.
+Usa el usuario de acceso y contraseña proporcionados por Administración. Un error de credenciales no indica si existe la cuenta; tras demasiados intentos espera antes de reintentar. Si no tienes acceso, contacta a Administración. No existe recuperación automática de contraseña.
 
-Mi espacio muestra tu nombre, correo, rol y estado consultados al servidor. La sesión se restaura al recargar, expira según configuración y puede ser revocada. «Cerrar sesión» invalida la sesión en el servidor. Si Administración cambia tu rol o desactiva tu cuenta, deberás autenticarte de nuevo o solicitar activación.
+Mi espacio muestra tu nombre, usuario de acceso, rol y estado consultados al servidor. La sesión se restaura al recargar, expira según configuración y puede ser revocada. «Cerrar sesión» invalida la sesión en el servidor. Si Administración cambia tu rol o desactiva tu cuenta, deberás autenticarte de nuevo o solicitar activación.
 
 ## Administración
 
-En Usuarios puedes buscar por nombre/correo, filtrar por rol y recorrer páginas. «Crear usuario» requiere nombre, correo único, rol y contraseña inicial de 12–128 caracteres. Comparte la contraseña por un canal seguro. «Editar» cambia nombre, correo o rol. El cambio de rol cierra las sesiones previas.
+En Usuarios puedes buscar por nombre/usuario, filtrar por rol y recorrer páginas. «Crear usuario» requiere nombre del empleado, usuario único, rol y contraseña inicial de 8–128 caracteres. Comparte la contraseña por un canal seguro. «Editar» cambia nombre, usuario o rol. El cambio de rol cierra las sesiones previas.
 
 «Desactivar» y «Activar» requieren confirmación; no eliminan historial. Desactivar cierra sesiones y bloquea nuevos accesos. «Revocar sesiones» cierra todos los accesos vigentes del usuario. No es posible desactivar ni cambiar el rol al último administrador activo. Si otra persona editó la cuenta, actualiza la lista antes de reintentar.
 
@@ -92,3 +92,7 @@ Elige el reporte, combina búsqueda/estado/prioridad/fechas UTC o filtros de act
 Las fechas de compras filtran la creación de la compra; su valor recibido es el acumulado de recepciones de esas compras hasta el momento. Pedidos cancelados se muestran separados del pedido sin canceladas. Son adquisiciones, no otro costo de autobús. Costos por autobús suma entregas menos devoluciones por fecha de movimiento; un período de solo devoluciones puede tener neto negativo. No incluye mano de obra monetaria porque no hay tarifas definidas. Inventario muestra la valoración actual, no un saldo reconstruido de una fecha pasada.
 
 Las descargas quedan registradas con autor y cantidad de filas. Contabilidad no puede registrar movimientos, aprobar/recibir compras ni consultar contactos privados de proveedores desde este acceso.
+
+## Actualización de acceso
+
+Las contraseñas no se consultan en texto. Usuario de acceso: 3–40 caracteres alfanuméricos, punto, guion o guion bajo; sin espacios interiores. Consulta [migración y acceso](acceso-por-usuario.md) para conservar cuentas existentes y consultar sus usuarios.

@@ -1,6 +1,6 @@
 # Manuales de TallerBus / Terrabus
 
-Documentos Word editables, edición del 22 de octubre de 2026. Describen el código de referencia `e4a2192`.
+Documentos Word editables, edición 2.0 del 27 de octubre de 2026. Incluyen la actualización de acceso por usuario y contraseña de mínimo 8 caracteres. El correo ya no es un campo de cuenta.
 
 - [Manual técnico](Manual_tecnico_TallerBus.docx): instalación Windows, arquitectura, seguridad, modelo de datos, API, pruebas y recuperación.
 - [Manual para empleados](Manual_empleados_TallerBus.docx): procedimientos por rol, ejemplos y resolución de errores.

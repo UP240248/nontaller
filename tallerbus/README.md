@@ -57,3 +57,7 @@ Un eventual despliegue empresarial/productivo requiere validar HTTPS/proxy/BD re
 ## Datos para presentar la aplicación
 
 `npm run demo:setup` prepara una base **tallerbus_demo** separada y `npm run demo` inicia la presentación en localhost:4202. Incluye autobuses, fallas, órdenes, compras, inventario y preventivos ficticios con cuentas de los cinco roles; conserva los datos personales. Ver [demostración y credenciales privadas](docs/demostracion.md).
+
+## Acceso con nombre de usuario
+
+El login y el alta de cuentas usan **usuario de acceso**, **nombre del empleado** y contraseña de **mínimo 8 caracteres**, sin correo. Administración ve usuario/nombre/rol/estado; las contraseñas se guardan protegidas y no se muestran. Para actualizar sin perder cuentas, sigue [migración a usuario](docs/acceso-por-usuario.md). Después de setup, `npm run users:local` muestra los identificadores migrados sin claves.

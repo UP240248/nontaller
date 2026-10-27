@@ -7,7 +7,7 @@ const {db,password,seed}=await import('../fixtures.mjs');
 let users,busId;
 test.beforeAll(async()=>{users=await seed();});
 test.afterAll(async()=>{await db.$disconnect();});
-async function login(page,role){await page.goto('/login');await page.getByLabel('Correo electrónico',{exact:true}).fill(users[role].email);await page.getByLabel('Contraseña',{exact:true}).fill(password);await page.getByRole('button',{name:'Entrar a TallerBus'}).click();await expect(page.getByRole('heading',{name:/Hola,/})).toBeVisible();}
+async function login(page,role){await page.goto('/login');await page.getByLabel('Usuario de acceso',{exact:true}).fill(users[role].username);await page.getByLabel('Contraseña',{exact:true}).fill(password);await page.getByRole('button',{name:'Entrar a TallerBus'}).click();await expect(page.getByRole('heading',{name:/Hola,/})).toBeVisible();}
 async function accessible(page){const result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(result.violations).toEqual([]);}
 async function create(page,economic,plates){await page.getByLabel('Número económico',{exact:true}).fill(economic);await page.getByLabel('Placas',{exact:true}).fill(plates);await page.getByLabel('Marca',{exact:true}).fill('Mercedes-Benz');await page.getByLabel('Modelo',{exact:true}).fill('Marcopolo');await page.getByLabel('Kilometraje',{exact:true}).fill('12345');await page.getByLabel('Estado operativo inicial',{exact:true}).selectOption('HABILITADO');await page.getByRole('button',{name:'Guardar autobús'}).click();}
 test('Logística: registro, edición, estado, activación, historial y dashboard reales',async({page})=>{

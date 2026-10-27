@@ -35,7 +35,8 @@
     "demo:api": "node --env-file=.local/demo.env backend/dist/main.js",
     "demo:web": "npm run start:demo -w frontend",
     "demo": "concurrently -k \"npm:demo:api\" \"npm:demo:web\"",
-    "demo:check": "node --env-file=.local/demo.env --test tests/demo.test.mjs"
+    "demo:check": "node --env-file=.local/demo.env --test tests/demo.test.mjs",
+    "users:local": "node --env-file=.local/backend.env scripts/list-local-users.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",

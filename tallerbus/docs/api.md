@@ -4,23 +4,26 @@ Base `/api/v1`. OpenAPI generado por Nest/DTOs, disponible en desarrollo en `/ap
 
 | Método / recurso | Acceso | Contrato |
 |---|---|---|
-| POST /auth/login | Público; Origin permitido obligatorio y límite por IP | email/password; cookie HttpOnly, SameSite Strict; devuelve usuario público y csrfToken |
+| POST /auth/login | Público; Origin permitido obligatorio y límite por IP | username/password; cookie HttpOnly, SameSite Strict; devuelve usuario público y csrfToken |
 | GET /auth/me | Sesión activa | Usuario propio y csrfToken recuperable tras recarga |
 | POST /auth/logout | Sesión + CSRF + Origin | 204; revoca y borra cookie |
 | GET /users | Administración | search, role, page (1), limit (20, máximo 100); data/total/page/limit |
-| POST /users | Administración + CSRF | name, email, password (12–128), role; usuario público, 201 |
-| PATCH /users/:id | Administración + CSRF | version obligatorio; name/email/role/active opcionales; 409 si obsoleto o último administrador |
+| POST /users | Administración + CSRF | name, username, password (8–128), role; usuario público, 201 |
+| PATCH /users/:id | Administración + CSRF | version obligatorio; name/username/role/active opcionales; 409 si obsoleto o último administrador |
 | POST /users/:id/revoke-sessions | Administración + CSRF | Devuelve revoked; revoca todas las sesiones vigentes |
 | GET /audit | Administración | page/limit; eventos, actor y cambios permitidos; nunca secretos |
 | GET /health | Público | Consulta MySQL; status/database sin credenciales |
 
 Las acciones autenticadas que modifican datos exigen `X-CSRF-Token` y Origin exacto de FRONTEND_ORIGIN. El token CSRF se devuelve por API y permanece solo en memoria del frontend; el token aleatorio de sesión solo en cookie, hash SHA-256 en BD. Contraseñas con Argon2id.
 
-Fechas UTC ISO 8601. Usuarios públicos: id, name, email, role, active, version. Roles enum ADMINISTRACION, LOGISTICA, MECANICO, OPERADOR, CONTABILIDAD. No hay DELETE de usuarios ni actualización de contraseña por API todavía. Orden de usuarios y eventos estable, más recientes primero. Los listados no admiten campos de orden arbitrarios.
+Fechas UTC ISO 8601. Usuarios públicos: id, name, username, role, active, version. Roles enum ADMINISTRACION, LOGISTICA, MECANICO, OPERADOR, CONTABILIDAD. No hay DELETE de usuarios ni actualización de contraseña por API todavía. Orden de usuarios y eventos estable, más recientes primero. Los listados no admiten campos de orden arbitrarios.
 
 Errores: statusCode, message y requestId. 400 validación/campos desconocidos, 401 sesión inválida, 403 permiso/origen/CSRF, 404 recurso inexistente, 409 unicidad/versión/pérdida del último administrador, 429 intentos de acceso, 500 genérico sin detalles internos. Logs estructurados incluyen método, estado, duración y requestId; no cuerpos, cookies, URLs con consultas ni credenciales.
 
 Inventario y compras se describen en Fase 4. Todos los importes/cantidades decimales son cadenas; no enviar números JSON. Los reportes y exportaciones de Fase 6 se describen al final.
+
+
+Usuario: 3–40 caracteres, letras/números/punto/guion/guion bajo, inicio alfanumérico, normalización trim + minúsculas. No se devuelve contraseña/hash. Edición de username revoca sesiones.
 
 ## Autobuses (Fase 2)
 

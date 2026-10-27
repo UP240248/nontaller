@@ -14,4 +14,4 @@ export function hashPassword(password: string): Promise<string> {
 export async function verifyPassword(hash: string, password: string): Promise<boolean> {
   try { return await argon2.verify(hash, password); } catch { return false; }
 }
-export function validPassword(value: string): boolean { return value.length >= 12 && value.length <= 128; }
+export function validPassword(value: string): boolean { return value.length >= 8 && value.length <= 128; }

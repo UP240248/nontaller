@@ -97,3 +97,11 @@
 - Preparación repetible sin duplicar: 12 unidades, 12 fallas, 9 órdenes, 6 piezas, 3 proveedores, 5 compras y 6 planes.
 - Existencias y costos conciliados; cuentas aleatorias privadas de cinco roles; inicio local en 4202/3002 y guía de presentación.
 - Comprobaciones específicas de integridad, aislamiento, reejecución y acceso real por rol.
+
+## 2026-10-27 — Acceso por nombre de usuario
+
+- Login, alta, edición, perfil y bootstrap sin correo; empleado y usuario separados en Usuarios.
+- Mínimo de contraseña inicial reducido a 8, conservando hash Argon2id y privacidad de las claves.
+- Migración de cuentas con normalización/colisiones, sin cambiar hashes, IDs, roles ni relaciones; cambio de usuario revoca sesiones.
+- Cuentas privadas demo/desarrollo actualizadas sin regenerar claves; consulta local de identificadores y guía de actualización con respaldo.
+- Pruebas de migración, API, frontend, mínimo exacto de ocho caracteres y rechazo de campos antiguos; manuales actualizados.
