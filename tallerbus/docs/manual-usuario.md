@@ -96,3 +96,7 @@ Las descargas quedan registradas con autor y cantidad de filas. Contabilidad no 
 ## Actualización de acceso
 
 Las contraseñas no se consultan en texto. Usuario de acceso: 3–40 caracteres alfanuméricos, punto, guion o guion bajo; sin espacios interiores. Consulta [migración y acceso](acceso-por-usuario.md) para conservar cuentas existentes y consultar sus usuarios.
+
+## Dashboard operativo
+
+Mi espacio muestra a Administración/Logística/Mecánico tarjetas de flota, disponibilidad, distribución por estado y puntos de atención. Actualizar indicadores vuelve a consultar datos y muestra hora de actualización. Disponibilidad se calcula sobre unidades activas; las barras por estado incluyen activas/inactivas. Un guion indica información no disponible, nunca una cifra inventada. Ver [interpretación del dashboard](dashboard.md).

@@ -105,3 +105,10 @@
 - Migración de cuentas con normalización/colisiones, sin cambiar hashes, IDs, roles ni relaciones; cambio de usuario revoca sesiones.
 - Cuentas privadas demo/desarrollo actualizadas sin regenerar claves; consulta local de identificadores y guía de actualización con respaldo.
 - Pruebas de migración, API, frontend, mínimo exacto de ocho caracteres y rechazo de campos antiguos; manuales actualizados.
+
+## 2026-10-27 — Dashboard operativo
+
+- Inicio con tarjetas de indicadores, disponibilidad sobre activas, distribución por estado y puntos de atención.
+- Actualización manual con hora, estados vacíos y fallos parciales sin confundir información ausente con cero.
+- Diseño responsive y accesible, sin datos ficticios, dependencias nuevas, cambios financieros o ampliación de permisos.
+- Recorridos de navegador para cálculos reales, errores/reintentos, roles y pantalla estrecha; guía de indicadores en docs/dashboard.md.
