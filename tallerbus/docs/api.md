@@ -86,7 +86,7 @@ Todas las mutaciones siguientes son exclusivamente de Logística y requieren `op
 | Método / recurso bajo /api/v1 | Contrato |
 |---|---|
 | GET /inventario/existencias | Administración/Logística/Mecánico; page/limit, search SKU/descripción, refaccionId opcional; incluye cero stock, mínimo y alerta. Solo Logística recibe valor/costoPromedio/moneda |
-| GET /inventario/movimientos | Logística; page/limit, refaccionId/ordenId; movimientos con cantidades/valor firmados, costo histórico, saldo posterior, actor y motivo privado |
+| GET /inventario/movimientos | Logística; page/limit, refaccionId/ordenId, tipo (ENTRADA/ENTREGA/DEVOLUCION/AJUSTE/RECEPCION), search por descripción/código/título/económico; movimientos con cantidades/valor firmados, costo histórico, saldo posterior, actor y motivo privado |
 | POST /inventario/entradas | refaccionId, cantidad, costoUnitario; ingreso directo sin compra, p.ej. inventario inicial con comprobante |
 | POST /inventario/entregas | refaccionId, ordenId, cantidad; descuenta al entregar a orden no finalizada, a promedio vigente |
 | POST /inventario/devoluciones | origenId de entrega, cantidad; no puede exceder lo entregado sin devolver, incluso en concurrencia; costo original; admite orden cerrada o pieza inactiva |
@@ -152,3 +152,7 @@ Estados/rangos/filtros incompatibles o desconocidos:400. desde/hasta ISO 8601 in
 Cada consulta usa una transacción REPEATABLE READ para que filas/conteo/totales correspondan al mismo snapshot. Una descarga es una nueva consulta y puede incluir cambios posteriores a lo mostrado. JSON sigue paginado; exportación de más de 10000 filas:400 con petición de reducir filtros, sin archivo parcial ni evento de éxito. No hay endpoints de exportación de escritura, xlsx/PDF, costos laborales estimados o reconstrucción de inventario histórico.
 
 CSV protege texto que empieza con =, +, -, @ tras blancos/controles mediante prefijo apóstrofo; escapa comillas, comas y saltos. Las columnas numéricas solo aceptan formato decimal/entero canónico, preservando negativos reales sin conversión a Number. Evento REPORT_EXPORT en AuditEvent incluye tipo/filas/alcance/actor, sin importes ni términos de búsqueda; consultas no modifican datos de negocio.
+
+## Consulta de devoluciones
+
+GET /inventario/movimientos incluye orden legible (id/título/económico). Para ENTREGAS añade devuelto y pendienteDevolver como decimales exactos calculados de sus devoluciones; filtros y conteo se aplican antes de paginar. No es una reserva ni sustituye la validación atómica al devolver. Permisos financieros sin cambios.

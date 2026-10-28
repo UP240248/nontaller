@@ -119,3 +119,11 @@
 - Prisma consulta SQL durante inicialización y el contenedor conocido usa unless-stopped, sin borrar datos ni regenerar claves.
 - Modo/BD/puertos/origen validados; entorno privado del modo pasado explícitamente a procesos.
 - Arranque real probado desde MySQL detenido en normal/demo, con datos/credenciales intactos y rechazo de clave errónea sin divulgación.
+
+## 2026-10-28 — Inventario y compras por tarea
+
+- Secciones separadas, acciones claras en diálogos y compras con pasos, pendientes y confirmación de cancelación.
+- Búsquedas independientes; órdenes filtradas antes de paginar; devoluciones de entregas antiguas con pendiente exacto y vínculo legible.
+- Accesos de consulta para Contabilidad basados en reportes ya autorizados, sin ampliar escritura ni exponer contactos.
+- Validación de cantidades/costos/duplicados, precisión exacta, mensajes locales y selección conservada al buscar.
+- 18 unitarias, 122 integraciones y 13 E2E relevantes aprobados; ninguna migración ni cambio de reglas de stock/costo.

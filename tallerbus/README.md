@@ -65,3 +65,7 @@ El login y el alta de cuentas usan **usuario de acceso**, **nombre del empleado*
 ## Inicio después de reiniciar el equipo
 
 `npm run dev` y `npm run demo` ahora preparan MySQL, verifican SQL/esquema con la cuenta de aplicación y solo después inician API/interfaz. Docker Desktop debe estar abierto y listo. No crean cuentas ni reemplazan credenciales. Consulta [actualización y diagnóstico de arranque](docs/arranque-tras-reinicio.md).
+
+## Inventario por tarea
+
+Inventario se organiza en Existencias, Movimientos y Compras con formularios separados y mensajes guiados. Contabilidad tiene accesos directos a consultas de inventario/valoración y compras, sin permisos de escritura. Ver [guía rápida](docs/inventario-guia-rapida.md).

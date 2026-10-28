@@ -9,3 +9,5 @@ Documentos Word editables, edición 2.0 del 27 de octubre de 2026. Incluyen la a
 En GitHub abre el archivo y selecciona **Download raw file** (icono de descarga); GitHub no muestra una vista previa de Word. Abre el archivo descargado desde Word o LibreOffice. Si descargas el ZIP, extrae los archivos primero.
 
 En una copia local existente ejecuta `git pull --ff-only` desde el repositorio; los documentos quedan en `tallerbus/docs/manuales/`. No contienen credenciales ni datos privados.
+
+Incluyen el anexo de Inventario por tareas del 28 de octubre de 2026: consultas de Contabilidad y secciones Existencias, Movimientos y Compras para Logística.

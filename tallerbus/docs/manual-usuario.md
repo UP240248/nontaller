@@ -52,7 +52,7 @@ Una orden finalizada no puede reabrirse, reasignarse ni finalizarse de nuevo. No
 
 En **Refacciones** registra el SKU, descripción, unidad, categoría opcional y mínimo. Las cantidades admiten hasta tres decimales con punto. En **Proveedores** registra código, nombre y contactos opcionales. Editar o activar/desactivar exige motivo y conserva historial. Una unidad de medida con movimientos o compras queda fija: registra otra pieza si necesitas otra unidad.
 
-En **Inventario** consulta existencias y alertas de mínimo. La búsqueda por SKU/descripción filtra existencias y actualiza las opciones de piezas activas en formularios. Para catálogos grandes usa una búsqueda específica; cada selección carga hasta 100 coincidencias, mientras las tablas tienen paginación de 20 registros. Administración y Mecánico consultan cantidades sin importes; solo Logística ve valoración y operaciones.
+En **Inventario** consulta existencias y alertas de mínimo. La búsqueda por código/descripción filtra solo existencias. Los formularios tienen búsquedas independientes para conservar las selecciones. Para catálogos grandes usa una búsqueda específica; cada selección carga hasta 100 coincidencias, mientras las tablas tienen paginación de 20 registros. Administración y Mecánico consultan cantidades sin importes; solo Logística ve valoración y operaciones.
 
 - **Entrada directa:** indica pieza, cantidad positiva, costo unitario en MXN y comprobante/motivo. Úsala para ingresos que no provengan de una compra registrada, por ejemplo saldo inicial respaldado; no repitas una recepción como entrada directa.
 - **Entrega a orden:** busca la orden, selecciona pieza/cantidad e indica motivo. La existencia baja inmediatamente al entregar; si falta stock, la operación se rechaza completa. No se entregan piezas a órdenes finalizadas.
@@ -100,3 +100,7 @@ Las contraseñas no se consultan en texto. Usuario de acceso: 3–40 caracteres 
 ## Dashboard operativo
 
 Mi espacio muestra a Administración/Logística/Mecánico tarjetas de flota, disponibilidad, distribución por estado y puntos de atención. Actualizar indicadores vuelve a consultar datos y muestra hora de actualización. Disponibilidad se calcula sobre unidades activas; las barras por estado incluyen activas/inactivas. Un guion indica información no disponible, nunca una cifra inventada. Ver [interpretación del dashboard](dashboard.md).
+
+## Inventario organizado por tarea
+
+Secciones Existencias, Movimientos y Compras, con formularios de operación separados. Contabilidad accede directamente a Inventario (consulta) y Compras (consulta), sin escritura. Guía breve: [inventario por tarea](inventario-guia-rapida.md).

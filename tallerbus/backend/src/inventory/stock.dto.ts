@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { ArrayMaxSize, ArrayMinSize, ArrayUnique, IsArray, IsIn, IsInt, IsOptional, IsString, IsUUID, Matches, MaxLength, Min, MinLength, ValidateNested } from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, ArrayUnique, IsArray, IsEnum, IsIn, IsInt, IsOptional, IsString, IsUUID, Matches, MaxLength, Min, MinLength, ValidateNested } from 'class-validator';
+import { TipoMovimiento } from '@prisma/client';
 import { PageDto } from '../dto';
 export class OperationDto {
  @ApiProperty() @IsUUID('4') operacionId!:string;
@@ -47,6 +48,9 @@ export class StockQueryDto extends PageDto {
  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(100) search?:string;
  @ApiPropertyOptional() @IsOptional() @IsUUID() refaccionId?:string;
  @ApiPropertyOptional() @IsOptional() @IsUUID() ordenId?:string;
+}
+export class MovementQueryDto extends StockQueryDto {
+ @ApiPropertyOptional({enum:TipoMovimiento}) @IsOptional() @IsEnum(TipoMovimiento) tipo?:TipoMovimiento;
 }
 export class PurchaseQueryDto extends PageDto {
  @ApiPropertyOptional() @IsOptional() @IsIn(['BORRADOR','APROBADA','PARCIAL','RECIBIDA','CANCELADA']) estado?:'BORRADOR'|'APROBADA'|'PARCIAL'|'RECIBIDA'|'CANCELADA';

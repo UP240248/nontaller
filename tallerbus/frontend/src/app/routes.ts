@@ -19,6 +19,8 @@ export const routes: Routes = [
   {path:'ordenes/:id',canActivate:[fleetAccess],loadComponent:()=>import('./features/work-orders/order-detail.component').then(m=>m.OrderDetailComponent)},
   {path:'reportes',loadComponent:()=>import('./features/reports/reports.component').then(m=>m.ReportsComponent)},
   {path:'mantenimiento',canActivate:[fleetAccess],loadComponent:()=>import('./features/maintenance/plans.component').then(m=>m.PlansComponent)},
+  {path:'inventario/movimientos',data:{section:'movimientos'},canActivate:[logisticsAccess],loadComponent:()=>import('./features/inventory/stock.component').then(m=>m.StockComponent)},
+  {path:'compras',data:{section:'compras'},canActivate:[logisticsAccess],loadComponent:()=>import('./features/inventory/stock.component').then(m=>m.StockComponent)},
   {path:'inventario',canActivate:[partsAccess],loadComponent:()=>import('./features/inventory/stock.component').then(m=>m.StockComponent)},
   {path:'refacciones',canActivate:[partsAccess],data:{kind:'parts'},loadComponent:()=>import('./features/inventory/catalog.component').then(m=>m.CatalogComponent)},
   {path:'proveedores',canActivate:[logisticsAccess],data:{kind:'suppliers'},loadComponent:()=>import('./features/inventory/catalog.component').then(m=>m.CatalogComponent)},

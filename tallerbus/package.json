@@ -17,7 +17,7 @@
     "build": "npm run build -w backend && npm run build -w frontend",
     "typecheck": "npm run typecheck -w backend && npm run typecheck -w frontend",
     "lint": "eslint backend/src frontend/src scripts tests",
-    "test:unit": "npm run build -w backend && node --test tests/unit.test.mjs tests/local-status.test.mjs tests/local-runtime.test.mjs",
+    "test:unit": "npm run build -w backend && node --test tests/unit.test.mjs tests/local-status.test.mjs tests/local-runtime.test.mjs tests/inventory-values.test.mjs",
     "test:integration": "node scripts/test-integration.mjs",
     "test:e2e": "playwright test",
     "dev:api": "node --env-file=.local/backend.env backend/dist/main.js",

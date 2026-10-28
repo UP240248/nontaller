@@ -3,12 +3,12 @@ import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { AuthRequest, SessionGuard } from '../guards';
 import { CatalogGuard, SupplierGuard } from './catalog.controller';
 import { StockService } from './stock.service';
-import { PurchaseActionDto, PurchaseDto, PurchaseQueryDto, ReceiptDto, StockAdjustmentDto, StockEntryDto, StockIssueDto, StockQueryDto, StockReturnDto } from './stock.dto';
+import { MovementQueryDto, PurchaseActionDto, PurchaseDto, PurchaseQueryDto, ReceiptDto, StockAdjustmentDto, StockEntryDto, StockIssueDto, StockQueryDto, StockReturnDto } from './stock.dto';
 @ApiTags('Inventario') @ApiCookieAuth() @Controller('inventario') @UseGuards(SessionGuard,CatalogGuard)
 export class StockController {
  constructor(private readonly stock:StockService){}
  @Get('existencias') balances(@Query() q:StockQueryDto,@Req() req:AuthRequest){return this.stock.balances(q,req.identity.role==='LOGISTICA');}
- @Get('movimientos') @UseGuards(SupplierGuard) movements(@Query() q:StockQueryDto){return this.stock.movements(q);}
+ @Get('movimientos') @UseGuards(SupplierGuard) movements(@Query() q:MovementQueryDto){return this.stock.movements(q);}
  @Get('ordenes/:id/materiales') materials(@Param('id',ParseUUIDPipe) id:string){return this.stock.orderMaterials(id);}
  @Get('ordenes/:id/costo') @UseGuards(SupplierGuard) cost(@Param('id',ParseUUIDPipe) id:string){return this.stock.orderCost(id);}
  @Post('entradas') @UseGuards(SupplierGuard) entry(@Body() dto:StockEntryDto,@Req() req:AuthRequest){return this.stock.entry(dto,req.identity);}
