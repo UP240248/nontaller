@@ -12,15 +12,17 @@ let state;
 try{state=JSON.parse(await readFile(path.join(dir,'database.json'),'utf8'));}
 catch(e){if(e.code!=='ENOENT')throw e;state={root:secret(),dev:secret(),test:secret()};await writeFile(path.join(dir,'database.json'),JSON.stringify(state),{mode:0o600,flag:'wx'});}
 const container='tallerbus-mysql-local';
-function docker(args,input){const p=spawnSync('docker',args,{input,encoding:'utf8'});if(p.status!==0)throw new Error('Falló Docker. Comprueba el daemon, acceso a la imagen y puerto 3307.');return p.stdout;}
+function docker(args,input){const p=spawnSync('docker',args,{input,encoding:'utf8'});if(p.status!==0)throw new Error(args[0]==='info'?'Docker Desktop no está listo. Ábrelo, espera a que el motor esté activo y repite npm run dev (o demo).':'Falló una operación de MySQL local. Revisa Docker y puerto 3307; no borres volúmenes ni .local.');return p.stdout;}
+docker(['info','--format','{{.ServerVersion}}']);
 const existing=spawnSync('docker',['inspect',container],{encoding:'utf8'});
 if(existing.status===0){
  const info=JSON.parse(existing.stdout)[0];
  if(info.Config.Labels?.['tallerbus.local']!=='true')throw new Error('Nombre de contenedor ocupado por otro servicio');
+ docker(['update','--restart','unless-stopped',container]);
  docker(['start',container]);
 }else{
  await writeFile(path.join(dir,'mysql.env'),`MYSQL_ROOT_PASSWORD=${state.root}\n`,{mode:0o600});
- docker(['run','-d','--name',container,'--label','tallerbus.local=true','--env-file',path.join(dir,'mysql.env'),'-p','127.0.0.1:3307:3306','-v','tallerbus-mysql-local-data:/var/lib/mysql','mysql@sha256:24989179f58856db763f418010c1169fecc944e3ec1ea7e921572d83eb070f70']);
+ docker(['run','-d','--name',container,'--label','tallerbus.local=true','--restart','unless-stopped','--env-file',path.join(dir,'mysql.env'),'-p','127.0.0.1:3307:3306','-v','tallerbus-mysql-local-data:/var/lib/mysql','mysql@sha256:24989179f58856db763f418010c1169fecc944e3ec1ea7e921572d83eb070f70']);
 }
 let ready=false;
 for(let n=0;n<60;n++){

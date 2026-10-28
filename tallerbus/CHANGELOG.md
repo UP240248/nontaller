@@ -112,3 +112,10 @@
 - Actualización manual con hora, estados vacíos y fallos parciales sin confundir información ausente con cero.
 - Diseño responsive y accesible, sin datos ficticios, dependencias nuevas, cambios financieros o ampliación de permisos.
 - Recorridos de navegador para cálculos reales, errores/reintentos, roles y pantalla estrecha; guía de indicadores en docs/dashboard.md.
+
+## 2026-10-28 — Arranque local verificado tras reinicio
+
+- dev/demo preparan el contenedor y verifican SQL con sus cuentas antes de abrir API/interfaz; mensajes previos al arranque ante fallos.
+- Prisma consulta SQL durante inicialización y el contenedor conocido usa unless-stopped, sin borrar datos ni regenerar claves.
+- Modo/BD/puertos/origen validados; entorno privado del modo pasado explícitamente a procesos.
+- Arranque real probado desde MySQL detenido en normal/demo, con datos/credenciales intactos y rechazo de clave errónea sin divulgación.

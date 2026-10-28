@@ -75,3 +75,7 @@ La demo utiliza el mismo contenedor MySQL local, pero otro esquema/usuario y car
 ## Evidencia de esta entrega — 27 de octubre de 2026
 
 En el entorno Linux de desarrollo se ejecutaron correctamente lint, demo:setup (generación, seis migraciones, compilación y carga), seis casos de demo:check y un recorrido real con Chromium: login de Logística, flota, fallas, órdenes, inventario, mantenimiento, reportes, salud a través del proxy y logout. La repetición del seed conservó todos los hashes de tablas demo y personales; la cuenta SQL demo recibió denegación al intentar leer tallerbus y tallerbus_test. No se imprimieron contraseñas ni datos internos. No se afirma una ejecución en la computadora Windows del usuario. No cambió la lógica de negocio ni se repitió la suite completa de aplicación para esta carga aislada.
+
+## Arranque diario actualizado
+
+Después de preparar la demo, `npm run demo` ya inicia/verifica MySQL, refresca la clave RSA local y comprueba SQL con la cuenta demo antes de abrir API/interfaz. Docker Desktop debe tener el motor activo. No es necesario repetir demo:setup cada mañana ni crear otras cuentas. Ver arranque-tras-reinicio.md.

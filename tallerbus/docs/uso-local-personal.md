@@ -27,7 +27,6 @@ No ejecutes `seed:dev` para empezar tus datos personales: crea cuentas ficticias
 Arranca Docker y, desde `tallerbus/`:
 
 ```sh
-npm run db:local
 npm run dev
 ```
 
@@ -82,3 +81,7 @@ Detén la aplicación, crea y verifica una copia primero. Con el checkout limpio
 El cierre técnico local incluye pruebas automatizadas, referencia de carga, respaldo/restauración aislada, revisión de teclado/pantalla estrecha y comprobación de arranque. Queda tu aceptación en el equipo donde vas a usarlo. El despliegue empresarial, HTTPS público, servidor interno y aceptación productiva se retoman únicamente si decides ampliar el alcance; no bloquean la entrega local personal ni se consideran realizados.
 
 Para una versión anterior con acceso por correo, sigue [migración a usuario](acceso-por-usuario.md) y consulta `npm run users:local` después de actualizar.
+
+### Arranque actualizado
+
+El lanzador `dev` ya incluye db:local y una consulta SQL previa con la cuenta de la aplicación. Tras actualizar esta versión, cada inicio solo necesita Docker Desktop listo y `npm run dev`; para demo, `npm run demo`. Ver [arranque después de reiniciar](arranque-tras-reinicio.md). Si falla la comprobación no se abre la interfaz.

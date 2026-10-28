@@ -61,3 +61,7 @@ Un eventual despliegue empresarial/productivo requiere validar HTTPS/proxy/BD re
 ## Acceso con nombre de usuario
 
 El login y el alta de cuentas usan **usuario de acceso**, **nombre del empleado** y contraseña de **mínimo 8 caracteres**, sin correo. Administración ve usuario/nombre/rol/estado; las contraseñas se guardan protegidas y no se muestran. Para actualizar sin perder cuentas, sigue [migración a usuario](docs/acceso-por-usuario.md). Después de setup, `npm run users:local` muestra los identificadores migrados sin claves.
+
+## Inicio después de reiniciar el equipo
+
+`npm run dev` y `npm run demo` ahora preparan MySQL, verifican SQL/esquema con la cuenta de aplicación y solo después inician API/interfaz. Docker Desktop debe estar abierto y listo. No crean cuentas ni reemplazan credenciales. Consulta [actualización y diagnóstico de arranque](docs/arranque-tras-reinicio.md).
