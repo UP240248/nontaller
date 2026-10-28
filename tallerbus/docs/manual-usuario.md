@@ -104,3 +104,9 @@ Mi espacio muestra a Administración/Logística/Mecánico tarjetas de flota, dis
 ## Inventario organizado por tarea
 
 Secciones Existencias, Movimientos y Compras, con formularios de operación separados. Contabilidad accede directamente a Inventario (consulta) y Compras (consulta), sin escritura. Guía breve: [inventario por tarea](inventario-guia-rapida.md).
+
+## Fichas de piezas individuales
+
+Desde Inventario abre **Catálogo / agregar refacción** para registrar un tipo de pieza, o **Fichas con foto / agregar pieza** para identificar una pieza física. Administración, Logística y Mecánicos registran y actualizan estos datos. Administración y Logística pueden retirar tipos del catálogo; las compras y los movimientos siguen a cargo de Logística.
+
+La ficha incluye foto privada PNG/JPEG de hasta 5 MB, identificador único, condición libre, situación, observaciones y costo aproximado opcional visible para estos tres roles. El costo vacío queda pendiente y es informativo. Para marcar una pieza **En uso**, escribe el número económico registrado en Autobuses. Para darla de baja elige **Retirada**; se conserva su historial. Ninguna actualización de ficha cambia por sí sola las existencias ni el costo contable.

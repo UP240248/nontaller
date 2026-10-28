@@ -1,3 +1,11 @@
+## 2026-10-28 · Seguimiento físico de refacciones
+
+- Accesos visibles desde Inventario al catálogo y a fichas individuales con fotografía.
+- Administración, Logística y Mecánicos registran y editan refacciones y fichas. Solo Administración y Logística desactivan tipos del catálogo; compras y stock siguen a cargo de Logística.
+- Condición libre, situación de uso, unidad existente, observaciones y costo aproximado opcional; este costo informativo es visible para los tres roles del taller.
+- Fotografía privada PNG/JPEG, control de versiones e historial. Baja mediante Retirada, sin borrar trazabilidad.
+- Migración aditiva `20261028200000_part_tracking`; ejecutar setup al actualizar.
+
 # Registro de cambios
 
 ## 2026-10-17 — Fase 0 documental

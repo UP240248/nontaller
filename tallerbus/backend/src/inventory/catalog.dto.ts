@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsBoolean, IsEmail, IsIn, IsInt, IsOptional, IsString, Matches, MaxLength, Min, MinLength, ValidateIf } from 'class-validator';
+import { IsBoolean, IsUUID, IsEmail, IsIn, IsInt, IsOptional, IsString, Matches, MaxLength, Min, MinLength, ValidateIf } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { PageDto } from '../dto';
 const trim=({value}:{value:unknown})=>typeof value==='string'?value.trim():value;
@@ -37,4 +37,15 @@ export class CatalogActiveDto extends CatalogVersionDto {
 export class CatalogQueryDto extends PageDto {
  @ApiPropertyOptional() @ValidateIf((_o,value:unknown)=>value!==undefined) @Transform(trim) @IsString() @MaxLength(100) search?:string;
  @ApiPropertyOptional({enum:['true','false']}) @ValidateIf((_o,value:unknown)=>value!==undefined) @IsIn(['true','false']) activo?:string;
+}
+
+export class PartTrackingDto {
+ @IsUUID() refaccionId!:string;
+ @Transform(trim) @IsString() @MinLength(1) @MaxLength(80) identificador!:string;
+ @Transform(trim) @IsString() @MinLength(1) @MaxLength(200) condicion!:string;
+ @IsIn(['PENDIENTE','DISPONIBLE','EN_USO','RETIRADA']) situacion!:string;
+ @Transform(optional) @IsOptional() @IsString() @MaxLength(40) unidad?:string|null;
+ @IsOptional() @IsString() @Matches(/^(?:0|[1-9]\d{0,8})(?:\.\d{1,6})?$/) costoAproximado?:string|null;
+ @Transform(optional) @IsOptional() @IsString() @MaxLength(1000) notas?:string|null;
+ @IsOptional() @IsInt() @Min(1) version?:number;
 }

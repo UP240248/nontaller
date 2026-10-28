@@ -224,6 +224,7 @@ model RefaccionDescriptiva {
 }
 
 model Refaccion {
+  fichas FichaRefaccion[]
   saldo SaldoInventario?
   movimientos MovimientoInventario[]
   compras LineaCompra[]
@@ -400,4 +401,23 @@ model PasoPreventivo {
  completado Boolean @default(false)
  observaciones String? @db.VarChar(500)
  @@unique([ejecucionId,posicion])
+}
+
+// Seguimiento físico individual; no modifica cantidades ni valoración contable.
+model FichaRefaccion {
+ id String @id @default(uuid()) @db.Char(36)
+ refaccionId String @db.Char(36)
+ refaccion Refaccion @relation(fields:[refaccionId], references:[id])
+ identificador String @unique @db.VarChar(80)
+ condicion String @db.VarChar(200)
+ situacion String @db.VarChar(30)
+ unidad String? @db.VarChar(40)
+ costoAproximado Decimal? @db.Decimal(15,6)
+ notas String? @db.VarChar(1000)
+ foto Bytes? @db.MediumBlob
+ fotoMime String? @db.VarChar(30)
+ version Int @default(1)
+ createdAt DateTime @default(now()) @db.DateTime(3)
+ updatedAt DateTime @updatedAt @db.DateTime(3)
+ @@index([refaccionId, createdAt])
 }

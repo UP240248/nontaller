@@ -21,6 +21,7 @@ export const routes: Routes = [
   {path:'mantenimiento',canActivate:[fleetAccess],loadComponent:()=>import('./features/maintenance/plans.component').then(m=>m.PlansComponent)},
   {path:'inventario/movimientos',data:{section:'movimientos'},canActivate:[logisticsAccess],loadComponent:()=>import('./features/inventory/stock.component').then(m=>m.StockComponent)},
   {path:'compras',data:{section:'compras'},canActivate:[logisticsAccess],loadComponent:()=>import('./features/inventory/stock.component').then(m=>m.StockComponent)},
+  {path:'inventario/fichas',canActivate:[partsAccess],loadComponent:()=>import('./features/inventory/tracking.component').then(m=>m.TrackingComponent)},
   {path:'inventario',canActivate:[partsAccess],loadComponent:()=>import('./features/inventory/stock.component').then(m=>m.StockComponent)},
   {path:'refacciones',canActivate:[partsAccess],data:{kind:'parts'},loadComponent:()=>import('./features/inventory/catalog.component').then(m=>m.CatalogComponent)},
   {path:'proveedores',canActivate:[logisticsAccess],data:{kind:'suppliers'},loadComponent:()=>import('./features/inventory/catalog.component').then(m=>m.CatalogComponent)},

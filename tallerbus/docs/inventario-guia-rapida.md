@@ -70,3 +70,15 @@ Comprobados: compras/recepciones, entrega/devolución, cierre sin segundo consum
 ![Movimientos y devoluciones](images/inventario-movimientos.png)
 
 En una entrega, pendiente de devolver indica **el máximo que todavía se puede devolver**, no una obligación de regresar piezas que sí se utilizaron. En una compra, pendiente de recibir sí indica la diferencia entre pedido y recibido.
+
+## Fichas físicas con fotografía
+
+En **Inventario → Fichas con foto / agregar pieza** puedes identificar cada pieza individual. Administración, Logística y Mecánicos pueden registrar tipos de refacción y actualizar fichas. Para crear una ficha primero registra su tipo en **Catálogo / agregar refacción**.
+
+Cada ficha tiene identificador único (por ejemplo un número de serie), condición de texto libre (hasta 200 caracteres), situación, fotografía PNG/JPEG de hasta 5 MB, observaciones y costo aproximado MXN opcional. Dejar el costo vacío significa **Pendiente**, no cero. Este importe es informativo y visible para estos tres roles; no representa la valoración contable.
+
+Situaciones: **Pendiente de revisión**, **Disponible**, **En uso en una unidad** y **Retirada / baja**. Si está en uso, escribe el número económico que aparece en Autobuses. **Actualizar pieza** permite cambiar los datos o reemplazar la foto. Retirar conserva su registro e historial; no se borran movimientos.
+
+Registrar o retirar una ficha no agrega ni descuenta existencias: Logística sigue registrando entradas, entregas y devoluciones del almacén. Para retirar un tipo completo del catálogo, Administración o Logística puede desactivarlo. Mecánicos pueden registrar y editar tipos, pero no desactivar el catálogo ni operar compras.
+
+Actualización local: detén el servidor, abre Docker, ejecuta `git pull --ff-only`, `npm.cmd run setup` (incluye la nueva tabla, sin borrar datos) y `npm.cmd run dev`.
