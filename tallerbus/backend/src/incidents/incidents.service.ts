@@ -34,11 +34,13 @@ export class IncidentsService {
  async metrics(actor:Identity){const groups=await this.db.falla.groupBy({by:['estado'],where:this.scope(actor),_count:{_all:true}});let abiertas=0;for(const g of groups)if(g.estado!=='FINALIZADA')abiertas+=g._count._all;return {abiertas};}
  async create(input:CreateIncidentDto,actor:Identity) {
   return this.db.$transaction(async tx=>{
+   if(actor.role===Role.OPERADOR)await tx.$queryRaw`SELECT id FROM AdminLock WHERE id = 1 FOR UPDATE`;
    await this.authorize(tx,actor,incidentReporters);
    const bus=await tx.autobus.findUnique({where:{numeroEconomico:input.numeroEconomico},select:{id:true,activo:true}});
    if(!bus?.activo)throw new BadRequestException('Unidad no disponible para reportar');
    // Bloquea la unidad para serializar con desactivación; no modifica su estado ni versión.
    await tx.$queryRaw`SELECT id FROM Autobus WHERE id = ${bus.id} FOR UPDATE`;
+   if(actor.role===Role.OPERADOR&&!await tx.operadorAutobus.findUnique({where:{operadorId_autobusId:{operadorId:actor.id,autobusId:bus.id}}}))throw new ForbiddenException('Solo puedes reportar fallas de tus unidades autorizadas. Solicita la asignación a Administración.');
    const current=await tx.autobus.findUnique({where:{id:bus.id},select:{activo:true}});
    if(!current?.activo)throw new BadRequestException('Unidad no disponible para reportar');
    const incident=await tx.falla.create({data:{autobusId:bus.id,reportanteId:actor.id,descripcion:input.descripcion,tipo:input.tipo},select:incidentSelect});

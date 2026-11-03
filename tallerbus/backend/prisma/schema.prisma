@@ -13,6 +13,8 @@ enum Role {
   CONTABILIDAD
 }
 model User {
+  unidadesOperador OperadorAutobus[]
+  operatorFleetVersion Int @default(0)
  registrosCompra RegistroCompra[]
   movimientos MovimientoInventario[]
   comprasCreadas Compra[] @relation("CreadorCompra")
@@ -86,6 +88,7 @@ enum EstadoOperativo {
   FUERA_DE_SERVICIO
 }
 model Autobus {
+  operadoresAutorizados OperadorAutobus[]
   planes PlanPreventivo[]
   id String @id @default(uuid()) @db.Char(36)
   numeroEconomico String @unique @db.VarChar(30)
@@ -421,4 +424,14 @@ model FichaRefaccion {
  createdAt DateTime @default(now()) @db.DateTime(3)
  updatedAt DateTime @updatedAt @db.DateTime(3)
  @@index([refaccionId, createdAt])
+}
+
+model OperadorAutobus {
+ operadorId String @db.Char(36)
+ autobusId String @db.Char(36)
+ operador User @relation(fields:[operadorId],references:[id],onDelete:Restrict)
+ autobus Autobus @relation(fields:[autobusId],references:[id],onDelete:Restrict)
+ createdAt DateTime @default(now()) @db.DateTime(3)
+ @@id([operadorId,autobusId])
+ @@index([autobusId])
 }

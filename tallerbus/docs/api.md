@@ -163,3 +163,14 @@ GET /inventario/movimientos incluye orden legible (id/título/económico). Para 
 Las compras sin proveedor no generan registros ficticios en Proveedor; almacenan proveedorId nulo y vendedor opcional. Las listas, el detalle y los reportes admiten la relación nula. El reporte usa vendedor o «Sin proveedor registrado» y los totales incluyen estas compras. Las recepciones posteriores conservan versiones, límites e idempotencia.
 
 En POST/PATCH `/refacciones/fichas`, identificador es opcional: una ficha nueva recibe PZ-UUID si se omite o queda vacío; una existente conserva su identificador al dejarlo vacío. El resto de permisos, condición libre y fotos privadas se conserva.
+
+## Autorizaciones de autobuses para operadores
+
+- `GET /operadores`: directorio paginado de operadores, solo Administración/Logística. `page`, `limit`, `search`. No permite consultar usuarios de otros roles ni datos de autenticación.
+- `GET /operadores/:id/unidades`: nombre/usuario/estado del operador, `operatorFleetVersion` y unidades autorizadas (ID, económico, placas y activo). Mismos roles.
+- `PATCH /operadores/:id/unidades`: `version` entero desde 0, `autobusIds` UUID únicos (máximo 500) y `motivo` de 3–500 caracteres. Primera asignación: Administración y al menos una unidad activa. Tras inicializar, Administración/Logística pueden cambiar o retirar permisos. Versión obsoleta →409, selección inválida →400, rol insuficiente →403. Exige sesión/Origin/CSRF.
+- `GET /operadores/mis-unidades`: exclusivo del Operador; devuelve solo sus unidades activas (`id`, `numeroEconomico`, `placas`). No concede acceso al catálogo general.
+
+`POST /fallas` conserva su contrato: `numeroEconomico`, `tipo`, `descripcion`. Para Operador se valida pertenencia a sus unidades autorizadas dentro de la transacción de creación; una unidad activa ajena devuelve 403 y no crea reporte. Mecánico conserva su alcance. Retirada de autorización y creación de reporte se serializan con AdminLock, al igual que los cambios de rol. Reasignaciones no actualizan las FK de fallas históricas. Se audita OPERATOR_UNITS con responsable, motivo, antes/después y versión.
+
+Migración `20261103190000_operator_units`: relación muchos a muchos y versión independiente de la cuenta. Los usuarios existentes comienzan sin autorizaciones; no se infieren desde reportes previos.

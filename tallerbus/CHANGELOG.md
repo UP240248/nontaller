@@ -1,3 +1,12 @@
+## 2026-11-03 · Autobuses autorizados por operador
+
+- Asignación de múltiples unidades por operador: primera configuración exclusiva de Administración, cambios posteriores por Administración/Logística.
+- Accesos desde Usuarios y menú; directorio mínimo para Logística sin ampliar acceso a cuentas generales.
+- Selector obligatorio de unidades activas autorizadas al reportar; validación transaccional del servidor para impedir reportes de unidades ajenas y carreras con reasignaciones.
+- Versiones independientes y auditoría de autorizaciones. Cambiar de rol elimina permisos de operador; el historial de fallas conserva autor y unidad originales.
+- Migración aditiva sin asignación automática de usuarios existentes; setup requerido.
+- Demo nueva con dos unidades ficticias autorizadas; demo existente conserva sus ediciones.
+
 ## 2026-11-03 · Atención de reparaciones desde Fallas
 
 - Fallas muestra acceso Atender falla y distingue reportes sin orden de los pendientes de inicio.

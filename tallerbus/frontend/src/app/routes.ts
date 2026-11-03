@@ -25,6 +25,7 @@ export const routes: Routes = [
   {path:'inventario',canActivate:[partsAccess],loadComponent:()=>import('./features/inventory/stock.component').then(m=>m.StockComponent)},
   {path:'refacciones',canActivate:[partsAccess],data:{kind:'parts'},loadComponent:()=>import('./features/inventory/catalog.component').then(m=>m.CatalogComponent)},
   {path:'proveedores',canActivate:[logisticsAccess],data:{kind:'suppliers'},loadComponent:()=>import('./features/inventory/catalog.component').then(m=>m.CatalogComponent)},
+  {path:'operadores',canActivate:[fleetManager],loadComponent:()=>import('./features/operator-units.component').then(m=>m.OperatorUnitsComponent)},
   {path:'usuarios',canActivate:[administrator],loadComponent:()=>import('./features/users.component').then(m=>m.UsersComponent)},
   {path:'auditoria',canActivate:[administrator],loadComponent:()=>import('./features/audit.component').then(m=>m.AuditComponent)}
  ]},

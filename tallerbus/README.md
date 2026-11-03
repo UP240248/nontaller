@@ -81,3 +81,7 @@ Compras permite compra ocasional sin proveedor registrado y folio automático. E
 ## Seguimiento de reparación en Fallas
 
 El mecánico asignado puede abrir **Fallas → Atender falla** y usar **Marcar en proceso** o **Finalizar trabajo** sin buscar los controles dentro de Órdenes. Si falta orden/asignación, se explica qué debe completar Administración o Logística. Cuando hay varias fallas en una orden, se avisa que todas se actualizan juntas. Ver [manual de uso](docs/manual-usuario.md).
+
+## Autobuses autorizados por operador
+
+Administración inicia la asignación desde Usuarios → Autobuses autorizados; Administración y Logística pueden cambiarla después. Cada operador puede tener varias unidades y debe seleccionar una autorizada al reportar. El servidor rechaza unidades ajenas; los reportes anteriores conservan su autobús original. Tras actualizar con setup, configura los operadores existentes. Ver [guía](docs/operadores-unidades.md).

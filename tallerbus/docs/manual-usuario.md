@@ -131,3 +131,11 @@ Debes estar asignado a la orden. Si falta una orden o asignación, el apartado e
 Si la orden agrupa varias fallas del mismo autobús, el aviso indica cuántas: se inician y finalizan juntas. Las acciones siguen disponibles en Órdenes de trabajo y usan el mismo registro; no se crean cierres duplicados ni se descuentan piezas por cerrar otra vez. Una falla finalizada conserva su historial y no muestra botones para volverla a cerrar.
 
 El Operador consulta el estado de sus reportes. Administración y Logística coordinan la asignación; solo el mecánico asignado ejecuta y finaliza. El estado del autobús se gestiona por separado.
+
+## Unidades autorizadas del operador
+
+Administración hace la primera asignación desde **Usuarios → Autobuses autorizados** o desde **Unidades de operadores**. Puede elegir varias unidades activas. Después, Administración y Logística pueden reasignarlas con motivo. Logística conserva su acceso limitado: no edita cuentas ni roles.
+
+El operador debe elegir una de sus unidades autorizadas en **Reportar falla**. Si no tiene ninguna activa, no puede enviar el reporte y aparece un aviso. No se selecciona una unidad por defecto. Una reasignación no cambia los reportes anteriores: conservan su autobús original y el operador sigue consultando su historial.
+
+Al actualizar, los operadores existentes necesitan asignación inicial por Administración; sus reportes se conservan. Consulta la [guía de operadores y unidades](operadores-unidades.md).

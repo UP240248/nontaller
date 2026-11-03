@@ -39,7 +39,8 @@ export class UsersService {
       if (removingAdmin && await tx.user.count({where:{role:Role.ADMINISTRACION,active:true}}) <= 1) throw new ConflictException('Debe existir al menos un administrador activo');
       const {version: _version, ...patch} = input;
       void _version;
-      const after = await tx.user.update({where:{id},data:{...patch,version:{increment:1}},select:userFields});
+      if(patch.role!==undefined&&patch.role!==before.role){const revoked=await tx.operadorAutobus.findMany({where:{operadorId:id},select:{autobusId:true}});await tx.operadorAutobus.deleteMany({where:{operadorId:id}});if(revoked.length)await tx.auditEvent.create({data:{actorId,entity:'User',entityId:id,action:'OPERATOR_UNITS',changes:{before:revoked.map(r=>r.autobusId),after:[],motivo:'Cambio de rol del usuario',version:0}}});}
+      const after = await tx.user.update({where:{id},data:{...patch,...(patch.role!==undefined&&patch.role!==before.role?{operatorFleetVersion:0}:{}),version:{increment:1}},select:userFields});
       if (!after.active || after.role !== before.role || after.username !== before.username) await tx.session.updateMany({where:{userId:id,revokedAt:null},data:{revokedAt:new Date()}});
       await tx.auditEvent.create({data:{actorId,entity:'User',entityId:id,action:'UPDATE',changes:{before,after}}});
       return after;
