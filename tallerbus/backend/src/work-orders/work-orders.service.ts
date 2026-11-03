@@ -5,7 +5,7 @@ import { Identity } from '../guards';
 import { PageDto } from '../dto';
 import { AssignOrderDto, CreateOrderDto, FinishOrderDto, OrderQueryDto, StartOrderDto, WaitOrderDto } from './work-orders.dto';
 const coordinators:Role[]=[Role.ADMINISTRACION,Role.LOGISTICA];
-export const orderReaders:Role[]=[...coordinators,Role.MECANICO];
+export const orderReaders:Role[]=[...coordinators,Role.MECANICO,Role.CONTABILIDAD];
 const select={preventivo:{select:{id:true,planId:true}},id:true,autobusId:true,titulo:true,estado:true,diagnostico:true,esperaRefacciones:true,startedAt:true,createdAt:true,updatedAt:true,version:true,autobus:{select:{id:true,numeroEconomico:true,kilometraje:true}},fallas:{select:{id:true,tipo:true,descripcion:true,estado:true,prioridad:true}},asignaciones:{select:{id:true,mecanicoId:true,retiradoAt:true,createdAt:true,mecanico:{select:{id:true,name:true,active:true,role:true}},asignadoPor:{select:{id:true,name:true}}},orderBy:{createdAt:'asc' as const}},finalizacion:{select:{id:true,trabajoRealizado:true,observaciones:true,fechaFinalizacion:true,aplicoManoObra:true,manoObraMinutos:true,aplicaronRefacciones:true,responsable:{select:{id:true,name:true}},refacciones:{select:{id:true,descripcion:true,cantidad:true,unidad:true}}}}} as const;
 @Injectable()
 export class WorkOrdersService {

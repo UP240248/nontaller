@@ -59,7 +59,7 @@ No se admite manipular reportante/estado/prioridad en el alta. El reporte origin
 
 ## Órdenes — Fase 3
 
-Lectura: Administración/Logística/Mecánico; Operador/Contabilidad no acceden.
+Lectura de órdenes: Administración, Logística, Mecánico y Contabilidad. Operador no accede. Contabilidad es exclusivamente de consulta; todas sus mutaciones de órdenes devuelven 403 antes de validar el cuerpo.
 
 | Método / recurso bajo /api/v1 | Contrato / autorización |
 |---|---|
@@ -92,7 +92,7 @@ Todas las mutaciones siguientes son exclusivamente de Logística y requieren `op
 | POST /inventario/devoluciones | origenId de entrega, cantidad; no puede exceder lo entregado sin devolver, incluso en concurrencia; costo original; admite orden cerrada o pieza inactiva |
 | POST /inventario/ajustes | refaccionId, cantidad firmada; promedio vigente. Ajuste positivo sin saldo previo:409, usar entrada con costo |
 | GET /inventario/ordenes/:id/materiales | Administración/Logística/Mecánico; cantidades y descripciones históricas, sin importes ni comprobantes privados |
-| GET /inventario/ordenes/:id/costo | Solo Logística; costoRefacciones neto de entregas menos devoluciones, MXN; no incluye compras ni piezas descriptivas del cierre |
+| GET /inventario/ordenes/:id/costo | Logística y Contabilidad; costoRefacciones neto de entregas menos devoluciones, MXN; no incluye compras ni piezas descriptivas del cierre |
 | GET /compras | Logística; page/limit, estado opcional; proveedor y líneas, orden fecha/ID descendente |
 | GET /compras/:id | Logística; líneas, cantidades pedidas/recibidas, costo unitario histórico, totalMXN, historial privado con actor/motivo |
 | POST /compras | proveedorId opcional (activo si se especifica), vendedor ocasional opcional (excluyente con proveedorId), referencia opcional (COMP-operacionId si se omite), lineas de refaccionId/cantidad/costoUnitario; 1–50 distintas. registro opcional: BORRADOR por defecto, PEDIDO autoriza sin stock, RECIBIDA autoriza e ingresa todo atómicamente. Idempotencia incluye modo y actor |
@@ -174,3 +174,12 @@ En POST/PATCH `/refacciones/fichas`, identificador es opcional: una ficha nueva 
 `POST /fallas` conserva su contrato: `numeroEconomico`, `tipo`, `descripcion`. Para Operador se valida pertenencia a sus unidades autorizadas dentro de la transacción de creación; una unidad activa ajena devuelve 403 y no crea reporte. Mecánico conserva su alcance. Retirada de autorización y creación de reporte se serializan con AdminLock, al igual que los cambios de rol. Reasignaciones no actualizan las FK de fallas históricas. Se audita OPERATOR_UNITS con responsable, motivo, antes/después y versión.
 
 Migración `20261103190000_operator_units`: relación muchos a muchos y versión independiente de la cuenta. Los usuarios existentes comienzan sin autorizaciones; no se infieren desde reportes previos.
+
+
+## Consulta contable de órdenes
+
+Contabilidad puede usar GET `/ordenes`, `/ordenes/:id`, `/ordenes/:id/historial`, `/inventario/ordenes/:id/materiales`, `/inventario/ordenes/:id/costo` y `/mantenimiento/ejecuciones/:id`. Este último permite consultar el checklist de la orden preventiva sin conceder acceso a planes de mantenimiento.
+
+Materiales incluye `valor` y `costoUnitario` únicamente para Logística/Contabilidad, como cadenas decimales. Administración/Mecánico conservan cantidades sin importes y no acceden a costo de orden. Todos los roles mantienen sus restricciones de catálogos, compras, movimientos y modificación de checklist. Contabilidad no obtiene GET `/fallas`, `/autobuses`, `/proveedores`, `/refacciones`, `/compras` ni movimientos operativos por esta habilitación; continúa consultando sus reportes financieros autorizados.
+
+Los importes provienen de entregas menos devoluciones; finalizar no genera otro costo. La valoración promedio no demuestra que una entrega provenga de una compra concreta. No se incorpora asignación por lote, serie o factura de compra a una entrega.

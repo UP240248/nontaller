@@ -1,16 +1,21 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable, Body, Controller, Get, Param, ParseUUIDPipe, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
+import { Role } from '@prisma/client';
 import { AuthRequest, SessionGuard } from '../guards';
 import { CatalogGuard, SupplierGuard } from './catalog.controller';
 import { StockService } from './stock.service';
 import { MovementQueryDto, PurchaseActionDto, PurchaseDto, PurchaseQueryDto, ReceiptDto, StockAdjustmentDto, StockEntryDto, StockIssueDto, StockQueryDto, StockReturnDto } from './stock.dto';
-@ApiTags('Inventario') @ApiCookieAuth() @Controller('inventario') @UseGuards(SessionGuard,CatalogGuard)
+@Injectable()
+export class OrderMaterialsGuard implements CanActivate {canActivate(c:ExecutionContext){const role=c.switchToHttp().getRequest<AuthRequest>().identity.role;if(!([Role.ADMINISTRACION,Role.LOGISTICA,Role.MECANICO,Role.CONTABILIDAD] as Role[]).includes(role))throw new ForbiddenException('Acceso a materiales no autorizado');return true;}}
+@Injectable()
+export class OrderCostGuard implements CanActivate {canActivate(c:ExecutionContext){const role=c.switchToHttp().getRequest<AuthRequest>().identity.role;if(role!==Role.LOGISTICA&&role!==Role.CONTABILIDAD)throw new ForbiddenException('Consulta financiera no autorizada');return true;}}
+@ApiTags('Inventario') @ApiCookieAuth() @Controller('inventario') @UseGuards(SessionGuard,OrderMaterialsGuard)
 export class StockController {
  constructor(private readonly stock:StockService){}
- @Get('existencias') balances(@Query() q:StockQueryDto,@Req() req:AuthRequest){return this.stock.balances(q,req.identity.role==='LOGISTICA');}
+ @Get('existencias') @UseGuards(CatalogGuard) balances(@Query() q:StockQueryDto,@Req() req:AuthRequest){return this.stock.balances(q,req.identity.role==='LOGISTICA');}
  @Get('movimientos') @UseGuards(SupplierGuard) movements(@Query() q:MovementQueryDto){return this.stock.movements(q);}
- @Get('ordenes/:id/materiales') materials(@Param('id',ParseUUIDPipe) id:string){return this.stock.orderMaterials(id);}
- @Get('ordenes/:id/costo') @UseGuards(SupplierGuard) cost(@Param('id',ParseUUIDPipe) id:string){return this.stock.orderCost(id);}
+ @Get('ordenes/:id/materiales') materials(@Param('id',ParseUUIDPipe) id:string,@Req() req:AuthRequest){return this.stock.orderMaterials(id,req.identity.role==='LOGISTICA'||req.identity.role==='CONTABILIDAD');}
+ @Get('ordenes/:id/costo') @UseGuards(OrderCostGuard) cost(@Param('id',ParseUUIDPipe) id:string){return this.stock.orderCost(id);}
  @Post('entradas') @UseGuards(SupplierGuard) entry(@Body() dto:StockEntryDto,@Req() req:AuthRequest){return this.stock.entry(dto,req.identity);}
  @Post('entregas') @UseGuards(SupplierGuard) issue(@Body() dto:StockIssueDto,@Req() req:AuthRequest){return this.stock.issue(dto,req.identity);}
  @Post('devoluciones') @UseGuards(SupplierGuard) returns(@Body() dto:StockReturnDto,@Req() req:AuthRequest){return this.stock.returnStock(dto,req.identity);}

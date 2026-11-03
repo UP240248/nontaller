@@ -88,3 +88,19 @@ test('ficha permite omitir el código y conserva el generado al actualizar',asyn
  const created=await post('/refacciones/fichas',input,'MECANICO');assert.equal(created.status,201);const original=await db.fichaRefaccion.findUniqueOrThrow({where:{id:created.body.id}});assert.match(original.identificador,/^PZ-/);assert.equal(original.costoAproximado,null);
  assert.equal((await request('/refacciones/fichas/'+original.id,{method:'PATCH',role:'MECANICO',data:{...input,identificador:'',version:original.version,condicion:'Desgastada'}})).status,200);assert.equal((await db.fichaRefaccion.findUniqueOrThrow({where:{id:original.id}})).identificador,original.identificador);
 });
+test('Contabilidad consulta órdenes y costos reales de entregas menos devoluciones sin permisos de escritura',async()=>{
+ const p=await post('/refacciones',{...partData,sku:'CONT-LECTURA',descripcion:'Pieza contable',minimo:'0'});assert.equal(p.status,201);
+ const o=await db.ordenTrabajo.create({data:{autobusId:order.autobusId,titulo:'Consumos para consulta contable'}});
+ const bought=await post('/compras',operation({registro:'RECIBIDA',referencia:'COMP-CONT-READ',lineas:[{refaccionId:p.body.id,cantidad:'3',costoUnitario:'10'}]}));assert.equal(bought.status,201);
+ const issued=await post('/inventario/entregas',operation({refaccionId:p.body.id,ordenId:o.id,cantidad:'2'}));assert.equal(issued.status,201);
+ assert.equal((await post('/inventario/devoluciones',operation({origenId:issued.body.id,cantidad:'0.5'}))).status,201);
+ const before=await db.movimientoInventario.count();const events=await db.auditEvent.count();
+ for(const path of ['/ordenes','/ordenes/'+o.id,'/ordenes/'+o.id+'/historial'])assert.equal((await request(path,{role:'CONTABILIDAD'})).status,200);
+ const lines=await request('/inventario/ordenes/'+o.id+'/materiales',{role:'CONTABILIDAD'});assert.equal(lines.status,200);assert.equal(lines.body.data.length,2);assert.equal(lines.body.data[0].costoUnitario,'10');assert.equal(lines.body.data[0].valor,'-20');assert.equal(lines.body.data[1].valor,'5');
+ assert.equal((await request('/inventario/ordenes/'+o.id+'/costo',{role:'CONTABILIDAD'})).body.costoRefacciones,'15');
+ for(const role of ['ADMINISTRACION','MECANICO']){const r=await request('/inventario/ordenes/'+o.id+'/materiales',{role});assert.equal(r.status,200);assert.ok(r.body.data.every(m=>!('valor' in m)&&!('costoUnitario' in m)));assert.equal((await request('/inventario/ordenes/'+o.id+'/costo',{role})).status,403);}
+ for(const [path,method] of [['/ordenes','POST'],['/ordenes/'+o.id+'/asignaciones','PATCH'],['/ordenes/'+o.id+'/iniciar','POST'],['/ordenes/'+o.id+'/espera','PATCH'],['/ordenes/'+o.id+'/finalizar','POST']])assert.equal((await request(path,{method,role:'CONTABILIDAD',data:{}})).status,403);
+ for(const path of ['/autobuses','/fallas','/refacciones','/inventario/existencias','/inventario/movimientos','/compras','/proveedores','/ordenes/mecanicos','/mantenimiento/planes'])assert.equal((await request(path,{role:'CONTABILIDAD'})).status,403);
+ for(const path of ['/inventario/entradas','/inventario/entregas','/inventario/ajustes','/inventario/devoluciones','/compras'])assert.equal((await request(path,{method:'POST',role:'CONTABILIDAD',data:{}})).status,403);
+ assert.equal(await db.movimientoInventario.count(),before);assert.equal(await db.auditEvent.count(),events);
+});

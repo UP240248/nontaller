@@ -1,3 +1,12 @@
+## 2026-11-03 · Login y consulta de órdenes
+
+- Panel izquierdo del login azul liso, sin textos ni marca; se conserva el formulario y la autenticación.
+- Contabilidad puede consultar órdenes, su historial, trabajos realizados y materiales entregados/devueltos con costo neto de refacciones.
+- Consulta de checklist preventivo sin acceso a planes ni acciones de edición.
+- Bloqueo de mutaciones de órdenes para Contabilidad en el servidor; se conservan permisos de flota, fallas y operación de almacén.
+- Materiales con importes solo para Logística/Contabilidad; no se atribuye una entrega a una compra concreta al usar costo promedio.
+- Sin migraciones ni dependencias nuevas.
+
 ## 2026-11-03 · Autobuses autorizados por operador
 
 - Asignación de múltiples unidades por operador: primera configuración exclusiva de Administración, cambios posteriores por Administración/Logística.

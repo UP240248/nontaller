@@ -2,15 +2,11 @@ import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SessionService, errorMessage } from '../core/session';
-@Component({standalone:true,imports:[ReactiveFormsModule],template:`
+@Component({standalone:true,imports:[ReactiveFormsModule],styles:[`.login-story{background:#172b4d;background-image:none}.login-form h1{font-size:30px}`],template:`
 <main class="login-page">
- <section class="login-story" aria-label="TallerBus Terrabus">
-  <div class="brand"><span class="brand-mark" aria-hidden="true">T</span> TALLERBUS <small>TERRABUS</small></div>
-  <div><p class="eyebrow light">OPERACIÓN INTERNA · TERRABUS</p><h1>Un solo lugar.<br>Todo tu equipo.</h1><p class="story-copy">Accede de forma segura al espacio de trabajo de Terrabus.</p></div>
-  <p class="story-foot">Flota propia. Trabajo en equipo.</p>
- </section>
+ <div class="login-story" aria-hidden="true"></div>
  <section class="login-form-wrap"><div class="login-form">
-  <p class="eyebrow">BIENVENIDO A TALLERBUS</p><h2>Inicia sesión</h2><p class="muted">Usa la cuenta que te proporcionó Administración.</p>
+  <p class="eyebrow">BIENVENIDO A TALLERBUS</p><h1>Inicia sesión</h1><p class="muted">Usa la cuenta que te proporcionó Administración.</p>
   <form [formGroup]="form" (ngSubmit)="submit()">
    <label for="username">Usuario de acceso</label><input id="username" type="text" formControlName="username" autocomplete="username" placeholder="ej. juan.perez" [attr.aria-invalid]="form.controls.username.touched && form.controls.username.invalid" aria-describedby="username-help">
    @if(form.controls.username.touched && form.controls.username.invalid){<p id="username-help" class="field-error">Usa de 3 a 40 letras, números, puntos, guiones o guiones bajos.</p>}

@@ -9,6 +9,8 @@ export const canReport=(role:Role|undefined)=>role==='OPERADOR'||role==='MECANIC
 export const canCoordinate=(role:Role|undefined)=>role==='ADMINISTRACION'||role==='LOGISTICA';
 export const incidentAccess:CanActivateFn=async()=>{const s=inject(SessionService);const r=inject(Router);await s.restore();return canReadIncidents(s.user()?.role)||r.parseUrl('/');};
 export const reportAccess:CanActivateFn=async()=>{const s=inject(SessionService);const r=inject(Router);await s.restore();return canReport(s.user()?.role)||r.parseUrl('/');};
+export const canReadOrders=(role:Role|undefined)=>!!role&&['ADMINISTRACION','LOGISTICA','MECANICO','CONTABILIDAD'].includes(role);
+export const orderAccess:CanActivateFn=async()=>{const s=inject(SessionService);const r=inject(Router);await s.restore();return canReadOrders(s.user()?.role)||r.parseUrl('/');};
 export type IncidentState='PENDIENTE'|'EN_PROCESO'|'FINALIZADA';
 export type Priority='BAJA'|'MEDIA'|'ALTA'|'CRITICA';
 export const priorities:Priority[]=['BAJA','MEDIA','ALTA','CRITICA'];

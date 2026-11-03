@@ -139,3 +139,12 @@ Administración hace la primera asignación desde **Usuarios → Autobuses autor
 El operador debe elegir una de sus unidades autorizadas en **Reportar falla**. Si no tiene ninguna activa, no puede enviar el reporte y aparece un aviso. No se selecciona una unidad por defecto. Una reasignación no cambia los reportes anteriores: conservan su autobús original y el operador sigue consultando su historial.
 
 Al actualizar, los operadores existentes necesitan asignación inicial por Administración; sus reportes se conservan. Consulta la [guía de operadores y unidades](operadores-unidades.md).
+
+
+## Órdenes de trabajo — consulta de Contabilidad
+
+Entra en **Órdenes de trabajo**, busca por título o unidad y abre una orden. Puedes revisar su estado, fallas descritas, mecánicos, diagnóstico y trabajo finalizado. En **Entregas y devoluciones de almacén** aparecen cantidades, fechas, costo unitario, importe de cada movimiento y costo neto de refacciones. Las devoluciones reducen ese costo. También puedes consultar el checklist de una orden preventiva.
+
+Este acceso es de consulta: no permite crear, asignar, iniciar ni finalizar órdenes, modificar checklist o registrar movimientos. Las compras recibidas pasan primero al almacén; su costo se asigna a la reparación al entregar materiales, usando el promedio de almacén. No se identifica una compra específica como origen de cada entrega y no se calculan tarifas de mano de obra. Las refacciones descriptivas del cierre no se suman de nuevo al costo.
+
+El inicio de sesión conserva usuario y contraseña; el panel izquierdo queda azul sin texto ni logotipo.

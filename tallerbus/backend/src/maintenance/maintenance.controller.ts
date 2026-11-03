@@ -22,6 +22,12 @@ export class MaintenanceController {
  @Post('planes/:id/programar') @UseGuards(MaintenanceWriter) schedule(@Param('id',ParseUUIDPipe) id:string,@Body() dto:SchedulePlanDto,@Req() req:AuthRequest){return this.maintenance.schedule(id,dto,req.identity);}
  @Get('planes/:id/ejecuciones') executions(@Param('id',ParseUUIDPipe) id:string,@Query() q:PageDto){return this.maintenance.executions(id,q);}
  @Get('planes/:id/historial') history(@Param('id',ParseUUIDPipe) id:string,@Query() q:PageDto){return this.maintenance.history(id,q);}
- @Get('ejecuciones/:id') execution(@Param('id',ParseUUIDPipe) id:string){return this.maintenance.execution(id);}
  @Patch('ejecuciones/:id/checklist') @UseGuards(MaintenanceMechanic) checklist(@Param('id',ParseUUIDPipe) id:string,@Body() dto:ChecklistDto,@Req() req:AuthRequest){return this.maintenance.checklist(id,dto,req.identity);}
+}
+
+// Consulta de la ejecución vinculada a una orden, sin ampliar acceso a planes.
+@ApiTags('Mantenimiento preventivo') @ApiCookieAuth() @Controller('mantenimiento/ejecuciones') @UseGuards(SessionGuard)
+export class PreventiveExecutionReadController {
+ constructor(private readonly maintenance:MaintenanceService){}
+ @Get(':id') execution(@Param('id',ParseUUIDPipe) id:string,@Req() req:AuthRequest){if(!([Role.ADMINISTRACION,Role.LOGISTICA,Role.MECANICO,Role.CONTABILIDAD] as Role[]).includes(req.identity.role))throw new ForbiddenException('Consulta de ejecución no autorizada');return this.maintenance.execution(id);}
 }
