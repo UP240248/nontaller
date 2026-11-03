@@ -42,7 +42,7 @@ export class WorkOrdersService {
   for(const falla of fallas){await tx.falla.update({where:{id:falla.id},data:{ordenId:order.id,version:{increment:1}}});await tx.auditEvent.create({data:{actorId:actor.id,busId:first.autobusId,fallaId:falla.id,ordenId:order.id,entity:'Falla',entityId:falla.id,action:'INCIDENT_LINK_ORDER',changes:{ordenId:order.id}}});}
   await tx.auditEvent.create({data:{actorId:actor.id,busId:first.autobusId,ordenId:order.id,entity:'OrdenTrabajo',entityId:order.id,action:'ORDER_CREATE',changes:{fallaIds:input.fallaIds}}});
   return tx.ordenTrabajo.findUniqueOrThrow({where:{id:order.id},select});
- },{isolationLevel:Prisma.TransactionIsolationLevel.ReadCommitted});}
+ },{isolationLevel:Prisma.TransactionIsolationLevel.ReadCommitted,maxWait:10000,timeout:20000});}
  async assign(id:string,input:AssignOrderDto,actor:Identity){return this.db.$transaction(async tx=>{
   await this.authorize(tx,actor,coordinators);const order=await this.lock(tx,id,input.version);if(actor.role!==Role.LOGISTICA&&await tx.ejecucionPreventiva.findUnique({where:{ordenId:id}}))throw new ForbiddenException('Solo Logística asigna mecánicos al preventivo');
   const mechanics=await tx.user.findMany({where:{id:{in:input.mecanicoIds},role:Role.MECANICO,active:true},select:{id:true}});
@@ -53,20 +53,20 @@ export class WorkOrdersService {
   await tx.ordenTrabajo.update({where:{id},data:{version:{increment:1}}});
   await tx.auditEvent.create({data:{actorId:actor.id,busId:order.autobusId,ordenId:id,entity:'OrdenTrabajo',entityId:id,action:'ORDER_ASSIGN',changes:{before:previous.map(a=>a.mecanicoId),after:input.mecanicoIds,motivo:input.motivo}}});
   return tx.ordenTrabajo.findUniqueOrThrow({where:{id},select});
- },{isolationLevel:Prisma.TransactionIsolationLevel.ReadCommitted});}
+ },{isolationLevel:Prisma.TransactionIsolationLevel.ReadCommitted,maxWait:10000,timeout:20000});}
  async start(id:string,input:StartOrderDto,actor:Identity){return this.db.$transaction(async tx=>{
   const order=await this.lock(tx,id,input.version);await this.assigned(tx,id,actor);
   if(order.estado!=='ABIERTA')throw new ConflictException('Solo puede iniciarse una orden abierta');
   await tx.ordenTrabajo.update({where:{id},data:{estado:'EN_PROCESO',diagnostico:input.diagnostico,startedAt:new Date(),version:{increment:1}}});
   for(const falla of order.fallas){if(falla.estado!=='PENDIENTE')throw new ConflictException('Estado de falla incompatible');await tx.falla.update({where:{id:falla.id},data:{estado:'EN_PROCESO',version:{increment:1}}});await tx.auditEvent.create({data:{actorId:actor.id,busId:order.autobusId,ordenId:id,fallaId:falla.id,entity:'Falla',entityId:falla.id,action:'INCIDENT_START',changes:{before:'PENDIENTE',after:'EN_PROCESO'}}});}
   await tx.auditEvent.create({data:{actorId:actor.id,busId:order.autobusId,ordenId:id,entity:'OrdenTrabajo',entityId:id,action:'ORDER_START',changes:{motivo:input.motivo}}});return tx.ordenTrabajo.findUniqueOrThrow({where:{id},select});
- },{isolationLevel:Prisma.TransactionIsolationLevel.ReadCommitted});}
+ },{isolationLevel:Prisma.TransactionIsolationLevel.ReadCommitted,maxWait:10000,timeout:20000});}
  async wait(id:string,input:WaitOrderDto,actor:Identity){return this.db.$transaction(async tx=>{
   const order=await this.lock(tx,id,input.version);await this.assigned(tx,id,actor);
   if(order.estado!=='EN_PROCESO')throw new ConflictException('La espera se registra en órdenes en proceso');
   await tx.ordenTrabajo.update({where:{id},data:{esperaRefacciones:input.esperaRefacciones,version:{increment:1}}});
   await tx.auditEvent.create({data:{actorId:actor.id,busId:order.autobusId,ordenId:id,entity:'OrdenTrabajo',entityId:id,action:'ORDER_WAIT',changes:{before:order.esperaRefacciones,after:input.esperaRefacciones,motivo:input.motivo}}});return tx.ordenTrabajo.findUniqueOrThrow({where:{id},select});
- },{isolationLevel:Prisma.TransactionIsolationLevel.ReadCommitted});}
+ },{isolationLevel:Prisma.TransactionIsolationLevel.ReadCommitted,maxWait:10000,timeout:20000});}
  async finish(id:string,input:FinishOrderDto,actor:Identity){
   if(input.aplicoManoObra?input.manoObraMinutos<1:input.manoObraMinutos!==0)throw new BadRequestException('Declara los minutos de mano de obra cuando aplique');
   if(input.aplicaronRefacciones?input.refacciones.length===0:input.refacciones.length!==0)throw new BadRequestException('Declara las refacciones utilizadas cuando apliquen');
@@ -82,7 +82,7 @@ export class WorkOrdersService {
    await tx.auditEvent.create({data:{actorId:actor.id,busId:order.autobusId,ordenId:id,entity:'OrdenTrabajo',entityId:id,action:'ORDER_FINISH',changes:{motivo:input.motivo,esperaRefaccionesAntes:order.esperaRefacciones,responsableId:actor.id}}});
    // Decisión explícita del usuario: sin bloqueo ni habilitación automática de la unidad.
    return tx.ordenTrabajo.findUniqueOrThrow({where:{id},select});
-  },{isolationLevel:Prisma.TransactionIsolationLevel.ReadCommitted});
+  },{isolationLevel:Prisma.TransactionIsolationLevel.ReadCommitted,maxWait:10000,timeout:20000});
  }
  async history(id:string,q:PageDto){await this.detail(id);const [data,total]=await this.db.$transaction([this.db.auditEvent.findMany({where:{ordenId:id,entity:'OrdenTrabajo'},select:{id:true,action:true,createdAt:true,changes:true,actor:{select:{id:true,name:true}}},skip:(q.page-1)*q.limit,take:q.limit,orderBy:[{createdAt:'desc'},{id:'desc'}]}),this.db.auditEvent.count({where:{ordenId:id,entity:'OrdenTrabajo'}})]);return {data,total,page:q.page,limit:q.limit};}
 }

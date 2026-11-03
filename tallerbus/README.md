@@ -76,3 +76,8 @@ Inventario se organiza en Existencias, Movimientos y Compras con formularios sep
 En preventivo se elige la unidad en una lista con económico/placas y confirmación visible; se puede buscar o recorrer páginas. En fichas de inventario, etiqueta o número de serie es opcional y se genera si queda vacío.
 
 Compras permite compra ocasional sin proveedor registrado y folio automático. Elige si ya recibiste las piezas (registro e ingreso en una operación) o llegarán después (pedido sin cambiar stock). Los reportes incluyen ambas. Después de actualizar ejecuta `npm run setup` para aplicar la migración; no hace falta clonar otra carpeta.
+
+
+## Seguimiento de reparación en Fallas
+
+El mecánico asignado puede abrir **Fallas → Atender falla** y usar **Marcar en proceso** o **Finalizar trabajo** sin buscar los controles dentro de Órdenes. Si falta orden/asignación, se explica qué debe completar Administración o Logística. Cuando hay varias fallas en una orden, se avisa que todas se actualizan juntas. Ver [manual de uso](docs/manual-usuario.md).

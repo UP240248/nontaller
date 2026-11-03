@@ -44,7 +44,7 @@ export class IncidentsService {
    const incident=await tx.falla.create({data:{autobusId:bus.id,reportanteId:actor.id,descripcion:input.descripcion,tipo:input.tipo},select:incidentSelect});
    await tx.auditEvent.create({data:{actorId:actor.id,busId:bus.id,fallaId:incident.id,entity:'Falla',entityId:incident.id,action:'INCIDENT_REPORT',changes:{estado:incident.estado,tipo:incident.tipo}}});
    return incident;
-  },{isolationLevel:Prisma.TransactionIsolationLevel.ReadCommitted});
+  },{isolationLevel:Prisma.TransactionIsolationLevel.ReadCommitted,maxWait:10000,timeout:20000});
  }
  async evaluate(id:string,input:EvaluateIncidentDto,actor:Identity) {
   return this.db.$transaction(async tx=>{
@@ -55,7 +55,7 @@ export class IncidentsService {
    if(result.count!==1)throw new ConflictException('El reporte cambió. Recarga antes de evaluar.');
    await tx.auditEvent.create({data:{actorId:actor.id,busId:before.autobusId,fallaId:id,entity:'Falla',entityId:id,action:'INCIDENT_EVALUATE',changes:{before:{prioridad:before.prioridad,version:before.version},after:{prioridad:input.prioridad,version:input.version+1},motivo:input.motivo}}});
    return tx.falla.findUniqueOrThrow({where:{id},select:incidentSelect});
-  },{isolationLevel:Prisma.TransactionIsolationLevel.ReadCommitted});
+  },{isolationLevel:Prisma.TransactionIsolationLevel.ReadCommitted,maxWait:10000,timeout:20000});
  }
  async history(id:string,q:PageDto,actor:Identity) {
   await this.detail(id,actor);

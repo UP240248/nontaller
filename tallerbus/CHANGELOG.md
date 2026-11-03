@@ -1,3 +1,13 @@
+## 2026-11-03 · Atención de reparaciones desde Fallas
+
+- Fallas muestra acceso Atender falla y distingue reportes sin orden de los pendientes de inicio.
+- Detalle con controles Marcar en proceso y Finalizar trabajo para el mecánico asignado, además de espera/reanudación de refacciones.
+- Mensajes específicos cuando falta evaluación, orden, asignación o falla la consulta de atención; reintento independiente del reporte.
+- Aviso de actualización conjunta si la orden agrupa varias fallas y resumen del cierre con responsable.
+- Órdenes y Fallas comparten formularios y validaciones de reparación; se conservan transacciones, versiones, auditoría y permisos del servidor.
+- Transacciones de fallas y órdenes con límite de 20 segundos y espera de conexión de 10 segundos; prueba de bloqueo concurrente que verifica evaluación, inicio y cierre único.
+- Sin migraciones ni cambios de reglas de asignación o de stock.
+
 ## 2026-11-03 · Preventivo y compras sin bloqueos de captura
 
 - Selector preventivo con unidades concretas, económico, placas, lectura, búsqueda, paginación, confirmación de selección y recuperación de errores. Sin seleccionar unidades ni inventar lecturas por defecto.

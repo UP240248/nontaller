@@ -119,3 +119,15 @@ Logística abre Crear plan preventivo y marca la unidad en **Autobús del plan**
 Si no aparece ninguna unidad, revisa el mensaje: puede no haber coincidencias, unidades activas o haber fallado la carga. Puedes reintentar sin cerrar el formulario. En Autobuses registra o reactiva la unidad si corresponde. El kilometraje del último servicio y el intervalo deben provenir del historial o del criterio del taller; no se inventan automáticamente.
 
 En fichas de inventario, número de serie o etiqueta es opcional: se genera un identificador si queda vacío. Para compras recibidas no dupliques la entrada en Inventario. Consulta la [guía rápida de inventario y compras](inventario-guia-rapida.md).
+
+## Iniciar y finalizar una reparación desde Fallas
+
+1. Entra como **Mecánico**, abre **Fallas** y pulsa **Atender falla** en el reporte.
+2. En **Atención de la falla**, pulsa **Marcar en proceso** cuando comiences. Registra diagnóstico y motivo y confirma. El estado cambia a **En proceso**.
+3. Al terminar, pulsa **Finalizar trabajo**. Registra trabajo realizado, observaciones, mano de obra y refacciones cuando apliquen y confirma. El estado cambia a **Finalizada** y se muestra quién terminó y lo realizado.
+
+Debes estar asignado a la orden. Si falta una orden o asignación, el apartado explica el paso pendiente: Administración o Logística crea la orden y asigna al mecánico. El reporte debe tener evaluación/prioridad antes de crear la orden.
+
+Si la orden agrupa varias fallas del mismo autobús, el aviso indica cuántas: se inician y finalizan juntas. Las acciones siguen disponibles en Órdenes de trabajo y usan el mismo registro; no se crean cierres duplicados ni se descuentan piezas por cerrar otra vez. Una falla finalizada conserva su historial y no muestra botones para volverla a cerrar.
+
+El Operador consulta el estado de sus reportes. Administración y Logística coordinan la asignación; solo el mecánico asignado ejecuta y finaliza. El estado del autobús se gestiona por separado.
