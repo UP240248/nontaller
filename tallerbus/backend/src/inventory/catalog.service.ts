@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { EvidenceFile, evidenceType } from '../incidents/evidence.service';
 import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, Role } from '@prisma/client';
@@ -25,14 +26,14 @@ export class CatalogService {
  async tracking(q:PageDto){const select={id:true,refaccionId:true,identificador:true,condicion:true,situacion:true,unidad:true,costoAproximado:true,notas:true,version:true,updatedAt:true,fotoMime:true,refaccion:{select:{sku:true,descripcion:true}}};const [data,total]=await this.db.$transaction([this.db.fichaRefaccion.findMany({select,skip:(q.page-1)*q.limit,take:q.limit,orderBy:[{createdAt:'desc'},{id:'desc'}]}),this.db.fichaRefaccion.count()]);return {data,total,page:q.page,limit:q.limit};}
  async saveTracking(id:string|null,input:PartTrackingDto,actor:Identity){return this.db.$transaction(async tx=>{
  await this.authorize(tx,actor,catalogReaders);
- const existing=id?await tx.fichaRefaccion.findUnique({where:{id},select:{refaccionId:true}}):null;if(id&&!existing)throw new NotFoundException('Ficha no encontrada');if(existing&&existing.refaccionId!==input.refaccionId)throw new BadRequestException('La ficha conserva su refacción original');
+ const existing=id?await tx.fichaRefaccion.findUnique({where:{id},select:{refaccionId:true,identificador:true}}):null;if(id&&!existing)throw new NotFoundException('Ficha no encontrada');if(existing&&existing.refaccionId!==input.refaccionId)throw new BadRequestException('La ficha conserva su refacción original');
  const part=await tx.refaccion.findUnique({where:{id:input.refaccionId}});if(!part||(!part.activo&&!existing))throw new BadRequestException('Selecciona una refacción activa');
  if(input.situacion==='EN_USO'&&!input.unidad)throw new BadRequestException('Indica el número económico de la unidad');
  if(input.unidad&&!await tx.autobus.findFirst({where:{numeroEconomico:input.unidad}}))throw new BadRequestException('La unidad no existe. Usa su número económico registrado');
- const {version,...fields}=input;const data={...fields,unidad:input.unidad??null,notas:input.notas??null,costoAproximado:input.costoAproximado==null?null:new Prisma.Decimal(input.costoAproximado)};
+ const {version,...fields}=input;const data={...fields,identificador:input.identificador??existing?.identificador??'PZ-'+randomUUID(),unidad:input.unidad??null,notas:input.notas??null,costoAproximado:input.costoAproximado==null?null:new Prisma.Decimal(input.costoAproximado)};
  if(id){if(!version)throw new BadRequestException('Falta la versión');const updated=await tx.fichaRefaccion.updateMany({where:{id,version},data:{...data,version:{increment:1}}});if(updated.count!==1)throw new ConflictException('La ficha cambió. Recarga antes de guardar');}
  const record=id?await tx.fichaRefaccion.findUniqueOrThrow({where:{id},select:{id:true,version:true}}):await tx.fichaRefaccion.create({data,select:{id:true,version:true}});
- await tx.auditEvent.create({data:{actorId:actor.id,refaccionId:input.refaccionId,entity:'FichaRefaccion',entityId:record.id,action:id?'PART_TRACKING_UPDATE':'PART_TRACKING_CREATE',changes:{...fields,version:record.version}}});return record;
+ await tx.auditEvent.create({data:{actorId:actor.id,refaccionId:input.refaccionId,entity:'FichaRefaccion',entityId:record.id,action:id?'PART_TRACKING_UPDATE':'PART_TRACKING_CREATE',changes:{...fields,identificador:data.identificador,version:record.version}}});return record;
  });}
  async trackingPhoto(id:string){const record=await this.db.fichaRefaccion.findUnique({where:{id},select:{foto:true,fotoMime:true}});if(!record?.foto||!record.fotoMime)throw new NotFoundException('Foto no encontrada');return {buffer:Buffer.from(record.foto),mime:record.fotoMime};}
  async setTrackingPhoto(id:string,file:EvidenceFile|undefined,actor:Identity){if(!file)throw new BadRequestException('Selecciona una imagen');const type=evidenceType(file);return this.db.$transaction(async tx=>{await this.authorize(tx,actor,catalogReaders);const record=await tx.fichaRefaccion.findUnique({where:{id},select:{refaccionId:true}});if(!record)throw new NotFoundException('Ficha no encontrada');await tx.fichaRefaccion.update({where:{id},data:{foto:new Uint8Array(file.buffer),fotoMime:type.mime,version:{increment:1}}});await tx.auditEvent.create({data:{actorId:actor.id,refaccionId:record.refaccionId,entity:'FichaRefaccion',entityId:id,action:'PART_TRACKING_PHOTO',changes:{mime:type.mime,size:file.size}}});return {ok:true};});}

@@ -1,0 +1,1 @@
+ALTER TABLE `Compra` MODIFY `proveedorId` CHAR(36) NULL, ADD COLUMN `vendedor` VARCHAR(120) NULL;

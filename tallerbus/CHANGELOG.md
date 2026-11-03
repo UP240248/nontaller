@@ -1,3 +1,13 @@
+## 2026-11-03 · Preventivo y compras sin bloqueos de captura
+
+- Selector preventivo con unidades concretas, económico, placas, lectura, búsqueda, paginación, confirmación de selección y recuperación de errores. Sin seleccionar unidades ni inventar lecturas por defecto.
+- Fichas de piezas sin etiqueta obligatoria: se genera identificador; al editar se conserva si se deja vacío.
+- Compras ocasionales sin proveedor del catálogo, vendedor opcional y referencia automática. Se mantiene la validación de proveedores activos cuando se elige uno.
+- Compra recibida: autorización y recepción atómicas e idempotentes. Pedido pendiente: autorización sin stock hasta recibir. Se conserva la opción de borrador.
+- Total exacto antes de guardar y recepción completa de pendientes con un botón.
+- Reportes y totales incluyen compras sin proveedor mediante relación opcional; se conservan los permisos de Logística y Contabilidad.
+- Migración compatible con registros previos `20261103160000_occasional_purchases`; actualizar con setup.
+
 ## 2026-10-28 · Seguimiento físico de refacciones
 
 - Accesos visibles desde Inventario al catálogo y a fichas individuales con fotografía.

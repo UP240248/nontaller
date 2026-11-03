@@ -56,3 +56,35 @@ test('fichas físicas: mecánico registra, costo pendiente, versión y unidad va
  assert.equal((await request('/refacciones/fichas/'+id,{method:'PATCH',role:'MECANICO',data:{...input,version:3,situacion:'RETIRADA'}})).status,200);
  assert.ok(await db.auditEvent.count({where:{entityId:id}})>=4);
 });
+
+test('compra ocasional recibida en un paso: sin proveedor ni folio, recepción exacta e idempotente',async()=>{
+ const p=await post('/refacciones',{...partData,sku:'OCASIONAL-REC',minimo:'0'});assert.equal(p.status,201);
+ const input=operation({registro:'RECIBIDA',vendedor:'Tienda ocasional',lineas:[{refaccionId:p.body.id,cantidad:'2.5',costoUnitario:'0.123456'}]});
+ const results=await Promise.all([post('/compras',input),post('/compras',input)]);assert.deepEqual(results.map(r=>r.status),[201,201]);const purchase=results[0].body;assert.equal(results[1].body.id,purchase.id);
+ assert.equal(purchase.estado,'RECIBIDA');assert.equal(purchase.proveedorId,null);assert.equal(purchase.vendedor,'Tienda ocasional');assert.equal(purchase.referencia,'COMP-'+input.operacionId);assert.equal(purchase.lineas[0].recibida,'2.5');
+ const saldo=await db.saldoInventario.findUniqueOrThrow({where:{refaccionId:p.body.id}});assert.equal(saldo.cantidad.toString(),'2.5');assert.equal(saldo.valor.toString(),'0.30864');assert.equal(await db.movimientoInventario.count({where:{refaccionId:p.body.id}}),1);
+ const detail=await request('/compras/'+purchase.id);assert.equal(detail.body.historial.length,3);assert.equal(detail.body.proveedor,null);
+ assert.equal((await post('/compras/'+purchase.id+'/recepciones',operation({version:purchase.version,lineas:[{lineaId:purchase.lineas[0].id,cantidad:'1'}]}))).status,409);
+ for(const role of ['ADMINISTRACION','MECANICO','OPERADOR','CONTABILIDAD'])assert.equal((await post('/compras',{...input,operacionId:randomUUID()},role)).status,403);
+ const report=await request('/reportes/compras?search=Tienda%20ocasional',{role:'CONTABILIDAD'});assert.equal(report.status,200);assert.equal(report.body.total,1);assert.equal(report.body.data[0].proveedor,'Tienda ocasional');assert.equal(report.body.resumen.totalPedidoMXN,'0.308640');assert.equal(report.body.resumen.valorRecibidoMXN,'0.308640');
+});
+test('pedido ocasional sin vendedor: no ingresa existencias hasta recepción y aparece en reportes',async()=>{
+ const p=await post('/refacciones',{...partData,sku:'OCASIONAL-PED',minimo:'0'});
+ const input=operation({registro:'PEDIDO',proveedorId:null,referencia:'PED-SIN-PROV',lineas:[{refaccionId:p.body.id,cantidad:'2',costoUnitario:'1.5'}]});
+ const created=await post('/compras',input);assert.equal(created.status,201);assert.equal(created.body.estado,'APROBADA');assert.equal(await db.saldoInventario.count({where:{refaccionId:p.body.id}}),0);
+ const received=await post('/compras/'+created.body.id+'/recepciones',operation({version:created.body.version,lineas:[{lineaId:created.body.lineas[0].id,cantidad:'1'}]}));assert.equal(received.status,201);assert.equal(received.body.estado,'PARCIAL');
+ const report=await request('/reportes/compras?search=PED-SIN-PROV',{role:'CONTABILIDAD'});assert.equal(report.body.total,1);assert.equal(report.body.data[0].proveedor,'Sin proveedor registrado');assert.equal(report.body.resumen.totalPedidoMXN,'3.000000');assert.equal(report.body.resumen.valorRecibidoMXN,'1.500000');
+ const draft=await post('/compras',operation({lineas:[{refaccionId:p.body.id,cantidad:'1',costoUnitario:'0'}]}));assert.equal(draft.status,201);assert.equal(draft.body.estado,'BORRADOR');assert.equal((await post('/compras/'+draft.body.id+'/aprobar',operation({version:1}))).status,201);
+ const inactive=await db.proveedor.create({data:{codigo:'INACTIVO-NOV',nombre:'Inactivo',activo:false}});assert.equal((await post('/compras',operation({...input,operacionId:randomUUID(),proveedorId:inactive.id,registro:'RECIBIDA'}))).status,409);
+ assert.equal((await post('/compras',operation({...input,operacionId:randomUUID(),proveedorId:supplier.id,vendedor:'Ambos'}))).status,400);
+});
+test('compra recibida revierte documento, autorización y movimientos cuando falla el ingreso',async()=>{
+ const p=await post('/refacciones',{...partData,sku:'LIMITE-NOV',minimo:'0'});await db.saldoInventario.create({data:{refaccionId:p.body.id,cantidad:'999999999999.999',valor:'1'}});
+ const count=await db.compra.count();const movements=await db.movimientoInventario.count();const audits=await db.auditEvent.count();const input=operation({registro:'RECIBIDA',lineas:[{refaccionId:p.body.id,cantidad:'1',costoUnitario:'1'}]});
+ assert.equal((await post('/compras',input)).status,409);assert.equal(await db.compra.count(),count);assert.equal(await db.movimientoInventario.count(),movements);assert.equal(await db.auditEvent.count(),audits);assert.equal(await db.operacionInventario.count({where:{id:input.operacionId}}),0);
+});
+test('ficha permite omitir el código y conserva el generado al actualizar',async()=>{
+ const p=await post('/refacciones',{...partData,sku:'AUTO-FICHA',minimo:'0'},'MECANICO');const input={refaccionId:p.body.id,condicion:'Por revisar',situacion:'PENDIENTE'};
+ const created=await post('/refacciones/fichas',input,'MECANICO');assert.equal(created.status,201);const original=await db.fichaRefaccion.findUniqueOrThrow({where:{id:created.body.id}});assert.match(original.identificador,/^PZ-/);assert.equal(original.costoAproximado,null);
+ assert.equal((await request('/refacciones/fichas/'+original.id,{method:'PATCH',role:'MECANICO',data:{...input,identificador:'',version:original.version,condicion:'Desgastada'}})).status,200);assert.equal((await db.fichaRefaccion.findUniqueOrThrow({where:{id:original.id}})).identificador,original.identificador);
+});

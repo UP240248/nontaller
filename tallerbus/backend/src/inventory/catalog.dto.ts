@@ -41,7 +41,7 @@ export class CatalogQueryDto extends PageDto {
 
 export class PartTrackingDto {
  @IsUUID() refaccionId!:string;
- @Transform(trim) @IsString() @MinLength(1) @MaxLength(80) identificador!:string;
+ @Transform(({value}:{value:unknown})=>typeof value==='string'?(value.trim()||undefined):value) @IsOptional() @IsString() @MinLength(1) @MaxLength(80) identificador?:string;
  @Transform(trim) @IsString() @MinLength(1) @MaxLength(200) condicion!:string;
  @IsIn(['PENDIENTE','DISPONIBLE','EN_USO','RETIRADA']) situacion!:string;
  @Transform(optional) @IsOptional() @IsString() @MaxLength(40) unidad?:string|null;

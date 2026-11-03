@@ -1,84 +1,67 @@
-# Inventario: guía por tarea — 28 de octubre de 2026
+# Inventario y compras: guía rápida — 3 de noviembre de 2026
 
-## Contabilidad: consultar y exportar
+## ¿Dónde registro cada cosa?
 
-En el menú o Mi espacio, elige **Inventario (consulta)** para cantidades y valoración actual; **Compras (consulta)** para lo pedido/recibido. El reporte se selecciona automáticamente. Escribe tus filtros, pulsa Consultar reporte y luego Exportar CSV con filtros. No necesitas abrir formularios de almacén ni registrar una compra para consultar datos.
+| Quiero… | Abro… |
+|---|---|
+| Registrar un tipo de refacción, como filtro de aceite | Inventario → Catálogo / agregar refacción |
+| Identificar una pieza física con foto y condición | Inventario → Fichas con foto / agregar pieza |
+| Consultar cuántas piezas hay | Inventario → Existencias |
+| Registrar piezas que compré | Compras → Nueva compra |
+| Entregar piezas a una reparación | Inventario → Entregar a orden |
+| Regresar sobrantes | Inventario → Devolver sobrantes |
 
-Contabilidad sigue sin registrar entradas, entregas, devoluciones, ajustes, compras, aprobaciones o recepciones. Tampoco ve contactos privados de proveedores. Los permisos financieros aprobados no cambian.
+## Ficha de una pieza: no necesitas inventar un código
 
-## Logística: tres secciones
+Primero selecciona su tipo de refacción del catálogo. Escribe su condición libremente: nueva, desgastada, por revisar, etc. **Número de serie o etiqueta es opcional**: si lo dejas vacío, TallerBus genera un identificador. Al editar y dejarlo vacío, conserva el identificador que ya tenía.
 
-- **Existencias:** código/descripcion, cantidad disponible, mínimo y valoración. Buscar por código o descripción no cambia los formularios. Los accesos Entrada/Entregar de cada fila ya seleccionan la pieza.
-- **Movimientos:** historial con búsqueda por código, descripción, económico o título de orden; filtro por tipo; vínculo legible a la orden y pendiente de devolver.
-- **Compras:** lista por estado, Nueva compra y detalle con pasos: crear borrador → aprobar → recibir. También tiene su propio acceso en el menú principal.
+Puedes agregar foto PNG/JPEG de hasta 5 MB, observaciones y costo aproximado MXN. Dejar el costo vacío significa **Pendiente**, no cero. Este importe es informativo y visible para Administración, Logística y Mecánicos; no sustituye el costo contable.
 
-Los cuatro botones de operación abren solo el formulario necesario. No hay que recorrer una página con todos los formularios abiertos.
+Situaciones disponibles: **Pendiente de revisión**, **Disponible**, **En uso en una unidad**, **Retirada / baja**. Para una pieza en uso indica el número económico registrado en Autobuses. **Actualizar pieza** permite cambiar su condición, ubicación y foto. Retirar conserva su historial.
 
-| Necesitas… | Usa… | Qué ocurre |
-|---|---|---|
-| Ingresar piezas sin compra registrada | Registrar entrada | Cantidad y costo unitario aumentan stock/valor |
-| Dar piezas a una reparación | Entregar a orden | Descuenta al entregar a orden abierta/en proceso |
-| Regresar piezas no usadas | Devolver sobrantes | Selecciona la entrega original y repone su costo histórico |
-| Corregir diferencia de conteo | Ajustar conteo | Cantidad positiva suma; negativa resta; siempre con motivo y sin stock negativo |
-| Recibir mercancía de una compra | Compras → Ver compra → Recibir ahora | Ingresa lo recibido; no lo dupliques como entrada directa |
+Las fichas describen piezas individuales; crearlas o retirarlas no cambia las cantidades del almacén. Las entradas, entregas y devoluciones las registra Logística.
 
-## Antes de la primera operación
+## Compras: elige si las piezas ya llegaron
 
-En Refacciones registra un **código de refacción (SKU)** propio, descripción, unidad y mínimo. Código es simplemente el identificador único, por ejemplo FIL-001; no requiere código de barras. Para compras registra también un proveedor. Los enlaces dentro de formularios abren el catálogo en otra pestaña para no descartar lo capturado; después vuelve y usa Buscar piezas/Buscar proveedores para actualizar opciones.
+1. Abre **Compras → Nueva compra**.
+2. Elige **Ya recibí todas las piezas** o **Llegarán después**.
+3. Si no tienes un proveedor dado de alta, deja **Compra ocasional / sin proveedor registrado**. Puedes escribir el nombre de la tienda o vendedor, o dejarlo pendiente. No se crea un proveedor ficticio.
+4. La referencia de ticket/factura es opcional. Si no tienes una, el sistema genera un folio.
+5. Selecciona las refacciones por nombre, cantidad y costo unitario MXN. Puedes buscar por descripción; no necesitas conocer su código. Se muestra el total antes de guardar. Usa punto decimal.
+6. Explica el motivo de la compra y guarda.
 
-## Entregar a una orden
+**Registrar compra e ingresar piezas** autoriza la compra como Logística y suma al almacén lo recibido en una sola operación. **No registres otra entrada por esas piezas**.
 
-Busca por título o económico; aparecen abiertas y en proceso, aunque existan muchas finalizadas recientes. El selector carga hasta 100 de cada estado: afina la búsqueda si hace falta. Desde el detalle de una orden, Entregar piezas a esta orden abre el formulario con su orden seleccionada. Una finalizada no acepta nuevas entregas.
+**Guardar pedido pendiente** autoriza el pedido, pero no cambia las existencias. Cuando llegue, abre Ver compra y elige **Recibir todo lo pendiente**, o captura cantidades parciales y pulsa **Confirmar cantidades capturadas**. No puedes recibir más de lo pedido.
 
-## Devolver sobrantes
+**Solo preparar un borrador** es una opción para guardar sin autorizar todavía. Después pulsa Aprobar compra y registra su recepción. Logística puede aprobar compras propias.
 
-Busca la entrega por pieza, unidad o título de orden. Se consultan **entregas**, no solamente los últimos movimientos de cualquier tipo; hay paginación. Selecciona el origen y revisa cuánto se ha devuelto y cuánto queda. Una entrega completamente devuelta queda deshabilitada. Se permite devolver después de cerrar la orden, conservando su vínculo original. La validación definitiva sigue siendo transaccional en servidor, también ante devoluciones concurrentes.
+Puedes cancelar antes de recibir piezas, con motivo y confirmación. No se incluyen impuestos, descuentos, pagos ni devolución a proveedor.
 
-## Compras sin confusión
+## Existencias, entregas y devoluciones
 
-1. En Compras, pulsa Nueva compra y elige proveedor.
-2. Captura referencia, partidas distintas, cantidades/costos y motivo. Usa punto decimal.
-3. Guardar borrador no modifica existencias. El detalle muestra total, estado y el siguiente paso.
-4. Aprobar compra tampoco ingresa stock; permite registrar recepción.
-5. En Recibir ahora escribe lo que llegó, sin exceder el pendiente. Deja vacías las partidas no recibidas. Se muestra pedido, recibido y pendiente por separado.
-6. Confirmar recepción actualiza stock y estado parcial/completo. No registrar otra entrada directa por esa mercancía.
+**Registrar entrada** incorpora piezas sin compra registrada, con cantidad y costo. **Entregar a orden** descuenta lo que sale hacia una orden abierta/en proceso. Busca por título o número económico; desde una orden también puedes abrir una entrega con esa orden seleccionada.
 
-Cancelar exige motivo y confirmación, y solo se permite antes de recibir. No hay impuestos, descuentos, pagos ni devolución a proveedor implementados. No se puede editar un movimiento ya registrado para ocultar errores: consultar al responsable y conservar trazabilidad.
+**Devolver sobrantes** exige elegir la entrega original y limita la devolución a lo pendiente; conserva su costo histórico. Se permite después de cerrar una orden. El pendiente de devolver es un máximo, no una obligación de devolver piezas utilizadas.
 
-## Validación y mensajes
+**Ajustar conteo** corrige una diferencia física, con motivo y sin stock negativo. Solo Logística opera el almacén y las compras.
 
-Los formularios explican cantidad mayor que cero, máximo de tres decimales, costo no negativo de hasta seis y partidas duplicadas. Los ajustes son los únicos que admiten cantidad negativa. Se conserva precisión exacta en cálculo de pendientes y presentación monetaria; no se convierte dinero a Number.
+## Contabilidad
 
-Los mensajes de operación aparecen dentro del formulario. Durante envío se impide editar/enviar de nuevo. Ante una respuesta de red incierta, conservar los datos y reintentar el mismo formulario; revisar historial antes de iniciar otra operación. Las claves idempotentes y controles de stock del servidor se conservan.
+Abre **Inventario (consulta)** para cantidades y valoración; **Compras (consulta)** para compras y recepciones, incluidas las ocasionales. Usa Consultar reporte y Exportar CSV con filtros. Contabilidad no registra movimientos ni compras y no ve contactos privados de proveedores.
 
-Cerrar sin guardar conserva los valores solo mientras sigas en esa página/componente: no equivale a un borrador guardado en BD. Solo Guardar borrador envía una compra. No se asegura persistencia de campos sin enviar al cerrar navegador o cambiar de página.
+## Si falla una operación
 
-## Otros roles
+Lee el mensaje dentro del formulario. Si hubo un error de red y no sabes si se guardó, conserva el formulario y reintenta sin cambiar los datos; revisa el historial antes de iniciar otra operación. Cerrar sin guardar no guarda un registro en la base de datos.
 
-Administración y Mecánico consultan existencias sin importes; se explica que Logística opera. Operador no accede al almacén. No se han ampliado permisos para resolver problemas de interfaz.
+## Actualizar tu instalación
 
-## Cambios técnicos y validación
+Detén el servidor, abre Docker y ejecuta desde la carpeta tallerbus:
 
-Sin migraciones ni cambios de reglas de negocio. GET inventario/movimientos añade filtro tipo, búsqueda y vínculo de orden, y devuelto/pendienteDevolver para entregas. Filtra y cuenta en servidor antes de paginar. Solo Logística accede como antes.
+```powershell
+git pull --ff-only
+npm.cmd run setup
+npm.cmd run dev
+```
 
-Comprobados: compras/recepciones, entrega/devolución, cierre sin segundo consumo, búsquedas independientes, orden abierta anterior a 105 finalizadas, entrega fuera de los últimos 20 movimientos, devolución excesiva/completa, partidas duplicadas, conservación de piezas seleccionadas al buscar y acceso directo de Contabilidad sin formularios de escritura. Se ejecutaron lint, tipos, build, 18 unitarias, 122 integraciones y 13 E2E relevantes (153 pruebas), con cero fallidas/omitidas en las ejecuciones finales. Se revisan capturas con fixtures; no son datos del usuario ni certificación WCAG/Windows.
-
-## Vista previa con datos ficticios
-
-![Compras por pasos](images/inventario-compras.png)
-
-![Movimientos y devoluciones](images/inventario-movimientos.png)
-
-En una entrega, pendiente de devolver indica **el máximo que todavía se puede devolver**, no una obligación de regresar piezas que sí se utilizaron. En una compra, pendiente de recibir sí indica la diferencia entre pedido y recibido.
-
-## Fichas físicas con fotografía
-
-En **Inventario → Fichas con foto / agregar pieza** puedes identificar cada pieza individual. Administración, Logística y Mecánicos pueden registrar tipos de refacción y actualizar fichas. Para crear una ficha primero registra su tipo en **Catálogo / agregar refacción**.
-
-Cada ficha tiene identificador único (por ejemplo un número de serie), condición de texto libre (hasta 200 caracteres), situación, fotografía PNG/JPEG de hasta 5 MB, observaciones y costo aproximado MXN opcional. Dejar el costo vacío significa **Pendiente**, no cero. Este importe es informativo y visible para estos tres roles; no representa la valoración contable.
-
-Situaciones: **Pendiente de revisión**, **Disponible**, **En uso en una unidad** y **Retirada / baja**. Si está en uso, escribe el número económico que aparece en Autobuses. **Actualizar pieza** permite cambiar los datos o reemplazar la foto. Retirar conserva su registro e historial; no se borran movimientos.
-
-Registrar o retirar una ficha no agrega ni descuenta existencias: Logística sigue registrando entradas, entregas y devoluciones del almacén. Para retirar un tipo completo del catálogo, Administración o Logística puede desactivarlo. Mecánicos pueden registrar y editar tipos, pero no desactivar el catálogo ni operar compras.
-
-Actualización local: detén el servidor, abre Docker, ejecuta `git pull --ff-only`, `npm.cmd run setup` (incluye la nueva tabla, sin borrar datos) y `npm.cmd run dev`.
+Setup aplica la migración que permite compras ocasionales. Conserva la base y los registros existentes.

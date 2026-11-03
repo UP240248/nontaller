@@ -315,8 +315,9 @@ enum EstadoCompra {
 model Compra {
  historial RegistroCompra[]
  id String @id @default(uuid()) @db.Char(36)
- proveedorId String @db.Char(36)
- proveedor Proveedor @relation(fields:[proveedorId],references:[id],onDelete:Restrict)
+ proveedorId String? @db.Char(36)
+ vendedor String? @db.VarChar(120)
+ proveedor Proveedor? @relation(fields:[proveedorId],references:[id],onDelete:Restrict)
  referencia String @db.VarChar(100)
  estado EstadoCompra @default(BORRADOR)
  version Int @default(1)

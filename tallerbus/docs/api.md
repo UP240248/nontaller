@@ -79,7 +79,7 @@ Todas las acciones mutantes exigen CSRF/Origin; versiones obsoletas o estado inc
 
 ## Inventario y compras — Fase 4
 
-Catálogos: `/refacciones` y `/proveedores`, con GET lista/detalle/`:id/historial`, POST alta, PATCH `:id` edición y PATCH `:id/activacion`. Listas aceptan `page/limit`, `search`, `activo=true/false`. Edición/activación exige versión y motivo. Solo Logística escribe; proveedores solo Logística, refacciones también Administración/Mecánico. Campos de pieza: sku, descripcion, unidad, categoria opcional y minimo decimal no negativo. Proveedor: codigo, nombre y contacto/email/telefono opcionales. Los códigos son canónicos únicos. No se cambia unidad después de registrar movimientos o líneas de compra.
+Catálogos: `/refacciones` y `/proveedores`, con GET lista/detalle/`:id/historial`, POST alta, PATCH `:id` edición y PATCH `:id/activacion`. Listas aceptan `page/limit`, `search`, `activo=true/false`. Edición/activación exige versión y motivo. Proveedores: solo Logística. Refacciones: Administración, Logística y Mecánicos crean/editan; Administración/Logística activan o desactivan. Campos de pieza: sku, descripcion, unidad, categoria opcional y minimo decimal no negativo. Proveedor: codigo, nombre y contacto/email/telefono opcionales. Los códigos son canónicos únicos. No se cambia unidad después de registrar movimientos o líneas de compra.
 
 Todas las mutaciones siguientes son exclusivamente de Logística y requieren `operacionId` UUIDv4 y `motivo` (3–500). La misma clave y contenido/actor devuelve la respuesta original; reutilizarla en otra ruta o con datos distintos devuelve 409. Las mutaciones completadas devuelven 201, incluidos reintentos. No hay PATCH/DELETE del ledger. Cantidad positiva hasta 9 enteros/3 decimales; costo unitario no negativo hasta 9 enteros/6 decimales. El ajuste admite signo y excluye cero.
 
@@ -95,7 +95,7 @@ Todas las mutaciones siguientes son exclusivamente de Logística y requieren `op
 | GET /inventario/ordenes/:id/costo | Solo Logística; costoRefacciones neto de entregas menos devoluciones, MXN; no incluye compras ni piezas descriptivas del cierre |
 | GET /compras | Logística; page/limit, estado opcional; proveedor y líneas, orden fecha/ID descendente |
 | GET /compras/:id | Logística; líneas, cantidades pedidas/recibidas, costo unitario histórico, totalMXN, historial privado con actor/motivo |
-| POST /compras | proveedorId activo, referencia, lineas de refaccionId/cantidad/costoUnitario; 1–50 líneas de piezas distintas; crea BORRADOR sin movimientos |
+| POST /compras | proveedorId opcional (activo si se especifica), vendedor ocasional opcional (excluyente con proveedorId), referencia opcional (COMP-operacionId si se omite), lineas de refaccionId/cantidad/costoUnitario; 1–50 distintas. registro opcional: BORRADOR por defecto, PEDIDO autoriza sin stock, RECIBIDA autoriza e ingresa todo atómicamente. Idempotencia incluye modo y actor |
 | POST /compras/:id/aprobar | version; solo BORRADOR, aprobador fijado por sesión, admite creador; no genera entradas |
 | POST /compras/:id/cancelar | version; solo BORRADOR/APROBADA sin recepción; conserva historia |
 | POST /compras/:id/recepciones | version, lineas de lineaId/cantidad (1–50 únicas); solo APROBADA/PARCIAL; límite por pendiente; atomicidad de todo el lote y stock; estado PARCIAL/RECIBIDA |
@@ -156,3 +156,10 @@ CSV protege texto que empieza con =, +, -, @ tras blancos/controles mediante pre
 ## Consulta de devoluciones
 
 GET /inventario/movimientos incluye orden legible (id/título/económico). Para ENTREGAS añade devuelto y pendienteDevolver como decimales exactos calculados de sus devoluciones; filtros y conteo se aplican antes de paginar. No es una reserva ni sustituye la validación atómica al devolver. Permisos financieros sin cambios.
+
+
+### Captura simplificada — noviembre de 2026
+
+Las compras sin proveedor no generan registros ficticios en Proveedor; almacenan proveedorId nulo y vendedor opcional. Las listas, el detalle y los reportes admiten la relación nula. El reporte usa vendedor o «Sin proveedor registrado» y los totales incluyen estas compras. Las recepciones posteriores conservan versiones, límites e idempotencia.
+
+En POST/PATCH `/refacciones/fichas`, identificador es opcional: una ficha nueva recibe PZ-UUID si se omite o queda vacío; una existente conserva su identificador al dejarlo vacío. El resto de permisos, condición libre y fotos privadas se conserva.

@@ -33,8 +33,10 @@ export class PurchaseLineDto extends QuantityDto {
  @ApiProperty() @IsString() @Matches(/^(?:0|[1-9]\d{0,8})(?:\.\d{1,6})?$/) costoUnitario!:string;
 }
 export class PurchaseDto extends OperationDto {
- @ApiProperty() @IsUUID() proveedorId!:string;
- @ApiProperty() @Transform(({value}:{value:unknown})=>typeof value==='string'?value.trim():value) @IsString() @MinLength(1) @MaxLength(100) referencia!:string;
+ @ApiPropertyOptional({nullable:true}) @IsOptional() @IsUUID() proveedorId?:string|null;
+ @ApiPropertyOptional({nullable:true}) @Transform(({value}:{value:unknown})=>typeof value==='string'?(value.trim()||null):value) @IsOptional() @IsString() @MaxLength(120) vendedor?:string|null;
+ @ApiPropertyOptional({enum:['BORRADOR','PEDIDO','RECIBIDA']}) @IsOptional() @IsIn(['BORRADOR','PEDIDO','RECIBIDA']) registro?:'BORRADOR'|'PEDIDO'|'RECIBIDA';
+ @ApiPropertyOptional() @Transform(({value}:{value:unknown})=>typeof value==='string'?(value.trim()||undefined):value) @IsOptional() @IsString() @MinLength(1) @MaxLength(100) referencia?:string;
  @ApiProperty() @IsArray() @ArrayMinSize(1) @ArrayMaxSize(50) @ArrayUnique((l:PurchaseLineDto)=>l.refaccionId) @ValidateNested({each:true}) @Type(()=>PurchaseLineDto) lineas!:PurchaseLineDto[];
 }
 export class PurchaseActionDto extends OperationDto {

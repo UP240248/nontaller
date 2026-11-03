@@ -3,3 +3,11 @@ import assert from 'node:assert/strict';
 import {quantityUnits,positiveQuantity,validCost,decimalText,pendingQuantity} from '../frontend/src/app/core/inventory-values.ts';
 test('cantidades exactas y pendientes con milésimas sin flotantes',()=>{assert.equal(quantityUnits('0.001'),1n);assert.equal(quantityUnits('-0.125'),-125n);assert.equal(pendingQuantity('10.001','9.999'),'0.002');assert.equal(pendingQuantity('4','4'),'0');for(const v of ['0','-1','1e3','1,5','0.0001'])assert.equal(positiveQuantity(v),false);assert.equal(positiveQuantity('999999999.999'),true);});
 test('costos y formato conservan seis decimales y signo de fracciones negativas',()=>{assert.equal(validCost('0.000001'),true);assert.equal(validCost('-1'),false);assert.equal(validCost('1.0000001'),false);assert.equal(decimalText('-0.000001'),'-0.000001');assert.equal(decimalText('1000000.123456'),'1,000,000.123456');assert.equal(decimalText('0.100000'),'0.1');});
+
+test('total de compra concilia decimales exactos y redondeo de documento',async()=>{
+ const {purchaseTotal}=await import('../frontend/src/app/core/inventory-values.ts');
+ assert.equal(purchaseTotal([{cantidad:'0.001',costoUnitario:'0.0005'},{cantidad:'0.001',costoUnitario:'0.0005'}]),'0.000001');
+ assert.equal(purchaseTotal([{cantidad:'3',costoUnitario:'0.1'},{cantidad:'2',costoUnitario:'0.2'}]),'0.700000');
+ assert.equal(purchaseTotal([{cantidad:'999999999.999',costoUnitario:'999999999.999999'}]),'999999999998999000.000000');
+ assert.equal(purchaseTotal([{cantidad:'0',costoUnitario:'1'}]),null);
+});

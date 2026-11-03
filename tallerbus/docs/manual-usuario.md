@@ -59,7 +59,7 @@ En **Inventario** consulta existencias y alertas de mínimo. La búsqueda por c�
 - **Devolución:** en el historial localiza la entrega y pulsa «Devolver de esta entrega». Indica la cantidad no utilizada y motivo. Se repone su costo original, no el precio actual. No se puede devolver más de lo entregado sin devolver. Puede registrarse después del cierre y conserva su historia.
 - **Ajuste:** cantidad con signo y motivo del conteo. Los ajustes usan el promedio vigente y no pueden dejar stock negativo. Para incorporar piezas sin promedio previo registra una entrada con costo.
 
-Para comprar, elige proveedor activo, referencia y una o varias partidas de piezas distintas, con cantidades y costos unitarios MXN (hasta seis decimales). Guarda el borrador; este aún no altera existencias. Revisa el detalle, escribe motivo y pulsa **Aprobar compra**. Logística puede aprobar sus propias compras, según la regla autorizada.
+Para comprar, abre **Compras → Nueva compra** y elige si ya recibiste todas las piezas o llegarán después. Proveedor y referencia son opcionales: puedes registrar una compra ocasional, escribir la tienda si la conoces y dejar que el sistema genere el folio. Captura refacciones, cantidades, costos unitarios MXN y motivo. **Registrar compra e ingresar piezas** autoriza y recibe en una operación; **Guardar pedido pendiente** autoriza sin ingresar existencias. También puedes elegir Solo preparar un borrador. Logística puede aprobar sus propias compras.
 
 En la compra aprobada, escribe la cantidad que llega en cada partida; deja vacías las que no recibiste. Confirma con motivo/comprobante. La recepción es atómica: si una línea excede lo pendiente, ninguna se ingresa. La compra queda PARCIAL hasta completar todas las partidas, luego RECIBIDA. Solo se cancelan compras sin recepción; su historial conserva autor y motivo. No se calculan impuestos, descuentos ni pagos.
 
@@ -110,3 +110,12 @@ Secciones Existencias, Movimientos y Compras, con formularios de operación sepa
 Desde Inventario abre **Catálogo / agregar refacción** para registrar un tipo de pieza, o **Fichas con foto / agregar pieza** para identificar una pieza física. Administración, Logística y Mecánicos registran y actualizan estos datos. Administración y Logística pueden retirar tipos del catálogo; las compras y los movimientos siguen a cargo de Logística.
 
 La ficha incluye foto privada PNG/JPEG de hasta 5 MB, identificador único, condición libre, situación, observaciones y costo aproximado opcional visible para estos tres roles. El costo vacío queda pendiente y es informativo. Para marcar una pieza **En uso**, escribe el número económico registrado en Autobuses. Para darla de baja elige **Retirada**; se conserva su historial. Ninguna actualización de ficha cambia por sí sola las existencias ni el costo contable.
+
+
+## Seleccionar autobús en preventivo
+
+Logística abre Crear plan preventivo y marca la unidad en **Autobús del plan**. La lista muestra número económico, placas y kilometraje. Busca por económico o placas; usa Más autobuses para recorrer las páginas o Mostrar todos para limpiar la búsqueda. Un aviso confirma qué unidad elegiste. No se selecciona una por defecto.
+
+Si no aparece ninguna unidad, revisa el mensaje: puede no haber coincidencias, unidades activas o haber fallado la carga. Puedes reintentar sin cerrar el formulario. En Autobuses registra o reactiva la unidad si corresponde. El kilometraje del último servicio y el intervalo deben provenir del historial o del criterio del taller; no se inventan automáticamente.
+
+En fichas de inventario, número de serie o etiqueta es opcional: se genera un identificador si queda vacío. Para compras recibidas no dupliques la entrada en Inventario. Consulta la [guía rápida de inventario y compras](inventario-guia-rapida.md).

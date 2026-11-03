@@ -69,3 +69,10 @@ El login y el alta de cuentas usan **usuario de acceso**, **nombre del empleado*
 ## Inventario por tarea
 
 Inventario se organiza en Existencias, Movimientos y Compras con formularios separados y mensajes guiados. Contabilidad tiene accesos directos a consultas de inventario/valoración y compras, sin permisos de escritura. Ver [guía rápida](docs/inventario-guia-rapida.md).
+
+
+## Captura simplificada de noviembre
+
+En preventivo se elige la unidad en una lista con económico/placas y confirmación visible; se puede buscar o recorrer páginas. En fichas de inventario, etiqueta o número de serie es opcional y se genera si queda vacío.
+
+Compras permite compra ocasional sin proveedor registrado y folio automático. Elige si ya recibiste las piezas (registro e ingreso en una operación) o llegarán después (pedido sin cambiar stock). Los reportes incluyen ambas. Después de actualizar ejecuta `npm run setup` para aplicar la migración; no hace falta clonar otra carpeta.
