@@ -9,7 +9,7 @@ const photo=readFileSync('docs/images/inventario-compras.png');
 let users;
 test.beforeAll(async()=>{users=await seed();const bus=await db.autobus.create({data:{numeroEconomico:'FOTO-01',placas:'FTO001',marca:'Prueba',modelo:'Prueba',kilometraje:0,estadoOperativo:'HABILITADO'}});await db.operadorAutobus.create({data:{operadorId:users.OPERADOR.id,autobusId:bus.id}});await db.user.update({where:{id:users.OPERADOR.id},data:{operatorFleetVersion:1}});});
 test.afterAll(async()=>{await db.$disconnect();});
-async function login(page,role){await page.goto('/login');await page.getByLabel('Usuario de acceso',{exact:true}).fill(users[role].username);await page.getByLabel('Contraseña',{exact:true}).fill(password);await page.getByRole('button',{name:'Entrar a TallerBus'}).click();await expect(page.getByRole('heading',{name:/Hola,/})).toBeVisible();}
+async function login(page,role){await page.goto('/login');await page.getByLabel('Usuario de acceso',{exact:true}).fill(users[role].username);await page.getByLabel('Contraseña',{exact:true}).fill(password);await page.getByRole('button',{name:'Entrar a TallerBus'}).click();await expect(page.getByRole('heading',{name:/Hola,/})).toBeVisible({timeout:15000});}
 async function accessible(page){expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze()).violations).toEqual([]);}
 const file={name:'evidencia-prueba.png',mimeType:'image/png',buffer:photo};
 test('operador previsualiza al registrar, ve miniatura y amplía sin descargar; descarga opcional conserva bytes',async({page})=>{
@@ -30,4 +30,12 @@ test('desde detalle se previsualiza, se quita y se sube una foto adicional',asyn
 
 test('foto no disponible muestra una recuperación dentro del visor',async({page})=>{
  await login(page,'MECANICO');const incident=await db.falla.findFirstOrThrow({where:{tipo:'Foto con reintento'}});await page.route('**/api/v1/fallas/*/evidencias/*/vista?*',route=>route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({message:'Foto no disponible temporalmente'})}));await page.goto('/fallas/'+incident.id);await page.getByRole('button',{name:'Ver foto 1 en grande',exact:true}).click();const viewer=page.getByRole('dialog',{name:'Foto 1 de la falla',exact:true});await expect(viewer.getByRole('alert')).toContainText('No se pudo mostrar la foto');await page.unroute('**/api/v1/fallas/*/evidencias/*/vista?*');await viewer.getByRole('button',{name:'Reintentar foto',exact:true}).click();await expect(viewer.getByRole('img')).toBeVisible();await expect.poll(()=>viewer.getByRole('img').evaluate(img=>img.naturalWidth)).toBeGreaterThan(0);await viewer.getByRole('button',{name:'Cerrar foto',exact:true}).click();await expect(viewer).not.toBeVisible();
+});
+
+test('autor elimina una foto guardada con confirmación; otros solo consultan',async({page})=>{
+ const incident=await db.falla.findFirstOrThrow({where:{tipo:'Foto con reintento'}});
+ await login(page,'LOGISTICA');await page.goto('/fallas/'+incident.id);await expect(page.getByRole('button',{name:/Eliminar foto/})).toHaveCount(0);
+ await page.context().clearCookies();await login(page,'MECANICO');await page.goto('/fallas/'+incident.id);
+ await page.getByRole('button',{name:'Eliminar foto 1',exact:true}).click();const dialog=page.getByRole('dialog',{name:'¿Eliminar esta foto?',exact:true});await expect(dialog.getByRole('button',{name:'Cancelar',exact:true})).toBeFocused();await accessible(page);await dialog.getByRole('button',{name:'Cancelar',exact:true}).click();expect(await db.evidenciaFalla.count({where:{fallaId:incident.id}})).toBe(2);
+ await page.getByRole('button',{name:'Eliminar foto 1',exact:true}).click();await dialog.getByRole('button',{name:'Sí, eliminar foto',exact:true}).click();await expect(page.getByRole('status').filter({hasText:'Foto eliminada del reporte.'})).toBeVisible();await expect(page.getByRole('button',{name:/Ver foto .* en grande/})).toHaveCount(1);expect(await db.evidenciaFalla.count({where:{fallaId:incident.id}})).toBe(1);await expect(page.getByText('Foto eliminada',{exact:true})).toBeVisible();
 });

@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { createHash, randomUUID } from 'node:crypto';
 import path from 'node:path';
@@ -37,6 +37,25 @@ export class EvidenceService {
     return evidence;
    },{isolationLevel:Prisma.TransactionIsolationLevel.ReadCommitted});
   }catch(error){await rm(location,{force:true});throw error;}
+ }
+ async remove(id:string,evidenceId:string,actor:Identity) {
+  if(!incidentReporters.includes(actor.role))throw new ForbiddenException('Solo puedes eliminar tus propias fotos');
+  const evidence=await this.db.$transaction(async tx=>{
+   await this.incidents.authorize(tx,actor,incidentReporters);
+   const incident=await this.incidents.lock(tx,id);
+   if(actor.role==='OPERADOR'&&incident.reportanteId!==actor.id)throw new NotFoundException('Reporte no encontrado');
+   const photo=await tx.evidenciaFalla.findFirst({where:{id:evidenceId,fallaId:id}});
+   if(!photo)throw new NotFoundException('Evidencia no encontrada');
+   if(photo.autorId!==actor.id)throw new ForbiddenException('Solo puedes eliminar las fotos que tú subiste');
+   await tx.evidenciaFalla.delete({where:{id:evidenceId}});
+   await tx.auditEvent.create({data:{actorId:actor.id,busId:incident.autobusId,fallaId:id,entity:'Falla',entityId:id,action:'INCIDENT_EVIDENCE_DELETE',changes:{evidenciaId:evidenceId,mime:photo.mime,size:photo.size}}});
+   return photo;
+  },{isolationLevel:Prisma.TransactionIsolationLevel.ReadCommitted,maxWait:10000,timeout:20000});
+  if((/^[a-f0-9-]{36}\.(png|jpg)$/).test(evidence.storageKey)){
+   try{await rm(path.join(evidenceDirectory(),evidence.storageKey),{force:true});}
+   catch{new Logger(EvidenceService.name).warn('No se pudo limpiar el archivo de una evidencia eliminada: '+evidence.id);}
+  }
+  return {deleted:true};
  }
  async download(id:string,evidenceId:string,actor:Identity) {
   await this.incidents.detail(id,actor);

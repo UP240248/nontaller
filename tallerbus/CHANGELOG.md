@@ -190,3 +190,7 @@
 - Accesos de consulta para Contabilidad basados en reportes ya autorizados, sin ampliar escritura ni exponer contactos.
 - Validación de cantidades/costos/duplicados, precisión exacta, mensajes locales y selección conservada al buscar.
 - 18 unitarias, 122 integraciones y 13 E2E relevantes aprobados; ninguna migración ni cambio de reglas de stock/costo.
+
+### 2026-11-05 · Corregir fotos de fallas
+- Botón para eliminar una foto guardada, con confirmación y opción de cancelar.
+- Solo puede eliminarla quien la subió; queda constancia en el historial y se deshabilitan sus enlaces.

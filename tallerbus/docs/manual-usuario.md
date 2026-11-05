@@ -164,3 +164,5 @@ Al registrar una falla puedes elegir una foto opcional y comprobar la **vista pr
 En **Evidencias**, cada foto guardada aparece como miniatura. Pulsa **Ampliar foto** para verla en una ventana dentro de TallerBus. **Cerrar foto** o Escape regresa al detalle. **Descargar foto** sigue disponible si necesitas conservar una copia. Si no se puede cargar, puedes reintentar dentro del visor.
 
 Las fichas de refacciones también muestran vista previa al seleccionar una nueva fotografía. La selección se guarda únicamente al confirmar el formulario correspondiente.
+
+Para corregir una foto de una falla, pulsa **Eliminar foto** debajo de su miniatura y confirma. Operadores y mecánicos pueden eliminar únicamente las imágenes que ellos mismos subieron, en los reportes que pueden consultar. La foto deja de estar disponible y la eliminación queda en el historial; después puedes adjuntar otra. Si todavía no la guardaste, usa **Quitar foto seleccionada**.

@@ -53,3 +53,20 @@ test('vista de foto inline conserva autorización e integridad sin forzar descar
  for(const session of [sessions.operator2,sessions.CONTABILIDAD])assert.ok([403,404].includes((await fetch(url,{headers:{Cookie:session.cookie}})).status));
  assert.equal((await fetch(url)).status,401);assert.equal((await fetch(base+'/fallas/'+otherReport.id+'/evidencias/'+evidence.id+'/vista',{headers:{Cookie:sessions.LOGISTICA.cookie}})).status,404);assert.equal(await db.auditEvent.count(),count);
 });
+
+test('eliminar foto exige autor y CSRF, retira archivo y enlaces, y conserva auditoría',async()=>{
+ const route='/fallas/'+report.id+'/evidencias/'+evidence.id;
+ const stored=await db.evidenciaFalla.findUniqueOrThrow({where:{id:evidence.id}});
+ for(const role of ['MECANICO','ADMINISTRACION','LOGISTICA','CONTABILIDAD'])assert.equal((await request(route,{method:'DELETE',session:sessions[role]})).status,403);
+ assert.equal((await request(route,{method:'DELETE',session:sessions.operator2})).status,404);
+ assert.equal((await request(route,{method:'DELETE',session:sessions.OPERADOR,csrf:false})).status,403);
+ assert.equal((await request('/fallas/'+report2.id+'/evidencias/'+evidence.id,{method:'DELETE',session:sessions.MECANICO})).status,404);
+ assert.equal((await request(route,{method:'DELETE',session:sessions.OPERADOR})).status,200);
+ assert.equal(await db.evidenciaFalla.count({where:{id:evidence.id}}),0);
+ assert.equal((await readdir(evidenceDirectory())).includes(stored.storageKey),false);
+ for(const suffix of ['', '/vista'])assert.equal((await fetch(base+route+suffix,{headers:{Cookie:sessions.OPERADOR.cookie}})).status,404);
+ assert.equal((await request(route,{method:'DELETE',session:sessions.OPERADOR})).status,404);
+ const audit=await db.auditEvent.findFirstOrThrow({where:{fallaId:report.id,action:'INCIDENT_EVIDENCE_DELETE'}});assert.equal(audit.actorId,users.OPERADOR.id);assert.equal(audit.changes.evidenciaId,evidence.id);
+ assert.equal((await upload(report.id,sessions.OPERADOR)).status,201);
+ const own=await upload(report2.id,sessions.MECANICO);assert.equal(own.status,201);assert.equal((await request('/fallas/'+report2.id+'/evidencias/'+own.body.id,{method:'DELETE',session:sessions.mechanic2})).status,403);assert.equal((await request('/fallas/'+report2.id+'/evidencias/'+own.body.id,{method:'DELETE',session:sessions.MECANICO})).status,200);
+});

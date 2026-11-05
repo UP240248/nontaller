@@ -34,7 +34,7 @@ import { WorkflowHistoryComponent } from '../../shared/workflow-history.componen
 </section>}
 <div class="workflow-grid section-gap"><section class="card"><h2>Reporte</h2><p class="preserve-lines">{{i.descripcion}}</p><dl><div><dt>Prioridad confirmada</dt><dd>{{i.prioridad?priorityLabels[i.prioridad]:'Por evaluar'}}</dd></div>@if(i.evaluadoPor){<div><dt>Evaluado por</dt><dd>{{i.evaluadoPor.name}}</dd></div>}</dl>@if(i.evaluacion){<h3>Evaluación mecánica</h3><p class="preserve-lines">{{i.evaluacion}}</p>}
 @if(i.ordenId && session.user()?.role!=='OPERADOR'){<a [routerLink]="['/ordenes',i.ordenId]">Consultar orden de trabajo →</a>}@else if(!i.ordenId && canCoordinate(session.user()?.role) && i.prioridad && i.estado==='PENDIENTE'){<a class="secondary button-link" routerLink="/ordenes/nueva" [queryParams]="{unidad:i.autobus.numeroEconomico}">Crear orden para esta unidad</a>}
-</section><section class="card"><h2>Evidencias</h2><p class="fine">Pulsa una foto para verla en grande. Descargarla es opcional.</p><app-incident-photos [incidentId]="i.id" [photos]="i.evidencias" />
+</section><section class="card"><h2>Evidencias</h2><p class="fine">Pulsa una foto para verla en grande. Descargarla es opcional.</p><app-incident-photos [incidentId]="i.id" [photos]="i.evidencias" (deleted)="notice.set('Foto eliminada del reporte.');load()" />
 @if(canReport(session.user()?.role)){<app-photo-picker inputId="evidence-file" [disabled]="uploading()" (fileChange)="file.set($event);uploadError.set('')" /><button class="secondary" (click)="upload()" [disabled]="!file()||uploading()">{{uploading()?'Subiendo…':'Subir foto'}}</button>@if(uploadError()){<div class="error" role="alert">{{uploadError()}}</div>}}
 
 </section></div>
