@@ -53,6 +53,7 @@ Estado enum: HABILITADO, EN_REPARACION, EN_ESPERA_REFACCIONES, FUERA_DE_SERVICIO
 | PATCH /fallas/:id/evaluacion | Solo Mecánico; version, prioridad BAJA/MEDIA/ALTA/CRITICA, evaluacion 10–2000 y motivo; no finalizadas |
 | POST /fallas/:id/evidencias | Mecánico o Operador propietario; multipart file único PNG/JPEG ≤5 MB, sin campos extra; 201 |
 | GET /fallas/:id/evidencias/:evidenceId | Descarga autenticada, bytes/hash verificados; operador solo propio; attachment y no-sniff |
+| GET /fallas/:id/evidencias/:evidenceId/vista | Mismos permisos y comprobación de integridad; Content-Disposition inline para miniaturas y visor; no-store y no-sniff |
 | GET /fallas/:id/historial | Paginación y alcance como detalle; actor, acción, UTC y cambios seguros |
 
 No se admite manipular reportante/estado/prioridad en el alta. El reporte original no tiene edición ni DELETE. Su evaluación sí se actualiza con versión hasta cierre. Fechas de reporte son del servidor; no se inventa fecha de ocurrencia pasada. Imágenes duplicadas por checksum en una falla devuelven 409 sin duplicar auditoría ni archivo. No hay PATCH /fallas/:id/finalizar: la finalización debe pasar por la orden.
@@ -183,3 +184,10 @@ Contabilidad puede usar GET `/ordenes`, `/ordenes/:id`, `/ordenes/:id/historial`
 Materiales incluye `valor` y `costoUnitario` únicamente para Logística/Contabilidad, como cadenas decimales. Administración/Mecánico conservan cantidades sin importes y no acceden a costo de orden. Todos los roles mantienen sus restricciones de catálogos, compras, movimientos y modificación de checklist. Contabilidad no obtiene GET `/fallas`, `/autobuses`, `/proveedores`, `/refacciones`, `/compras` ni movimientos operativos por esta habilitación; continúa consultando sus reportes financieros autorizados.
 
 Los importes provienen de entregas menos devoluciones; finalizar no genera otro costo. La valoración promedio no demuestra que una entrega provenga de una compra concreta. No se incorpora asignación por lote, serie o factura de compra a una entrega.
+
+
+## Vista previa de imágenes
+
+La visualización inline reutiliza EvidenceService.download: no se publica el directorio de evidencias ni se omite la autorización de la falla. Archivos alterados o evidencia que no corresponde a la falla →404; sesión ausente →401; roles sin permiso →403. Se conservan PNG/JPEG y límite de 5 MB.
+
+El alta de falla mantiene su contrato JSON. La foto opcional de la interfaz se envía después mediante el POST de evidencias existente. Si ese segundo paso falla, la interfaz conserva el ID del reporte guardado y reintenta únicamente la foto; no vuelve a enviar el alta. Las vistas previas de archivos seleccionados se leen localmente con FileReader y se descartan al quitar la selección o destruir la vista.

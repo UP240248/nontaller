@@ -22,6 +22,8 @@ export class IncidentsController {
  @Post(':id/evidencias') @UseInterceptors(FileInterceptor('file',{limits:{fileSize:EVIDENCE_MAX_BYTES,files:1,fields:0}}))
  @ApiConsumes('multipart/form-data') @ApiBody({schema:{type:'object',required:['file'],properties:{file:{type:'string',format:'binary'}}}})
  upload(@Param('id',ParseUUIDPipe) id:string,@UploadedFile() file:EvidenceFile|undefined,@Req() req:AuthRequest){return this.evidence.upload(id,file,req.identity);}
+ @Get(':id/evidencias/:evidenceId/vista')
+ async preview(@Param('id',ParseUUIDPipe) id:string,@Param('evidenceId',ParseUUIDPipe) evidenceId:string,@Req() req:AuthRequest){const file=await this.evidence.download(id,evidenceId,req.identity);return new StreamableFile(file.buffer,{type:file.mime,disposition:`inline; filename="${file.filename}"`});}
  @Get(':id/evidencias/:evidenceId')
  async download(@Param('id',ParseUUIDPipe) id:string,@Param('evidenceId',ParseUUIDPipe) evidenceId:string,@Req() req:AuthRequest){const file=await this.evidence.download(id,evidenceId,req.identity);return new StreamableFile(file.buffer,{type:file.mime,disposition:`attachment; filename="${file.filename}"`});}
 }

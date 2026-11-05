@@ -32,7 +32,7 @@ Historial muestra responsable, UTC, motivo y datos anteriores/nuevos. El dashboa
 
 Operador y Mecánico pueden usar «Reportar falla»: escribe el económico de una unidad activa conocida, tipo y descripción. La fecha y autor se registran automáticamente. No es necesario decidir prioridad; la confirma un Mecánico. El operador solo ve sus reportes, sin catálogo completo de flota ni órdenes internas.
 
-Después de guardar puedes adjuntar fotos PNG/JPEG de hasta 5 MB y descargarlas desde el detalle. Un archivo con extensión falsa, tipo incompatible o contenido alterado se rechaza. Evita datos personales en las fotos y narrativas. No se publica una URL abierta.
+Puedes seleccionar una foto PNG/JPEG de hasta 5 MB al crear el reporte y ver su vista previa antes de guardar. En el detalle puedes añadir más fotos, ver miniaturas y pulsarlas para ampliarlas dentro de la página; descargarlas es opcional. Un archivo con extensión falsa, tipo incompatible o contenido alterado se rechaza. Evita datos personales en las fotos y narrativas. No se publica una URL abierta.
 
 Mecánico evalúa prioridad y escribe evaluación/motivo. Administración y Logística consultan seguimiento y coordinan órdenes. Los filtros combinan unidad, tipo, prioridad, estado y fechas UTC. Mecánico puede usar «Solo mis fallas asignadas» o «Solo mis órdenes» para enfocarse en sus trabajos. El historial registra responsables y acciones.
 
@@ -155,3 +155,12 @@ El inicio de sesión conserva usuario y contraseña; el panel izquierdo queda az
 En las pantallas de inventario aparece una barra **Secciones de inventario** con accesos grandes a Existencias, Catálogo de refacciones, Fichas con foto y, para Logística, Movimientos, Compras y Proveedores. Es la misma barra en todas esas pantallas: pulsa una subpestaña para abrir su sección. La actual se muestra azul, con una marca amarilla y la etiqueta **Actual**. Debajo de cada nombre hay una descripción corta de lo que encontrarás.
 
 En Usuarios y Autobuses autorizados, Administración dispone de **Secciones de personal** para moverse entre cuentas y asignaciones. En el detalle de un autobús, **Resumen** e **Historial** tienen botones con el mismo estilo visible. Puedes usar Tab y Enter para navegar con teclado; también se acomodan a pantallas pequeñas.
+
+
+## Ver fotografías sin descargarlas
+
+Al registrar una falla puedes elegir una foto opcional y comprobar la **vista previa**. **Quitar foto seleccionada** elimina solo la selección pendiente; no borra imágenes ya guardadas. Guardar reporte crea la falla y adjunta la foto. Si se guarda el reporte pero falla la subida, usa **Reintentar foto y abrir reporte** o abre el reporte guardado desde el enlace de la pantalla. No necesitas crear otra falla.
+
+En **Evidencias**, cada foto guardada aparece como miniatura. Pulsa **Ampliar foto** para verla en una ventana dentro de TallerBus. **Cerrar foto** o Escape regresa al detalle. **Descargar foto** sigue disponible si necesitas conservar una copia. Si no se puede cargar, puedes reintentar dentro del visor.
+
+Las fichas de refacciones también muestran vista previa al seleccionar una nueva fotografía. La selección se guarda únicamente al confirmar el formulario correspondiente.

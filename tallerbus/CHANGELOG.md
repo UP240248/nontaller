@@ -1,3 +1,12 @@
+## 2026-11-05 · Fotos visibles dentro de la aplicación
+
+- Miniaturas de evidencias en el detalle de falla y visor ampliado con cierre por botón o Escape; descarga opcional.
+- Ruta inline autenticada con los mismos permisos y verificación de integridad que la descarga.
+- Foto opcional al registrar la falla, con vista previa local; reintento de subida sobre el reporte ya creado para evitar duplicarlo.
+- Selector con vista previa y opción de quitar la selección en fallas y fichas de refacciones.
+- Recuperación de errores de carga en el visor, navegación de teclado y presentación adaptable a celular.
+- Sin migraciones ni formatos de archivo adicionales.
+
 ## 2026-11-05 · Subpestañas más visibles
 
 - Barra compartida de inventario en Existencias, Catálogo, Fichas, Movimientos, Compras y Proveedores, con opciones según el rol.
