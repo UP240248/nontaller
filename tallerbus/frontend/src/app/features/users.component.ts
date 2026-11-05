@@ -1,3 +1,4 @@
+import { PeopleNavigationComponent } from '../shared/section-navigation.component';
 import { RouterLink } from '@angular/router';
 import { Component, OnInit, inject, signal, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -5,8 +6,9 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { SessionService, User, Role, roles, roleLabels, errorMessage } from '../core/session';
 interface Page {data:User[];total:number;page:number;limit:number}
-@Component({standalone:true,imports:[ReactiveFormsModule,RouterLink],template:`
+@Component({standalone:true,imports:[PeopleNavigationComponent,ReactiveFormsModule,RouterLink],template:`
 <div class="page-heading"><div><p class="eyebrow">ADMINISTRACIÓN</p><h1>Usuarios</h1><p class="muted">Gestiona las cuentas y los permisos de tu equipo.</p></div><button class="primary" (click)="openCreate()">＋ Crear usuario</button></div>
+<app-people-navigation />
 @if(error()){<div class="error" role="alert">{{error()}}</div>}@if(notice()){<div class="notice" role="status">{{notice()}}</div>}
 <section class="card table-card"><form class="filters" [formGroup]="filters" (ngSubmit)="page=1;load()"><div><label for="search">Buscar usuario</label><input id="search" formControlName="search" type="search" placeholder="Nombre o usuario"></div><div><label for="role-filter">Rol</label><select id="role-filter" formControlName="role"><option value="">Todos los roles</option>@for(role of roles;track role){<option [value]="role">{{labels[role]}}</option>}</select></div><button class="secondary" type="submit" [disabled]="loading()">Filtrar</button></form>
 @if(loading()){<p class="loading" role="status">Cargando usuarios…</p>}@else{

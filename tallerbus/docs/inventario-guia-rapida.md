@@ -1,11 +1,15 @@
 # Inventario y compras: guía rápida — 3 de noviembre de 2026
 
+## Cómo cambiar de sección
+
+Usa las subpestañas de **Secciones de inventario**, visibles tanto en Inventario como en Catálogo, Fichas, Compras y Proveedores. Tienen borde y fondo de botón; la actual está en azul con marca amarilla y etiqueta **Actual**. Las opciones corresponden a tu rol. Cada una incluye una descripción breve. El botón Registrar/Agregar de cada pantalla realiza la acción; las subpestañas sirven para abrir otra sección.
+
 ## ¿Dónde registro cada cosa?
 
 | Quiero… | Abro… |
 |---|---|
-| Registrar un tipo de refacción, como filtro de aceite | Inventario → Catálogo / agregar refacción |
-| Identificar una pieza física con foto y condición | Inventario → Fichas con foto / agregar pieza |
+| Registrar un tipo de refacción, como filtro de aceite | Inventario → Catálogo de refacciones |
+| Identificar una pieza física con foto y condición | Inventario → Fichas con foto |
 | Consultar cuántas piezas hay | Inventario → Existencias |
 | Registrar piezas que compré | Compras → Nueva compra |
 | Entregar piezas a una reparación | Inventario → Entregar a orden |

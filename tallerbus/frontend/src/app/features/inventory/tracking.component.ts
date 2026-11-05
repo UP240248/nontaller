@@ -1,3 +1,4 @@
+import { InventoryNavigationComponent } from '../../shared/section-navigation.component';
 import { Component, ElementRef, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -6,9 +7,9 @@ import { firstValueFrom } from 'rxjs';
 import { InventoryApi, Part } from '../../core/inventory';
 import { errorMessage } from '../../core/session';
 interface Ficha {id:string;refaccionId:string;identificador:string;condicion:string;situacion:string;unidad:string|null;costoAproximado:string|null;notas:string|null;version:number;fotoMime:string|null;refaccion:{sku:string;descripcion:string}}
-@Component({standalone:true,imports:[FormsModule,RouterLink],styles:[`.pieces{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}.piece img{width:100%;height:190px;object-fit:contain;background:#f2f4f8}.piece-nav a{color:#174a85}.piece h2{font-size:1.2rem}.piece-nav{display:flex;gap:1rem;margin:1rem 0;flex-wrap:wrap}`],template:`
+@Component({standalone:true,imports:[InventoryNavigationComponent,FormsModule,RouterLink],styles:[`.pieces{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}.piece img{width:100%;height:190px;object-fit:contain;background:#f2f4f8}.piece h2{font-size:1.2rem}`],template:`
 <div class="page-heading"><div><p class="eyebrow">TALLER · REFACCIONES</p><h1>Fichas de refacciones</h1><p>Condición y ubicación de cada pieza física.</p></div><button class="primary" (click)="open()">Agregar pieza</button></div>
-<nav class="piece-nav"><a routerLink="/inventario">Existencias</a><a routerLink="/refacciones">Registrar tipo de refacción</a></nav>
+<app-inventory-navigation />
 <p class="notice">Estas fichas no cambian el stock ni su valoración contable. Logística registra las entregas y devoluciones. Para dar de baja una pieza, cambia su situación a Retirada.</p>
 @if(error()){<p class="error" role="alert">{{error()}}</p>}@if(notice()){<p class="notice" role="status">{{notice()}}</p>}
 @if(loading()){<p role="status">Cargando…</p>}

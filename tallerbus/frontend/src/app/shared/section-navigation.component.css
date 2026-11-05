@@ -1,0 +1,20 @@
+:host{display:block;min-width:0}
+.section-navigation{background:#eaf0f8;border:1px solid #c4d0e2;border-radius:12px;padding:16px;margin:0 0 24px;box-shadow:0 2px 5px #172b4d08}
+.section-navigation-heading{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:6px 16px;margin-bottom:12px}
+.section-navigation-heading>strong{font-size:14px;color:#172b4d}
+.section-navigation-heading>span{font-size:12px;color:#485a73;line-height:1.5}
+.section-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:8px}
+.section-links>a{min-width:0;display:flex;flex-direction:column;justify-content:center;gap:6px;min-height:76px;padding:12px 14px;border:1px solid #a7b9d1;border-radius:8px;background:#fff;color:#172b4d;text-decoration:none;box-shadow:0 2px 0 #c4d0e2;transition:background-color .12s,border-color .12s}
+.section-links>a:hover{background:#f3f7ff;border-color:#456a9f}
+.section-links>a:focus-visible{outline:3px solid #b27700;outline-offset:3px}
+.section-links>a.is-active{background:#1e4fa3;border-color:#1e4fa3;color:#fff;box-shadow:inset 0 -4px 0 #f4c542}
+.section-links>a.is-active:hover{background:#193f82}
+.section-link-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.section-link-top>strong{font-size:13px;line-height:1.4}
+.section-links small{font-size:11px;line-height:1.5;color:#52637a}
+.section-links>a.is-active small{color:#e3edff}
+.current-section{flex-shrink:0;font-size:10px;font-weight:700;background:#fff;color:#17386b;padding:3px 6px;border-radius:4px}
+.section-arrow{font-size:18px;color:#456a9f}
+@media(max-width:680px){.section-navigation{padding:12px}.section-links{gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}.section-links>a{padding:11px 10px;min-height:88px}.section-link-top{flex-wrap:wrap;gap:4px}.section-navigation-heading>span{font-size:11px}}
+@media(max-width:360px){.section-links{grid-template-columns:minmax(0,1fr)}.section-links>a{min-height:70px}.section-link-top{flex-wrap:nowrap}}
+@media(prefers-reduced-motion:reduce){.section-links>a{transition:none}}

@@ -107,7 +107,7 @@ Secciones Existencias, Movimientos y Compras, con formularios de operación sepa
 
 ## Fichas de piezas individuales
 
-Desde Inventario abre **Catálogo / agregar refacción** para registrar un tipo de pieza, o **Fichas con foto / agregar pieza** para identificar una pieza física. Administración, Logística y Mecánicos registran y actualizan estos datos. Administración y Logística pueden retirar tipos del catálogo; las compras y los movimientos siguen a cargo de Logística.
+Desde Inventario abre **Catálogo de refacciones** para registrar un tipo de pieza, o **Fichas con foto** para identificar una pieza física. Administración, Logística y Mecánicos registran y actualizan estos datos. Administración y Logística pueden retirar tipos del catálogo; las compras y los movimientos siguen a cargo de Logística.
 
 La ficha incluye foto privada PNG/JPEG de hasta 5 MB, identificador único, condición libre, situación, observaciones y costo aproximado opcional visible para estos tres roles. El costo vacío queda pendiente y es informativo. Para marcar una pieza **En uso**, escribe el número económico registrado en Autobuses. Para darla de baja elige **Retirada**; se conserva su historial. Ninguna actualización de ficha cambia por sí sola las existencias ni el costo contable.
 
@@ -148,3 +148,10 @@ Entra en **Órdenes de trabajo**, busca por título o unidad y abre una orden. P
 Este acceso es de consulta: no permite crear, asignar, iniciar ni finalizar órdenes, modificar checklist o registrar movimientos. Las compras recibidas pasan primero al almacén; su costo se asigna a la reparación al entregar materiales, usando el promedio de almacén. No se identifica una compra específica como origen de cada entrega y no se calculan tarifas de mano de obra. Las refacciones descriptivas del cierre no se suman de nuevo al costo.
 
 El inicio de sesión conserva usuario y contraseña; el panel izquierdo queda azul sin texto ni logotipo.
+
+
+## Navegación por subpestañas
+
+En las pantallas de inventario aparece una barra **Secciones de inventario** con accesos grandes a Existencias, Catálogo de refacciones, Fichas con foto y, para Logística, Movimientos, Compras y Proveedores. Es la misma barra en todas esas pantallas: pulsa una subpestaña para abrir su sección. La actual se muestra azul, con una marca amarilla y la etiqueta **Actual**. Debajo de cada nombre hay una descripción corta de lo que encontrarás.
+
+En Usuarios y Autobuses autorizados, Administración dispone de **Secciones de personal** para moverse entre cuentas y asignaciones. En el detalle de un autobús, **Resumen** e **Historial** tienen botones con el mismo estilo visible. Puedes usar Tab y Enter para navegar con teclado; también se acomodan a pantallas pequeñas.

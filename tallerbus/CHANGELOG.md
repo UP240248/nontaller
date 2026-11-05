@@ -1,3 +1,11 @@
+## 2026-11-05 · Subpestañas más visibles
+
+- Barra compartida de inventario en Existencias, Catálogo, Fichas, Movimientos, Compras y Proveedores, con opciones según el rol.
+- Botones de navegación con borde, fondo, descripción y sección actual marcada en azul, amarillo y etiqueta Actual.
+- Selección exacta de ruta, conservada al usar parámetros de contexto; enlaces navegables con teclado e historial del navegador.
+- Subpestañas de personal para Administración y botones más visibles de Resumen/Historial en el autobús.
+- Presentación adaptable a móvil y navegación etiquetada para lectores de pantalla.
+
 ## 2026-11-03 · Login y consulta de órdenes
 
 - Panel izquierdo del login azul liso, sin textos ni marca; se conserva el formulario y la autenticación.

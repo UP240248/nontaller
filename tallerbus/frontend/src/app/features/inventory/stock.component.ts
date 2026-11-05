@@ -1,8 +1,9 @@
+import { InventoryNavigationComponent } from '../../shared/section-navigation.component';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { Page } from '../../core/fleet';
 import { Part, Supplier } from '../../core/inventory';
@@ -15,7 +16,7 @@ interface PurchaseLine {id:string;refaccionId:string;descripcion:string;unidad:s
 interface Purchase {totalMXN?:string;historial?:{id:string;accion:string;motivo:string;createdAt:string;actor:{name:string}}[];id:string;referencia:string;estado:string;version:number;lineas:PurchaseLine[];proveedor:{nombre:string}|null;vendedor?:string|null}
 type MovementType='entradas'|'entregas'|'devoluciones'|'ajustes';
 const titles:Record<MovementType,string>={entradas:'Registrar entrada',entregas:'Entregar a orden',devoluciones:'Devolver sobrantes',ajustes:'Ajustar conteo'};
-@Component({standalone:true,imports:[FormsModule,RouterLink,RouterLinkActive,DatePipe],templateUrl:'./stock.component.html',styleUrl:'./stock.component.css'})
+@Component({standalone:true,imports:[InventoryNavigationComponent,FormsModule,RouterLink,DatePipe],templateUrl:'./stock.component.html',styleUrl:'./stock.component.css'})
 export class StockComponent implements OnInit, AfterViewInit {
  private partRequest=0;private supplierRequest=0;private orderRequest=0;private returnRequest=0;private detailRequest=0;
  private readonly http=inject(HttpClient);private readonly session=inject(SessionService);private readonly route=inject(ActivatedRoute);readonly writer=()=>this.session.user()?.role==='LOGISTICA';
