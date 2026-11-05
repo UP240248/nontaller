@@ -2,9 +2,21 @@ import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SessionService, errorMessage } from '../core/session';
-@Component({standalone:true,imports:[ReactiveFormsModule],styles:[`.login-story{background:#172b4d;background-image:none}.login-form h1{font-size:30px}`],template:`
+@Component({standalone:true,imports:[ReactiveFormsModule],styleUrl:'./login.component.css',template:`
 <main class="login-page">
- <div class="login-story" aria-hidden="true"></div>
+ <aside class="login-story" aria-label="Terrabus">
+  <svg class="login-globe" viewBox="0 0 900 900" aria-hidden="true" focusable="false">
+   <defs><clipPath id="login-globe-clip"><circle cx="450" cy="450" r="415" /></clipPath></defs>
+   <g transform="rotate(-16 450 450)" clip-path="url(#login-globe-clip)">
+    <circle cx="450" cy="450" r="415" class="globe-outline" />
+    <g class="globe-grid"><ellipse cx="450" cy="450" rx="270" ry="415"/><ellipse cx="450" cy="450" rx="112" ry="415"/><path d="M35 450H865M75 275Q450 355 825 275M75 625Q450 545 825 625M190 125Q450 205 710 125M190 775Q450 695 710 775"/></g>
+    <g class="globe-land"><path d="M95 220 145 161 211 144 254 112 304 120 330 155 386 155 430 194 405 224 365 225 349 253 368 276 347 310 323 326 311 367 281 383 278 421 253 427 246 394 224 374 200 336 168 325 161 290 132 272Z"/><path d="M276 423 307 432 322 464 353 478 384 486 405 512 451 521 481 553 469 587 443 605 435 648 407 681 396 726 369 776 345 804 330 773 335 735 322 693 314 652 298 615 291 568 268 540 257 502 266 467Z"/><path d="M465 151 493 125 541 113 562 134 546 171 510 184 484 179Z"/><path d="M570 242 614 204 661 207 681 231 719 228 760 254 785 291 830 302 850 347 815 371 775 353 754 381 723 364 701 337 668 346 639 326 620 294 588 292Z"/><path d="M599 347 642 339 672 362 686 404 722 432 704 470 680 478 673 520 647 554 616 542 605 503 580 476 566 435 574 393Z"/></g>
+   </g>
+   <circle cx="450" cy="450" r="415" class="globe-outline" />
+  </svg>
+  <svg class="login-waves" viewBox="0 0 850 400" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path class="wave-back" d="M0 20C190 95 285 257 535 317S760 355 850 400H0Z"/><path class="wave-front" d="M0 197C203 232 293 325 466 400H0Z"/><path class="wave-line" d="M0 197C203 232 293 325 466 400"/></svg>
+  @if(logoUrl){<img class="login-logo" [src]="logoUrl" alt="Terrabus" width="236" height="244" fetchpriority="high">}
+ </aside>
  <section class="login-form-wrap"><div class="login-form">
   <p class="eyebrow">BIENVENIDO A TALLERBUS</p><h1>Inicia sesión</h1><p class="muted">Usa la cuenta que te proporcionó Administración.</p>
   <form [formGroup]="form" (ngSubmit)="submit()">
@@ -18,6 +30,8 @@ import { SessionService, errorMessage } from '../core/session';
  </div></section>
 </main>`})
 export class LoginComponent {
+ // Se activará al incorporar el archivo original del logotipo, sin recrearlo.
+ readonly logoUrl:string|null=null;
  private readonly fb=inject(FormBuilder);private readonly session=inject(SessionService);private readonly router=inject(Router);
  readonly busy=signal(false);readonly error=signal('');
  readonly form=this.fb.nonNullable.group({username:['',[Validators.required,Validators.pattern(/^[a-zA-Z0-9][a-zA-Z0-9._-]{2,39}$/),Validators.maxLength(40)]],password:['',[Validators.required,Validators.maxLength(128)]]});

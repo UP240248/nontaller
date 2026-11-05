@@ -12,7 +12,9 @@ async function login(page,role='ADMINISTRACION'){
 }
 async function accessible(page){const result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(result.violations).toEqual([]);}
 test('administración: alta, edición, activación, revocación y auditoría reales',async({page,browser})=>{
- await page.goto('/login');await expect(page.locator('input[type=email]')).toHaveCount(0);await accessible(page);await login(page);await accessible(page);
+ await page.setViewportSize({width:1774,height:886});await page.goto('/login');await expect(page.locator('input[type=email]')).toHaveCount(0);await accessible(page);await page.screenshot({path:'test-results/login-redesign-desktop.png',fullPage:true});
+ await page.setViewportSize({width:390,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await expect(page.getByRole('button',{name:'Entrar a TallerBus'})).toBeInViewport();await accessible(page);await page.screenshot({path:'test-results/login-redesign-mobile.png',fullPage:true});
+ await page.setViewportSize({width:820,height:1180});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'test-results/login-redesign-tablet.png',fullPage:true});await page.setViewportSize({width:1280,height:900});await login(page);await accessible(page);
  await page.getByRole('link',{name:'Usuarios',exact:true}).click();await page.getByRole('button',{name:'Crear usuario'}).click();
  await expect(page.locator('input[type=email]')).toHaveCount(0);await page.getByLabel('Nombre del empleado').fill('María Taller');await page.getByLabel('Usuario de acceso',{exact:true}).fill('maria.test');await page.getByLabel('Contraseña inicial').fill('Ocho123!');await accessible(page);await page.getByRole('button',{name:'Guardar usuario'}).click();
  let row=page.getByRole('row').filter({hasText:'maria.test'});await expect(row).toBeVisible();

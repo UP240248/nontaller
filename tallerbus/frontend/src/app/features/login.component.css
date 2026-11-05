@@ -1,0 +1,24 @@
+:host{display:block;min-height:100svh}
+.login-page{min-height:100svh;grid-template-columns:minmax(0,48fr) minmax(0,52fr);background:#f5f7fb}
+.login-story{position:relative;display:grid;place-items:center;min-width:0;min-height:100svh;padding:40px;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at 70% 35%,#153158 0,#122a4b 60%,#172b4d 100%)}
+.login-logo{position:relative;z-index:1;display:block;width:clamp(180px,29%,244px);max-width:100%;height:auto;object-fit:contain;transform:translateY(-5svh)}
+.login-globe{position:absolute;width:clamp(620px,61vw,1000px);height:auto;right:-48%;bottom:-53%;opacity:.14;pointer-events:none;color:#7398c3}
+.globe-grid,.globe-outline{fill:none;stroke:currentColor;stroke-width:7}.globe-land{fill:currentColor;stroke:none}
+.login-waves{position:absolute;inset:auto 0 0;width:100%;height:40%;pointer-events:none}.wave-back{fill:#385b8b;opacity:.19}.wave-front{fill:#466da9;opacity:.26}.wave-line{fill:none;stroke:#7195c9;stroke-width:2;opacity:.16}
+.login-form-wrap{min-width:0;min-height:100svh;padding:48px clamp(28px,5vw,88px);background:#f5f7fb}
+.login-form{width:min(100%,440px)}
+.login-form .eyebrow{font-size:15px;letter-spacing:.035em;line-height:1.5;color:#5c6c8b;margin-bottom:24px;font-weight:700}
+.login-form h1{font-size:clamp(32px,2.7vw,40px);line-height:1.15;letter-spacing:-1.3px;color:#172b4d;margin-bottom:14px}
+.login-form>.muted{font-size:16px;line-height:1.65;margin-bottom:0;color:#60708b}
+.login-form form{margin-top:34px}
+.login-form label{font-size:15px;line-height:1.45;font-weight:700;margin:20px 0 7px}.login-form label:first-child{margin-top:0}
+.login-form input{min-height:50px;padding:12px 14px;border-radius:7px;background:#eaf0fc;border:1px solid #c3cfe2;font-size:16px;box-shadow:inset 0 1px 2px #172b4d04}
+.login-form input:hover{border-color:#9aaecb}.login-form input:focus-visible{border-color:#2563eb;outline:3px solid #b27700;outline-offset:3px}
+.login-form input[aria-invalid=true]{border-color:#a62e28}
+.login-form .full{min-height:50px;padding:13px 17px;margin-top:28px;font-size:16px;line-height:1.4;border-radius:7px;align-items:center;gap:16px;background:#2563eb}
+.login-form .full:hover:not(:disabled){background:#1d4ed8}.login-form .full:disabled{background:#2563eb;cursor:wait;opacity:.65}.login-form .full span{font-size:23px;font-weight:400;line-height:1}
+.login-help{font-size:14px;line-height:1.6;margin:24px 0 0;text-align:center;color:#172b4d}
+.login-form>.fine{margin:32px 0 0;padding-top:26px;font-size:12px;line-height:1.7;border-top:1px solid #d6deeb;color:#566783;text-align:center}
+@media(min-width:681px) and (max-width:1000px){.login-page{grid-template-columns:minmax(0,42fr) minmax(0,58fr)}.login-story{padding:24px}.login-logo{width:clamp(155px,57%,210px)}.login-form-wrap{padding:36px 30px}.login-form h1{font-size:34px}.login-globe{right:-100%;bottom:-35%}}
+@media(max-width:680px){.login-page{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr}.login-story{min-height:120px;padding:16px 24px}.login-logo{height:88px;width:auto;transform:none}.login-globe{width:330px;right:-100px;bottom:-235px;opacity:.1}.login-waves{height:80%}.login-form-wrap{min-height:0;padding:28px 24px 30px;align-content:center}.login-form{width:min(100%,420px)}.login-form .eyebrow{font-size:12px;margin-bottom:12px}.login-form h1{font-size:32px;margin-bottom:10px}.login-form>.muted{font-size:14px;line-height:1.5}.login-form form{margin-top:24px}.login-form label{font-size:14px;margin-top:18px}.login-form input{min-height:48px}.login-form .full{margin-top:24px}.login-help{font-size:13px;margin-top:20px}.login-form>.fine{font-size:11px;margin-top:22px;padding-top:18px}}
+@media(max-height:740px) and (min-width:681px){.login-form-wrap{padding-top:30px;padding-bottom:30px}.login-form .eyebrow{margin-bottom:16px}.login-form form{margin-top:24px}.login-form>.fine{margin-top:24px;padding-top:20px}}

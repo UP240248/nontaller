@@ -204,3 +204,8 @@
 ### 2026-11-05 · Botones más fáciles de reconocer
 - Fallas, órdenes y autobuses muestran botones grandes con fondo azul y textos como Ver reporte, Ver orden y Ver autobús.
 - El historial de mantenimiento utiliza el mismo estilo para abrir servicios; los títulos y las descripciones permanecen separados de las acciones.
+
+### 2026-11-05 · Mejorar la presentación del login
+- Proporciones de dos columnas, panel azul con globo y ondas decorativas, formulario con mejor espaciado, campos legibles y botón completo.
+- Vista móvil con cabecera compacta y sin desbordamiento horizontal.
+- El archivo original del logo queda pendiente; se evita publicar una imagen rota o una recreación. La autenticación y sus validaciones se conservan.
