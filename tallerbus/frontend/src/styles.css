@@ -10,3 +10,9 @@
 .table-scroll:focus-visible{outline:3px solid #b27700;outline-offset:-3px}
 
 .checkbox-label{display:flex;align-items:center;gap:10px;font-size:12px}.checkbox-label input{width:18px;min-height:18px;height:18px;accent-color:var(--blue)}
+
+/* Clear, generous actions for opening records in operational lists. */
+.record-title{display:block;font-size:16px;font-weight:700;line-height:1.5;color:var(--ink);overflow-wrap:anywhere}
+.record-summary{min-width:230px;max-width:420px}.record-summary small{font-size:14px;line-height:1.6;margin-top:8px}
+a.record-action,button.record-action{display:inline-flex;align-items:center;justify-content:center;min-height:50px;min-width:150px;max-width:100%;padding:12px 20px;margin:12px 0 2px;background:#1e4fa3;color:#fff;border:2px solid #173e81;border-radius:9px;box-shadow:0 3px 0 #123269;text-decoration:none;font-size:16px;font-weight:750;line-height:1.4;text-align:center;white-space:normal;cursor:pointer;overflow-wrap:anywhere}
+a.record-action:visited{color:#fff}a.record-action:hover,button.record-action:hover{background:#163d82;color:#fff;box-shadow:0 4px 0 #102d5e}a.record-action:active,button.record-action:active{background:#123269;box-shadow:0 1px 0 #102d5e;transform:translateY(2px)}a.record-action:focus-visible,button.record-action:focus-visible{outline:3px solid #b27700;outline-offset:4px}

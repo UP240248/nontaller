@@ -200,3 +200,7 @@
 - Administración, Logística y Mecánico gestionan preventivos completos. Los permisos de correctivos se conservan.
 - Próxima fecha mensual editable, avisos en Inicio y Mantenimiento, historial con fecha realizada y filtro por mes.
 - Se conservan los planes por kilometraje y las tareas históricas; el registro no cuenta como mantenimiento realizado hasta finalizarlo.
+
+### 2026-11-05 · Botones más fáciles de reconocer
+- Fallas, órdenes y autobuses muestran botones grandes con fondo azul y textos como Ver reporte, Ver orden y Ver autobús.
+- El historial de mantenimiento utiliza el mismo estilo para abrir servicios; los títulos y las descripciones permanecen separados de las acciones.
