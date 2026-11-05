@@ -1,0 +1,812 @@
+[
+  {
+    "id": "ACC-01",
+    "module": "Acceso",
+    "title": "Entrar con cada perfil",
+    "role": "Los cinco roles",
+    "priority": "P0",
+    "preconditions": "Demo preparada y cuentas locales disponibles.",
+    "steps": [
+      "Abrir http://localhost:4202 en una ventana privada.",
+      "Ingresar usuario y contraseña del perfil seleccionado.",
+      "Revisar el nombre y rol; cerrar sesión y repetir con los demás perfiles."
+    ],
+    "expected": "Inicio de sesión correcto para cada cuenta activa; el menú corresponde a su rol y no solicita correo.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "ACC-02",
+    "module": "Acceso",
+    "title": "Contraseña incorrecta y recuperación",
+    "role": "Cualquier rol",
+    "priority": "P1",
+    "preconditions": "Cuenta activa; probar solo unos pocos intentos.",
+    "steps": [
+      "Ingresar un usuario existente con una contraseña equivocada.",
+      "Revisar el mensaje.",
+      "Volver a intentar con los datos correctos."
+    ],
+    "expected": "El primer intento se rechaza con un mensaje comprensible; el segundo permite ingresar. No debe aparecer error interno del servidor.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "ACC-03",
+    "module": "Acceso",
+    "title": "Cerrar sesión y volver atrás",
+    "role": "Cualquier rol",
+    "priority": "P0",
+    "preconditions": "Sesión iniciada.",
+    "steps": [
+      "Abrir un registro al que el perfil tenga acceso.",
+      "Cerrar sesión.",
+      "Usar Atrás, actualizar la página e intentar abrir otra vez la dirección del registro."
+    ],
+    "expected": "Después de actualizar o pedir información protegida se exige iniciar sesión; no se recupera una sesión válida por usar Atrás.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "ACC-04",
+    "module": "Acceso",
+    "title": "Rutas restringidas",
+    "role": "Operador y Contabilidad",
+    "priority": "P0",
+    "preconditions": "Conocer las rutas /usuarios, /auditoria y /mantenimiento.",
+    "steps": [
+      "Iniciar como Operador e intentar esas direcciones.",
+      "Repetir como Contabilidad.",
+      "Revisar que tampoco aparezcan acciones administrativas en el menú."
+    ],
+    "expected": "La interfaz redirige a una pantalla permitida o informa falta de acceso. No permite crear usuarios ni gestionar mantenimiento; no es un error que estos perfiles tengan restricciones.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "USR-01",
+    "module": "Usuarios",
+    "title": "Crear cuenta con usuario y nombre",
+    "role": "Administración",
+    "priority": "P0",
+    "preconditions": "Existe un autobús QA activo para asignarlo si el rol será Operador.",
+    "steps": [
+      "Abrir Usuarios y la opción de agregar.",
+      "Capturar nombre del empleado, usuario único, contraseña propia de al menos ocho caracteres y rol.",
+      "Si es Operador, autorizar al menos un autobús; guardar e iniciar sesión con la nueva cuenta."
+    ],
+    "expected": "La cuenta se guarda, inicia sesión con usuario y conserva su nombre/rol. No se pide correo ni se muestra su contraseña guardada.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "USR-02",
+    "module": "Usuarios",
+    "title": "Validar contraseña y usuario repetido",
+    "role": "Administración",
+    "priority": "P1",
+    "preconditions": "Cuenta QA creada en USR-01.",
+    "steps": [
+      "Intentar otra alta con contraseña de siete caracteres.",
+      "Corregir la contraseña e intentar usar un usuario existente.",
+      "Cambiar a un usuario único y guardar."
+    ],
+    "expected": "Las dos entradas inválidas se rechazan sin duplicar la cuenta; el alta válida se permite.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "USR-03",
+    "module": "Usuarios",
+    "title": "Desactivar una cuenta de prueba",
+    "role": "Administración",
+    "priority": "P0",
+    "preconditions": "Cuenta QA secundaria abierta en otro perfil de navegador; conservar un administrador activo.",
+    "steps": [
+      "Desactivar solamente la cuenta secundaria.",
+      "Desde su sesión, actualizar o intentar guardar una operación permitida.",
+      "Intentar iniciar sesión otra vez; después reactivar la cuenta."
+    ],
+    "expected": "La cuenta desactivada pierde acceso. Reactivarla permite un nuevo inicio de sesión; no se elimina su historial.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "USR-04",
+    "module": "Usuarios",
+    "title": "Autorizar varias unidades al operador",
+    "role": "Administración y Logística",
+    "priority": "P0",
+    "preconditions": "Dos autobuses QA activos y un Operador QA.",
+    "steps": [
+      "Como Administración, autorizar QA-A y QA-B al operador.",
+      "Como Operador, abrir Reportar falla y revisar la lista de unidades.",
+      "Como Logística, retirar QA-B; volver a cargar el formulario del Operador."
+    ],
+    "expected": "Solo aparecen las unidades activas autorizadas. QA-B deja de estar disponible para nuevos reportes; los reportes anteriores conservan su autobús original.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "FLO-01",
+    "module": "Autobuses",
+    "title": "Registrar y abrir un autobús",
+    "role": "Administración o Logística",
+    "priority": "P0",
+    "preconditions": "Número económico y placas QA únicos.",
+    "steps": [
+      "Registrar QA-A con marca/modelo ficticios y 1,000 km.",
+      "Guardar y buscarlo en Autobuses.",
+      "Pulsar el botón Ver autobús."
+    ],
+    "expected": "Se crea un solo autobús y el botón abre su detalle correcto. El registro conserva los datos capturados.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "FLO-02",
+    "module": "Autobuses",
+    "title": "Rechazar identificación duplicada",
+    "role": "Administración o Logística",
+    "priority": "P1",
+    "preconditions": "QA-A ya existe.",
+    "steps": [
+      "Intentar registrar otra unidad con sus mismas placas.",
+      "Revisar el error y cancelar.",
+      "Confirmar que el registro original siga igual."
+    ],
+    "expected": "Se rechaza la duplicación; no se crea una segunda unidad ni se altera QA-A.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "FLO-03",
+    "module": "Autobuses",
+    "title": "Cambiar estado con trazabilidad",
+    "role": "Mecánico",
+    "priority": "P0",
+    "preconditions": "Autobús QA-A activo.",
+    "steps": [
+      "Abrir QA-A y cambiar su estado operativo con un motivo.",
+      "Actualizar la página.",
+      "Consultar el historial y los indicadores de Inicio."
+    ],
+    "expected": "El estado y su motivo se conservan; los indicadores corresponden a los datos actuales. Cambiar el estado no autoriza al Mecánico a editar placas o dar de alta unidades.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "FLO-04",
+    "module": "Autobuses",
+    "title": "Inactivar una unidad autorizada",
+    "role": "Administración o Logística y Operador",
+    "priority": "P1",
+    "preconditions": "QA-B está autorizada al Operador QA.",
+    "steps": [
+      "Inactivar QA-B.",
+      "Como Operador, volver a cargar Reportar falla.",
+      "Reactivar QA-B al terminar."
+    ],
+    "expected": "La unidad inactiva no se ofrece para nuevos reportes o mantenimientos; su historial sigue disponible para perfiles autorizados.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "FAL-01",
+    "module": "Fallas",
+    "title": "Crear reporte de unidad autorizada",
+    "role": "Operador",
+    "priority": "P0",
+    "preconditions": "QA-A autorizada al Operador QA.",
+    "steps": [
+      "Abrir Reportar falla y elegir QA-A.",
+      "Escribir tipo Frenos y una descripción ficticia suficientemente detallada.",
+      "Guardar, volver a Mis reportes y pulsar Ver reporte."
+    ],
+    "expected": "Se guarda una sola falla Pendiente, por evaluar y con el operador/unidad correctos. El botón abre ese reporte.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "FAL-02",
+    "module": "Fallas",
+    "title": "Datos obligatorios y unidad no autorizada",
+    "role": "Operador",
+    "priority": "P1",
+    "preconditions": "Formulario de reporte abierto.",
+    "steps": [
+      "Intentar guardar sin elegir autobús o sin descripción.",
+      "Revisar qué campo señala la pantalla.",
+      "Buscar una unidad que Administración no autorizó."
+    ],
+    "expected": "No se guarda un reporte incompleto. La unidad no autorizada no está disponible; no se confunde una validación con un fallo del servidor.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "FAL-03",
+    "module": "Fallas",
+    "title": "Privacidad entre operadores",
+    "role": "Dos operadores QA",
+    "priority": "P0",
+    "preconditions": "Cada operador tiene un reporte propio y ventanas/perfiles separados.",
+    "steps": [
+      "Abrir como Operador B la dirección del reporte de A.",
+      "Intentar abrir también un enlace de una foto de ese reporte.",
+      "Volver a Mis reportes de B."
+    ],
+    "expected": "B no ve el reporte ni la foto de A; su lista sigue limitada a sus propios registros.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "FAL-04",
+    "module": "Fallas",
+    "title": "Evaluar y priorizar una falla",
+    "role": "Mecánico",
+    "priority": "P0",
+    "preconditions": "FAL-01 creada y sin finalizar.",
+    "steps": [
+      "Abrir el reporte.",
+      "Elegir prioridad, registrar evaluación mecánica y motivo.",
+      "Guardar y actualizar la página."
+    ],
+    "expected": "Se conservan evaluación, prioridad y responsable. Administración y Logística pueden consultar esta información, pero no evaluarla como Mecánico.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "FOT-01",
+    "module": "Fotografías",
+    "title": "Previsualizar, guardar y ampliar",
+    "role": "Operador o Mecánico",
+    "priority": "P0",
+    "preconditions": "Imagen PNG/JPEG de prueba menor a 5 MB, sin datos personales.",
+    "steps": [
+      "Seleccionar la imagen al reportar o en el detalle de la falla.",
+      "Comprobar la vista previa y guardar/subir.",
+      "Pulsar la miniatura, ampliar y cerrar el visor; descargar solo si se desea."
+    ],
+    "expected": "La foto se muestra antes de subirla y luego dentro del reporte, sin obligar a descargar. Cerrar el visor devuelve a la pantalla; la descarga opcional conserva la imagen.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "FOT-02",
+    "module": "Fotografías",
+    "title": "Rechazar archivos no permitidos",
+    "role": "Operador o Mecánico",
+    "priority": "P1",
+    "preconditions": "Un PDF y una imagen de prueba que supere 5 MB.",
+    "steps": [
+      "Intentar seleccionar el PDF.",
+      "Intentar seleccionar la imagen demasiado grande.",
+      "Seleccionar finalmente una imagen válida."
+    ],
+    "expected": "Se informa que se permiten PNG/JPEG hasta 5 MB. Los archivos inválidos no se guardan; después puede seleccionarse uno válido.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "FOT-03",
+    "module": "Fotografías",
+    "title": "Quitar selección y cancelar borrado",
+    "role": "Autor de la foto",
+    "priority": "P1",
+    "preconditions": "Una foto guardada y otra seleccionada sin guardar.",
+    "steps": [
+      "Pulsar Quitar foto seleccionada.",
+      "En la foto guardada pulsar Eliminar foto.",
+      "Elegir Cancelar y actualizar."
+    ],
+    "expected": "La selección pendiente se limpia sin subir; cancelar el borrado conserva la foto ya guardada.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "FOT-04",
+    "module": "Fotografías",
+    "title": "Eliminar foto propia y verificar autoría",
+    "role": "Autor y otro usuario",
+    "priority": "P0",
+    "preconditions": "Foto de prueba guardada y su dirección anotada.",
+    "steps": [
+      "Confirmar Eliminar foto con el autor.",
+      "Actualizar e intentar abrir la dirección anterior.",
+      "Con otro usuario consultar una foto que no subió."
+    ],
+    "expected": "La foto eliminada desaparece y su enlace deja de funcionar; el historial registra la eliminación. Otro usuario no dispone del botón para borrar una foto ajena.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "ORD-01",
+    "module": "Órdenes correctivas",
+    "title": "Agrupar y asignar fallas",
+    "role": "Administración o Logística",
+    "priority": "P0",
+    "preconditions": "Dos fallas QA evaluadas, pendientes, sin orden y del mismo autobús.",
+    "steps": [
+      "Crear orden desde las fallas o desde Órdenes de trabajo.",
+      "Seleccionar las dos fallas y guardar un título QA.",
+      "Asignar un mecánico activo con motivo y abrir Ver orden."
+    ],
+    "expected": "Una sola orden agrupa ambas fallas, tiene la unidad correcta y conserva la asignación. No se duplica al volver a consultar.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "ORD-02",
+    "module": "Órdenes correctivas",
+    "title": "Evitar mezclas e incorporación duplicada",
+    "role": "Administración o Logística",
+    "priority": "P1",
+    "preconditions": "Hay fallas de dos unidades y una falla ya vinculada a una orden.",
+    "steps": [
+      "Intentar seleccionar fallas de unidades diferentes.",
+      "Intentar incorporar una falla ya vinculada o no evaluada.",
+      "Revisar la lista y las órdenes existentes."
+    ],
+    "expected": "La interfaz no ofrece combinaciones incompatibles o el servidor las rechaza; no queda una orden parcial ni una falla en dos órdenes.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "ORD-03",
+    "module": "Órdenes correctivas",
+    "title": "Iniciar solo cuando corresponde",
+    "role": "Mecánico asignado y no asignado",
+    "priority": "P0",
+    "preconditions": "Orden QA abierta y asignada al Mecánico A.",
+    "steps": [
+      "Abrirla como Mecánico B.",
+      "Abrirla luego como Mecánico A e iniciar con diagnóstico/motivo.",
+      "Consultar las fallas vinculadas."
+    ],
+    "expected": "B no puede iniciarla. A la pasa a En proceso y todas sus fallas cambian juntas. En correctivos Administración y Logística coordinan, pero no finalizan.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "ORD-04",
+    "module": "Órdenes correctivas",
+    "title": "Espera de refacciones",
+    "role": "Mecánico asignado",
+    "priority": "P1",
+    "preconditions": "Orden correctiva QA en proceso.",
+    "steps": [
+      "Registrar espera de refacciones con motivo.",
+      "Actualizar y consultar su estado.",
+      "Terminar la espera con motivo."
+    ],
+    "expected": "Se conserva En proceso y cambia el aviso de espera. No se cambia automáticamente el estado del autobús.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "ORD-05",
+    "module": "Órdenes correctivas",
+    "title": "Finalizar y conservar cierre",
+    "role": "Mecánico asignado",
+    "priority": "P0",
+    "preconditions": "Orden en proceso. Si se comprobará inventario, ejecutar INV-03 e INV-04 antes del cierre.",
+    "steps": [
+      "Finalizar con trabajo realizado, observaciones y motivo.",
+      "Indicar si hubo mano de obra/refacciones y capturar los datos correspondientes.",
+      "Actualizar y revisar orden, fallas e historial."
+    ],
+    "expected": "Orden y fallas quedan finalizadas una sola vez. Se conservan responsable y trabajo; el cierre no descuenta piezas otra vez ni habilita automáticamente el autobús.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "ORD-06",
+    "module": "Órdenes correctivas",
+    "title": "Consulta de Contabilidad",
+    "role": "Contabilidad",
+    "priority": "P0",
+    "preconditions": "Orden QA con entregas/devoluciones; preferentemente ejecutar INV-02 a INV-04.",
+    "steps": [
+      "Abrir Órdenes de trabajo, buscar la orden y pulsar Ver orden.",
+      "Consultar trabajo, entregas, devoluciones y costo neto.",
+      "Revisar que no haya acciones de modificación."
+    ],
+    "expected": "Contabilidad ve en qué unidad/orden se utilizaron las piezas y sus importes. No puede asignar, iniciar, finalizar ni registrar movimientos.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "INV-01",
+    "module": "Inventario",
+    "title": "Registrar refacción y reconocer su código",
+    "role": "Administración, Logística o Mecánico",
+    "priority": "P0",
+    "preconditions": "Código único QA-FIL-[corrida].",
+    "steps": [
+      "Abrir Catálogo de refacciones y registrar una refacción ficticia.",
+      "Capturar código SKU sin espacios, descripción, unidad pieza y mínimo 2.",
+      "Guardar y buscarla en Existencias."
+    ],
+    "expected": "La refacción se guarda con su código único y saldo inicial cero. SKU es el código de catálogo; crear una refacción no agrega existencias.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "INV-02",
+    "module": "Inventario",
+    "title": "Entrada y costo del almacén",
+    "role": "Logística",
+    "priority": "P0",
+    "preconditions": "Refacción de INV-01 con saldo cero; escenario de conciliación sin operaciones ajenas.",
+    "steps": [
+      "En Inventario elegir Registrar entrada.",
+      "Seleccionar la refacción; registrar 10 piezas a 100 MXN por pieza con motivo.",
+      "Actualizar Existencias y consultar movimientos."
+    ],
+    "expected": "Saldo 10; valor 1,000 MXN y costo promedio 100 MXN. Se registra una sola entrada. Otros roles sin permiso financiero no ven esos importes.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "INV-03",
+    "module": "Inventario",
+    "title": "Entregar a una orden abierta",
+    "role": "Logística",
+    "priority": "P0",
+    "preconditions": "INV-02 aprobada y una orden QA abierta o en proceso. Ejecutar antes de ORD-05.",
+    "steps": [
+      "Elegir Entregar a orden.",
+      "Seleccionar la orden y entregar 2 piezas.",
+      "Consultar saldo y materiales de la orden."
+    ],
+    "expected": "Saldo 8 y valor 800 MXN; la orden recibe 2 piezas con costo total 200 MXN. El descuento ocurre al entregar.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "INV-04",
+    "module": "Inventario",
+    "title": "Devolver sobrante de una entrega",
+    "role": "Logística",
+    "priority": "P0",
+    "preconditions": "Entrega de INV-03 identificada.",
+    "steps": [
+      "Elegir devolución de la entrega original.",
+      "Devolver 1 pieza con motivo.",
+      "Consultar saldo y costo neto de la orden."
+    ],
+    "expected": "Saldo 9 y valor 900 MXN. Costo neto de la orden: 100 MXN. La devolución usa el costo de la entrega; no inventa una compra.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "INV-05",
+    "module": "Inventario",
+    "title": "Impedir negativos y devoluciones excesivas",
+    "role": "Logística",
+    "priority": "P0",
+    "preconditions": "Saldo 9; entrega original de 2 piezas con 1 ya devuelta.",
+    "steps": [
+      "Intentar entregar 10 piezas.",
+      "Intentar devolver 2 piezas adicionales de esa entrega.",
+      "Actualizar saldo y movimientos."
+    ],
+    "expected": "Ambas operaciones se rechazan; el saldo permanece 9 y la devolución total no excede lo entregado. No se permiten existencias negativas.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "INV-06",
+    "module": "Inventario",
+    "title": "Ficha con foto, condición y unidad",
+    "role": "Administración, Logística o Mecánico",
+    "priority": "P1",
+    "preconditions": "Una refacción de catálogo y autobús QA activo.",
+    "steps": [
+      "Crear una ficha con foto, condición libre y situación Pendiente; dejar costo aproximado vacío.",
+      "Guardar, abrir y cambiarla a En uso eligiendo una unidad.",
+      "Revisar existencias antes y después."
+    ],
+    "expected": "La ficha conserva foto, condición y situación. En uso requiere una unidad válida. Una ficha individual no altera saldo ni valoración del almacén; costo aproximado no es costo contable.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "COM-01",
+    "module": "Compras",
+    "title": "Compra recibida sin proveedor registrado",
+    "role": "Logística",
+    "priority": "P0",
+    "preconditions": "Refacción QA con saldo 9 y costo 100 después de INV-04/05.",
+    "steps": [
+      "Abrir Compras y Nueva compra.",
+      "Dejar proveedor y referencia opcionales vacíos; capturar 5 piezas a 100 MXN y motivo.",
+      "Elegir registrar compra e ingresar piezas; guardar y consultar compra/existencias."
+    ],
+    "expected": "La compra se registra sin exigir proveedor, obtiene referencia y queda recibida. Saldo final 14, valor 1,400 MXN y promedio 100 MXN.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "COM-02",
+    "module": "Compras",
+    "title": "Pedido pendiente y recepción parcial",
+    "role": "Logística",
+    "priority": "P0",
+    "preconditions": "COM-01 aprobada; no hacer otras operaciones con esa refacción.",
+    "steps": [
+      "Crear un pedido de 2 piezas a 120 MXN, pendiente de recibir.",
+      "Confirmar que aún haya 14 piezas.",
+      "Recibir 1 pieza; revisar y luego recibir la otra."
+    ],
+    "expected": "El pedido no incrementa stock. Primera recepción: 15 piezas y valor 1,520 MXN; segunda: 16 piezas y valor 1,640 MXN. El promedio final es 102.50 MXN; se muestra progreso parcial/recibido.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "COM-03",
+    "module": "Compras",
+    "title": "Evitar recepción duplicada o excesiva",
+    "role": "Logística",
+    "priority": "P0",
+    "preconditions": "Compra QA recibida totalmente en COM-02.",
+    "steps": [
+      "Intentar recibir más que lo pendiente.",
+      "Actualizar la compra y revisar las acciones disponibles.",
+      "Consultar movimientos y saldo de la refacción."
+    ],
+    "expected": "No admite cantidades adicionales ni una segunda recepción del mismo saldo; permanece 16 si no hubo otras operaciones.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "COM-04",
+    "module": "Compras",
+    "title": "Borrador y aprobación propia",
+    "role": "Logística",
+    "priority": "P1",
+    "preconditions": "Usar otra referencia QA y una nueva compra, sin alterar el escenario numérico principal.",
+    "steps": [
+      "Crear un borrador con una partida válida.",
+      "Revisar que no aumenten las existencias.",
+      "Aprobar la compra con el mismo usuario y revisar antes de recibir."
+    ],
+    "expected": "Logística puede aprobar sus propias compras. Preparar o aprobar no ingresa piezas hasta registrar recepción.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "MAN-01",
+    "module": "Mantenimiento",
+    "title": "Guardar y asignar en un paso",
+    "role": "Administración",
+    "priority": "P0",
+    "preconditions": "QA-A activo y un mecánico activo.",
+    "steps": [
+      "Abrir Nuevo mantenimiento y seleccionar QA-A.",
+      "Capturar nombre único, fecha programada y dos tareas; mantener control Por fecha.",
+      "Seleccionar mecánico y Guardar mantenimiento."
+    ],
+    "expected": "Se guardan juntos plan, tareas, orden y asignación. No exige un kilometraje ficticio del último servicio. Queda Pendiente y todavía no cuenta como realizado.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "MAN-02",
+    "module": "Mantenimiento",
+    "title": "Avances que se conservan",
+    "role": "Logística",
+    "priority": "P0",
+    "preconditions": "MAN-01 guardado.",
+    "steps": [
+      "Abrir su seguimiento e Iniciar mantenimiento.",
+      "Marcar solo una tarea y Guardar avances.",
+      "Salir, regresar y actualizar."
+    ],
+    "expected": "El mantenimiento queda En proceso; conserva solo la tarea guardada y muestra el número de tareas completadas. El mensaje confirma que el avance se guardó.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "MAN-03",
+    "module": "Mantenimiento",
+    "title": "No cerrar con tareas pendientes",
+    "role": "Mecánico",
+    "priority": "P0",
+    "preconditions": "MAN-02 con una tarea pendiente.",
+    "steps": [
+      "Intentar Finalizar mantenimiento.",
+      "Capturar un trabajo realizado válido y confirmar.",
+      "Volver al seguimiento y al historial de servicios."
+    ],
+    "expected": "El cierre se rechaza por checklist incompleto; no se crea un servicio realizado ni se modifica la próxima fecha por un cierre fallido.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "MAN-04",
+    "module": "Mantenimiento",
+    "title": "Finalizar, calcular mes y editar próxima fecha",
+    "role": "Mecánico",
+    "priority": "P0",
+    "preconditions": "Todas las tareas completadas y guardadas.",
+    "steps": [
+      "Finalizar; indicar fecha real de hoy o anterior y describir el trabajo.",
+      "Revisar la fecha propuesta un mes después; cambiarla a otra posterior si se desea.",
+      "Confirmar y consultar Historial de servicios, filtrando por el mes realizado."
+    ],
+    "expected": "Queda un servicio finalizado con fecha real, lectura y responsable. La próxima fecha coincide con lo confirmado. El historial lo muestra en el mes realizado, no como un servicio pendiente.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "MAN-05",
+    "module": "Mantenimiento",
+    "title": "Los tres perfiles gestionan preventivos",
+    "role": "Administración, Logística y Mecánico",
+    "priority": "P0",
+    "preconditions": "Crear un mantenimiento nuevo con nombre distinto para cada perfil.",
+    "steps": [
+      "Repetir creación, inicio y guardado de todas las tareas con cada rol.",
+      "Finalizar cada servicio con ese mismo rol.",
+      "Revisar quién figura como responsable en orden e historial."
+    ],
+    "expected": "Los tres perfiles pueden completar el proceso preventivo aunque el cierre no lo haga el mecánico asignado. El responsable real queda registrado. Esto no amplía los permisos de órdenes correctivas.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "MAN-06",
+    "module": "Mantenimiento",
+    "title": "Avisos de fecha y próximos días",
+    "role": "Uno de los tres perfiles gestores",
+    "priority": "P1",
+    "preconditions": "Tres planes QA con fecha de hoy, dentro de 7 días y después de 7 días.",
+    "steps": [
+      "Actualizar Inicio y Mantenimiento.",
+      "Revisar Ya les toca y Próximos 7 días.",
+      "Pulsar Ya les toca y abrir el registro correspondiente."
+    ],
+    "expected": "Hoy cuenta como vencimiento alcanzado; dentro de siete días aparece como próximo. Un plan posterior a siete días no incrementa ese contador. Los avisos son internos, sin correo ni notificación externa.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "MAN-07",
+    "module": "Mantenimiento",
+    "title": "Fechas inválidas y fin de mes",
+    "role": "Uno de los tres perfiles gestores",
+    "priority": "P1",
+    "preconditions": "Servicio QA con todas sus tareas guardadas y sin finalizar.",
+    "steps": [
+      "Intentar cerrar con fecha realizada futura.",
+      "Intentar una próxima fecha igual o anterior a la realizada.",
+      "En otro caso independiente, elegir 31/01/2024 como fecha realizada y revisar la propuesta sin guardar si afectaría la secuencia."
+    ],
+    "expected": "Las fechas incompatibles se rechazan. Para 31/01/2024 se propone 29/02/2024; para 31/01/2026, 28/02/2026. No sobrescribe un último servicio más reciente. Cancelar no registra un cierre.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "MAN-08",
+    "module": "Mantenimiento",
+    "title": "Tareas futuras y plan por kilómetros",
+    "role": "Uno de los tres perfiles gestores",
+    "priority": "P1",
+    "preconditions": "Un plan con ejecución abierta; para kilómetros conocer una lectura real anterior.",
+    "steps": [
+      "Editar las tareas futuras del plan y consultar la ejecución ya abierta.",
+      "Comprobar que sus tareas originales no cambien.",
+      "Crear aparte un plan Por fecha y kilometraje, con último servicio 900 e intervalo 100 para QA-A a 1,000 km."
+    ],
+    "expected": "La ejecución conserva sus tareas históricas; futuros servicios usan la plantilla editada. El ejemplo por km ya requiere atención al alcanzar 1,000 km. Los planes antiguos por km siguen siendo consultables.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "MAN-09",
+    "module": "Mantenimiento",
+    "title": "Reintento sin datos parciales",
+    "role": "Uno de los tres perfiles gestores",
+    "priority": "P1",
+    "preconditions": "Formulario nuevo completo; realizar en demo y conservar su nombre único.",
+    "steps": [
+      "Desconectar temporalmente la red del navegador desde sus herramientas o detener solo la API de prueba con ayuda técnica.",
+      "Intentar guardar y observar el mensaje; restablecer la conexión/servicio.",
+      "Revisar si el registro ya existe antes de repetir; reintentar si no se guardó."
+    ],
+    "expected": "La pantalla informa el fallo y permite corregir/reintentar. No quedan plan u orden a medias. Ante respuesta perdida se consulta primero para evitar duplicados; nunca se debe suponer que la operación no llegó al servidor.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "REP-01",
+    "module": "Reportes",
+    "title": "Costos y existencias conciliados",
+    "role": "Logística y Contabilidad",
+    "priority": "P0",
+    "preconditions": "INV-02 a COM-03 aprobados, sin otras operaciones en esa refacción.",
+    "steps": [
+      "Abrir reportes de inventario y costos por autobús.",
+      "Filtrar la refacción/unidad QA cuando el reporte lo permita o identificarla en los resultados.",
+      "Comparar con los movimientos del escenario."
+    ],
+    "expected": "Existencia 16 y valor 1,640 MXN; promedio 102.50 MXN. La orden de INV-03/04 conserva costo neto 100 MXN. Compras por 740 MXN no se suman además como consumo del autobús.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "REP-02",
+    "module": "Reportes",
+    "title": "Exportar y contrastar el CSV",
+    "role": "Rol con reporte permitido",
+    "priority": "P1",
+    "preconditions": "Reporte filtrado con registros QA.",
+    "steps": [
+      "Aplicar búsqueda/filtros y anotar cantidad/totales.",
+      "Exportar CSV y abrirlo en Excel importando UTF-8 y separador coma si hace falta.",
+      "Comparar contenido, acentos y totales; probar también un filtro sin coincidencias."
+    ],
+    "expected": "La exportación respeta alcance y filtros e incluye todas las coincidencias, no solo la página visible. Un resultado vacío conserva encabezados. Un valor con decimales no debe confundirse con un importe en otra moneda.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "REP-03",
+    "module": "Reportes",
+    "title": "Restricciones financieras",
+    "role": "Administración, Mecánico y Operador",
+    "priority": "P0",
+    "preconditions": "Cuentas de esos roles y rutas de reportes financieros conocidas.",
+    "steps": [
+      "Revisar su catálogo de reportes.",
+      "Intentar abrir compras, valoración y costos por dirección directa.",
+      "Comparar con una sesión de Contabilidad."
+    ],
+    "expected": "Los perfiles sin permiso financiero no consultan ni exportan esos importes; Contabilidad y Logística sí. Operador conserva solo reportes propios permitidos.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "UX-01",
+    "module": "Usabilidad",
+    "title": "Reconocer botones sin ayuda",
+    "role": "Usuario representativo y tester",
+    "priority": "P1",
+    "preconditions": "Lista de Fallas con al menos dos registros; no explicar primero dónde pulsar.",
+    "steps": [
+      "Pedir al usuario: abre el reporte de la unidad indicada.",
+      "Observar si identifica Ver reporte y abre el registro correcto.",
+      "Repetir con Ver orden, Ver autobús y un servicio del historial."
+    ],
+    "expected": "Los botones tienen fondo, borde, tamaño y texto legibles. Registrar tiempo, ayuda solicitada y confusiones reales; no marcar aprobado solo por la opinión del tester.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "UX-02",
+    "module": "Usabilidad",
+    "title": "Teclado y tamaño de ventana",
+    "role": "Cualquier rol",
+    "priority": "P1",
+    "preconditions": "PC y ventana estrecha o simulación móvil; no requiere publicar a la red.",
+    "steps": [
+      "Recorrer con Tab y activar los botones con Enter.",
+      "Abrir/cerrar un diálogo con sus controles y revisar el foco visible.",
+      "Probar zoom 125–150 % y ancho cercano a 390 px."
+    ],
+    "expected": "Se puede llegar a los controles y reconocer el foco; texto y botones siguen utilizables. Las tablas anchas pueden desplazarse dentro de su contenedor, sin ocultar el acceso principal al registro.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "CON-01",
+    "module": "Concurrencia",
+    "title": "Evitar sobreescritura entre sesiones",
+    "role": "Dos sesiones gestoras",
+    "priority": "P1",
+    "preconditions": "Mismo plan/registro versionado abierto en dos ventanas antes de editar.",
+    "steps": [
+      "Guardar un cambio válido en la primera sesión.",
+      "Intentar guardar desde la segunda sin actualizar.",
+      "Recargar en la segunda y comprobar la información vigente."
+    ],
+    "expected": "La edición obsoleta se rechaza o pide recargar; el primer cambio no se pierde. No debe usarse la misma sesión/cookie para simular dos usuarios diferentes.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "REC-01",
+    "module": "Recuperación",
+    "title": "Arranque después de reiniciar",
+    "role": "Tester con acceso local",
+    "priority": "P0",
+    "preconditions": "Trabajo guardado; Docker Desktop instalado y equipo con virtualización funcional.",
+    "steps": [
+      "Cerrar con Ctrl+C y reiniciar Windows cuando no haya trabajo pendiente.",
+      "Abrir Docker y esperar a que el motor esté listo; iniciar la demo con npm.cmd run demo.",
+      "Entrar a http://localhost:4202 y consultar un registro QA anterior."
+    ],
+    "expected": "API, MySQL e interfaz funcionan y los datos guardados permanecen. Si solo falla la infraestructura, registrar bloqueo del caso en vez de atribuir automáticamente un error funcional.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "REC-02",
+    "module": "Recuperación",
+    "title": "Guardar no debe duplicar por doble clic",
+    "role": "Tester con rol habilitado",
+    "priority": "P1",
+    "preconditions": "Formulario nuevo válido con nombre/código únicos.",
+    "steps": [
+      "Pulsar Guardar dos veces rápidamente.",
+      "Esperar a que termine y actualizar el listado.",
+      "Buscar exactamente el identificador usado."
+    ],
+    "expected": "No hay dos registros/operaciones equivalentes. El control de guardado evita repeticiones o el servidor rechaza la duplicación; revisar el resultado antes de repetir.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  },
+  {
+    "id": "AUD-01",
+    "module": "Auditoría",
+    "title": "Trazabilidad del recorrido",
+    "role": "Administración",
+    "priority": "P1",
+    "preconditions": "Casos de cambios, fotos, órdenes y mantenimiento ejecutados.",
+    "steps": [
+      "Consultar Auditoría o los historiales de cada registro.",
+      "Identificar actor, fecha de captura, motivo y cambio.",
+      "Comparar con las evidencias de la corrida."
+    ],
+    "expected": "El responsable y los cambios coinciden con lo ejecutado; no aparecen contraseñas ni tokens. La fecha de captura puede mostrarse en UTC y diferir del día local realizado del mantenimiento.",
+    "evidence": "Captura del resultado y referencia del registro; sin contraseñas."
+  }
+]
