@@ -12,6 +12,15 @@ En una copia local existente ejecuta `git pull --ff-only` desde el repositorio; 
 
 Incluyen el anexo de Inventario por tareas del 28 de octubre de 2026: consultas de Contabilidad y secciones Existencias, Movimientos y Compras para Logística.
 
+## Guía sencilla para documentar con capturas
+
+Esta guía sigue el recorrido de la aplicación con una ficha por captura: **qué hacer → qué capturar → comentario breve**. El Word deja un espacio para pegar cada imagen y escribir lo que ocurrió.
+
+- [Guía editable en Word](Guia_capturas_TallerBus.docx).
+- [Guía de consulta en PDF](Guia_capturas_TallerBus.pdf).
+
+Incluye login, usuarios/unidades, fallas/fotos, reparación, inventario/compras, mantenimiento, consulta de Contabilidad, reportes y cierre de sesión. Los comentarios son ejemplos para ajustar al resultado observado. Fuente: [guia-capturas.md](../guia-capturas.md).
+
 ## Manual para tester · 5 de noviembre de 2026
 
 Guía actual de pruebas manuales con **54 casos**, pasos por módulo/rol, resultados esperados, datos ficticios, evidencias y criterios de aceptación. Incluye los cambios de mantenimiento, fotos y botones visibles.
