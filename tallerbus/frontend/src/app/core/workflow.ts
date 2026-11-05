@@ -27,7 +27,7 @@ export interface Assignment {id:string;mecanicoId:string;retiradoAt:string|null;
 export interface Part {descripcion:string;cantidad:string;unidad:string}
 export interface Completion {id:string;trabajoRealizado:string;observaciones:string;fechaFinalizacion:string;aplicoManoObra:boolean;manoObraMinutos:number;aplicaronRefacciones:boolean;responsable:Person;refacciones:(Part&{id:string})[]}
 export interface WorkOrder {preventivo:{id:string;planId:string}|null;id:string;autobusId:string;titulo:string;estado:keyof typeof orderLabels;diagnostico:string|null;esperaRefacciones:boolean;startedAt:string|null;createdAt:string;updatedAt:string;version:number;autobus:{id:string;numeroEconomico:string;kilometraje:number};fallas:Pick<Incident,'id'|'tipo'|'descripcion'|'estado'|'prioridad'>[];asignaciones:Assignment[];finalizacion:Completion|null}
-export interface FinishData {kilometrajePreventivo?:number;version:number;motivo:string;trabajoRealizado:string;observaciones:string;aplicoManoObra:boolean;manoObraMinutos:number;aplicaronRefacciones:boolean;refacciones:Part[]}
+export interface FinishData {fechaServicio?:string;proximaFecha?:string;kilometrajePreventivo?:number;version:number;motivo:string;trabajoRealizado:string;observaciones:string;aplicoManoObra:boolean;manoObraMinutos:number;aplicaronRefacciones:boolean;refacciones:Part[]}
 @Injectable({providedIn:'root'})
 export class WorkflowApi {
  private readonly http=inject(HttpClient);

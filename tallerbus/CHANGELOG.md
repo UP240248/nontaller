@@ -194,3 +194,9 @@
 ### 2026-11-05 · Corregir fotos de fallas
 - Botón para eliminar una foto guardada, con confirmación y opción de cancelar.
 - Solo puede eliminarla quien la subió; queda constancia en el historial y se deshabilitan sus enlaces.
+
+### 2026-11-05 · Mantenimiento más sencillo
+- Nuevo mantenimiento guarda autobús, fecha, tareas y asignación en un paso; seguimiento con inicio, avances y cierre dentro del apartado.
+- Administración, Logística y Mecánico gestionan preventivos completos. Los permisos de correctivos se conservan.
+- Próxima fecha mensual editable, avisos en Inicio y Mantenimiento, historial con fecha realizada y filtro por mes.
+- Se conservan los planes por kilometraje y las tareas históricas; el registro no cuenta como mantenimiento realizado hasta finalizarlo.

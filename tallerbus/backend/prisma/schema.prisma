@@ -365,7 +365,9 @@ model PlanPreventivo {
  autobusId String @db.Char(36)
  autobus Autobus @relation(fields:[autobusId],references:[id],onDelete:Restrict)
  nombre String @db.VarChar(100)
- intervaloKm Int
+ intervaloKm Int?
+ proximaFecha DateTime? @db.Date
+ ultimoServicioFecha DateTime? @db.Date
  ultimoServicioKm Int
  checklist Json
  activo Boolean @default(true)
@@ -376,6 +378,7 @@ model PlanPreventivo {
  @@unique([id,autobusId])
  @@unique([autobusId,nombre])
  @@index([activo,autobusId])
+ @@index([proximaFecha])
 }
 model EjecucionPreventiva {
  id String @id @default(uuid()) @db.Char(36)
@@ -386,9 +389,12 @@ model EjecucionPreventiva {
  orden OrdenTrabajo @relation(fields:[ordenId,autobusId],references:[id,autobusId],onDelete:Restrict)
  activeKey String? @unique @db.Char(36)
  nombre String @db.VarChar(100)
- intervaloKm Int
+ intervaloKm Int?
  baseKm Int
- objetivoKm Int
+ objetivoKm Int?
+ fechaProgramada DateTime? @db.Date
+ fechaServicio DateTime? @db.Date
+ proximaFecha DateTime? @db.Date
  kilometrajeCierre Int?
  createdAt DateTime @default(now()) @db.DateTime(3)
  finalizadaAt DateTime? @db.DateTime(3)

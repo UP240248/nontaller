@@ -14,3 +14,8 @@ test('CSV neutraliza fórmulas incluso tras blancos/controles y preserva negativ
 test('CSV no admite fórmulas o notación exponencial en columnas numéricas',()=>{for(const dato of ['=1+1','1e20','Infinity','NaN'])assert.throws(()=>reportCsv([{clave:'dato',titulo:'Valor',tipo:'decimal'}],[{dato}]));});
 
 test('comparación de tokens no falla con igual longitud de texto y diferente longitud UTF-8',()=>{assert.equal(security.equalToken('é','a'),false);assert.equal(security.equalToken('é','é'),true);assert.equal(security.equalToken('😀','ab'),false);});
+
+const {nextMonth,calendarDate}=require('../backend/dist/maintenance/calendar.js');
+test('próximo mantenimiento conserva día y ajusta fin de mes y año sin sumar treinta días',()=>{for(const [date,next] of [['2026-11-11','2026-12-11'],['2026-01-31','2026-02-28'],['2024-01-31','2024-02-29'],['2026-12-31','2027-01-31'],['2026-08-31','2026-09-30']])assert.equal(nextMonth(date),next);assert.equal(calendarDate('2026-11-11').toISOString(),'2026-11-11T00:00:00.000Z');});
+
+test('CSV admite campos numéricos opcionales sin inventar un cero',()=>{const csv=reportCsv([{clave:'km',titulo:'Próximo km',tipo:'entero'}],[{km:null}]);assert.equal(csv,'\uFEFF"Próximo km"\r\n""\r\n');assert.throws(()=>reportCsv([{clave:'km',titulo:'Km',tipo:'entero'}],[{km:''}]));});

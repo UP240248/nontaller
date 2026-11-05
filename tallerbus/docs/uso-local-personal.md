@@ -18,7 +18,7 @@ npm run bootstrap
 
 `bootstrap` pide tus datos y contraseña oculta en la terminal; crea solo el primer administrador. Si ya existe uno, utiliza esa cuenta: no borres la base para repetirlo. Se solicita usuario de acceso, nombre del empleado y contraseña de 8–128 caracteres; no se pide correo. No pegues contraseñas en el chat ni las incluyas en comandos.
 
-Para usar módulos operativos, Administración puede crear cuentas propias con los roles correspondientes. Logística gestiona inventario, compras y planes; Mecánico ejecuta reparaciones y preventivos; Operador reporta fallas; Contabilidad consulta reportes financieros. Cada cuenta tiene un rol. No hay una cuenta con todos los permisos ni un cambio automático de rol; Administración continúa sin importes financieros. Consulta el manual de usuario para los flujos.
+Para usar módulos operativos, Administración puede crear cuentas propias con los roles correspondientes. Logística gestiona inventario y compras; Administración, Logística y Mecánico gestionan mantenimientos preventivos; el mecánico asignado ejecuta reparaciones correctivas; Operador reporta fallas; Contabilidad consulta reportes financieros. Cada cuenta tiene un rol. No hay una cuenta con todos los permisos ni un cambio automático de rol; Administración continúa sin importes financieros. Consulta el manual de usuario para los flujos.
 
 No ejecutes `seed:dev` para empezar tus datos personales: crea cuentas ficticias de demostración. No se incorporan autobuses ni inventario automáticamente.
 

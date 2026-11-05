@@ -12,7 +12,7 @@
 | Trabajo y finalización | R, sin finalizar | R, sin finalizar | Iniciar/espera/finalizar solo asignado (aprobado) | R estado de sus fallas; sin órdenes internas | Sin acceso hasta aprobar costos |
 | Inventario | R catálogo y disponibilidad, sin importes | C/R/U catálogos; entradas, entregas, devoluciones y ajustes; R costos | R catálogo y disponibilidad, sin importes | No | R/exportar valoración solo en Reportes |
 | Proveedores/compras | No | C/R/U proveedores; crear/aprobar incluso propias, cancelar sin recepción y recibir compras | No | No | R/exportar resumen de compras en Reportes; sin contactos ni escritura |
-| Mantenimiento | R, sin configurar/asignar preventivos | C/R/U planes, activar/desactivar y crear/asignar órdenes preventivas | R; iniciar, checklist y finalizar solo asignado | No | No |
+| Mantenimiento | Crear, programar, asignar, iniciar, tareas y finalizar | Crear, programar, asignar, iniciar, tareas y finalizar | Crear, programar, asignar, iniciar, tareas y finalizar | No | Solo consulta de ejecución desde una orden |
 | Costos/exportación financiera | Sin importes; R auditoría segura | R/exportar compras, valoración y costos netos por autobús; conserva operaciones previas | No importes | No | R/exportar compras, valoración y costos netos por autobús |
 | Reportes operativos | R/exportar flota, fallas, órdenes y preventivos | R/exportar general | Flota/preventivos; órdenes asignadas; fallas propias/asignadas | R/exportar solo fallas propias | Solo reportes financieros aprobados |
 | Auditoría | R explícito | No por defecto | No | No | No por defecto |
@@ -48,11 +48,13 @@ Solo Logística modifica catálogos, opera el almacén, consulta movimientos con
 
 El servidor verifica sesión/Origin/CSRF y revalida el actor activo de Logística dentro de las transacciones. La auditoría administrativa contiene IDs, acciones y cantidades; omite importes, contactos y comprobantes privados. Las operaciones financieras no tienen edición ni borrado; las correcciones se registran mediante movimientos nuevos con motivo. Los precios no pueden introducirse mediante campos ajenos en el catálogo.
 
-## Fase 5: preventivo por kilometraje
+## Mantenimiento: fechas y permisos confirmados el 5 de noviembre de 2026
 
-El usuario confirmó programación por kilometraje y que Logística cree planes y asigne mecánicos. No definió servicios ni intervalos, por lo que se capturan sin valores predeterminados. Administración y Mecánico consultan planes, ejecuciones e historial; solo Logística crea/edita/activa planes y programa/asigna preventivos. La autorización general de Administración para órdenes correctivas no permite reasignar órdenes preventivas.
+Administración, Logística y Mecánico pueden crear/editar/pausar planes, programar y asignar mecánicos activos, iniciar, registrar tareas y finalizar cualquier mantenimiento preventivo accesible. No se exige que quien finaliza sea el mecánico asignado: se conserva su identidad real como responsable del cierre y en auditoría. Cada servicio sigue teniendo mecánicos asignados para su seguimiento.
 
-Solo el mecánico activo asignado registra el checklist de una orden en proceso y finaliza mediante el cierre existente. El servidor exige todas sus tareas completas y lectura de kilometraje de flota revisada. Mecánico no recibe permiso nuevo para editar el odómetro: Administración/Logística conservan la gestión de flota. Operador/Contabilidad no reciben acceso a mantenimiento. No hay permisos financieros nuevos.
+Esta ampliación se limita a órdenes preventivas. Las correctivas mantienen la creación y asignación por Administración/Logística y la ejecución por el mecánico asignado. El directorio general `/ordenes/mecanicos` conserva su permiso anterior; `/mantenimiento/mecanicos` permite a los tres perfiles consultar solo ID/nombre de mecánicos activos.
+
+Operador no accede al mantenimiento. Contabilidad conserva consulta de la ejecución desde una orden; no configura planes ni cambia tareas. El cierre exige todas las tareas completas y la lectura revisada de flota. No hay nuevos permisos financieros ni para modificar el odómetro.
 
 ## Fase 6: reportes y exportación
 

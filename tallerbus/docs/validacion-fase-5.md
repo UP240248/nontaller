@@ -1,3 +1,5 @@
+> Nota: este documento conserva la validación histórica de la fase 5. Los permisos y la programación por fecha actuales se describen en [Mantenimiento actual](mantenimiento-actual.md), [Permisos](permisos.md) y [API](api.md).
+
 # Validación — Fase 5: mantenimiento preventivo
 
 Fecha: 20 de octubre de 2026. Repositorio `UP240248/nontaller`, subproyecto `tallerbus`, rama local `tallerbus/fase-5` sobre `211fc10` (Fase 4). El informe acredita ejecución local; no implica subida a GitHub, integración en main ni despliegue productivo.

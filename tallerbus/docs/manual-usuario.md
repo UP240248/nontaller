@@ -67,19 +67,22 @@ Ante una respuesta de red incierta, reintenta el mismo formulario sin alterar lo
 
 En el detalle de la orden, **Entregas y devoluciones de almacén** muestra los movimientos. Solo Logística ve el costo neto de piezas; compras y cierre no lo suman de nuevo. Mecánico documenta el uso real en el cierre, sin volver a descontar stock. Las piezas descriptivas de órdenes antiguas no adquieren costos automáticamente. El costo mostrado es de refacciones entregadas menos devueltas; no incluye tarifas de mano de obra todavía.
 
-## Mantenimiento preventivo por kilometraje
+## Mantenimiento preventivo
 
-En **Mantenimiento**, Logística crea un plan por autobús: nombre del servicio, intervalo en kilómetros, kilometraje del último servicio conocido y tareas del checklist (una por línea). No se proponen servicios o intervalos automáticos. Consulta el manual del fabricante, historial de la unidad o al responsable del taller antes de capturarlos.
+Administración, Logística y Mecánico pueden crear, asignar, iniciar, guardar avances y finalizar mantenimientos preventivos. Operador no accede; Contabilidad consulta únicamente las tareas desde una orden, sin modificarlas.
 
-Los planes muestran kilometraje actual de flota, próximo servicio y estado. Se considera vencido al alcanzar el objetivo; solo cuentan planes y autobuses activos. Puedes buscar por servicio/unidad y filtrar planes activos o vencidos. Administración y Mecánico consultan, pero no configuran.
+1. En **Mantenimiento → Nuevo mantenimiento**, elige el autobús. Busca por número económico o placas si no aparece en la primera página.
+2. Escribe un nombre, confirma la fecha programada y agrega las tareas con **Agregar tarea**. El control **Por fecha** no exige conocer el kilometraje de un servicio anterior. Si necesitas también control por kilómetros, elige **Por fecha y kilometraje** e indica una lectura real del último servicio y su intervalo.
+3. Elige uno o varios mecánicos y pulsa **Guardar mantenimiento**. Se guardan el plan, la orden y la asignación juntos. Aún no cuenta como realizado.
+4. En el seguimiento, pulsa **Iniciar mantenimiento**. Marca las tareas realizadas y pulsa **Guardar avances**. Puedes salir y volver; lo guardado permanece.
+5. Completa todas las tareas y pulsa **Finalizar mantenimiento**. Describe el trabajo, confirma la fecha realizada y la próxima fecha. Las observaciones son opcionales. Se propone un mes después, ajustando los fines de mes; puedes cambiarla. Confirma para guardar el servicio y su responsable en el historial.
+6. En **Historial de servicios**, busca por autobús o nombre y, si quieres, filtra el mes realizado. Desde cada servicio puedes consultar su orden y sus tareas. El historial distingue la fecha del trabajo del momento en que se capturó.
 
-En **Ver plan**, Logística elige mecánicos activos e indica motivo para **Crear orden preventiva**. Puede anticipar un servicio con motivo. Solo hay una ejecución abierta por plan; si la operación ya se registró, usa el enlace a su orden. Desactivar un plan impide nuevas programaciones y conserva historia/órdenes abiertas. Editar nombre, intervalo o checklist conserva la copia histórica de las ejecuciones existentes.
+Los avisos del inicio y de **Programación y avisos** muestran los mantenimientos que ya requieren atención, los próximos siete días y los trabajos abiertos. Son avisos dentro de TallerBus, no correos ni notificaciones fuera de la aplicación. Al finalizar no se abre otra orden automáticamente: usa **Programar siguiente servicio** cuando corresponda.
 
-El mecánico asignado abre la orden e inicia trabajo con diagnóstico/motivo. En **Checklist preventivo** marca las tareas realizadas, agrega observaciones opcionales y guarda con motivo. Puedes guardar avances; para cerrar todas las tareas deben estar completas. La versión evita sobrescribir cambios de otro mecánico asignado.
+**Editar tareas o próxima fecha** cambia el plan para futuros servicios. Un trabajo ya abierto conserva sus tareas originales. Pausar impide nuevas programaciones, conserva el historial y permite terminar un trabajo abierto. Solo puede existir un trabajo abierto por plan.
 
-Antes de finalizar, Logística debe actualizar el kilometraje en Autobuses. El mecánico revisa esa lectura en la orden y confirma el cierre habitual, con trabajo/observaciones y labor/piezas cuando apliquen. Si cambió la lectura, recarga y revísala; no se cierra con una lectura obsoleta. El servicio queda registrado con ese kilometraje; el siguiente vencimiento es lectura de cierre + intervalo vigente del plan.
-
-Las piezas se entregan/devuelven desde Inventario como en otras órdenes. El checklist y el cierre no vuelven a descontarlas ni sumar costos. Tampoco habilitan o deshabilitan el autobús automáticamente. El checklist finalizado queda de consulta. No hay cancelación/reapertura de ejecuciones ni corrección de lecturas de cierre implementada todavía; conserva registros correctos desde su captura.
+El cierre toma la lectura actual revisada de Autobuses, sin cambiar odómetro ni estado de la unidad. Si la lectura cambió mientras trabajabas, actualiza el seguimiento antes de finalizar. Las refacciones se entregan desde Inventario a su orden y no se descuentan otra vez al cerrar.
 
 ## Reportes y exportaciones
 
@@ -114,7 +117,7 @@ La ficha incluye foto privada PNG/JPEG de hasta 5 MB, identificador único, cond
 
 ## Seleccionar autobús en preventivo
 
-Logística abre Crear plan preventivo y marca la unidad en **Autobús del plan**. La lista muestra número económico, placas y kilometraje. Busca por económico o placas; usa Más autobuses para recorrer las páginas o Mostrar todos para limpiar la búsqueda. Un aviso confirma qué unidad elegiste. No se selecciona una por defecto.
+Administración, Logística o Mecánico abre **Nuevo mantenimiento** y marca la unidad en **Autobús del mantenimiento**. La lista muestra número económico, placas y kilometraje. Busca por económico o placas; usa Más autobuses para recorrer las páginas o Mostrar todos para limpiar la búsqueda. Un aviso confirma qué unidad elegiste. No se selecciona una por defecto.
 
 Si no aparece ninguna unidad, revisa el mensaje: puede no haber coincidencias, unidades activas o haber fallado la carga. Puedes reintentar sin cerrar el formulario. En Autobuses registra o reactiva la unidad si corresponde. El kilometraje del último servicio y el intervalo deben provenir del historial o del criterio del taller; no se inventan automáticamente.
 

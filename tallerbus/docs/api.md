@@ -103,28 +103,31 @@ Todas las mutaciones siguientes son exclusivamente de Logística y requieren `op
 
 Las recepciones conservan el costo aprobado de cada línea; no aceptan sobrescribir precios ni moneda. Falta de stock, versión obsoleta, inactividad, recepción excesiva o estado incompatible:409. Cero cantidad:400. Claves idempotentes y saldos se protegen bajo un bloqueo transaccional del almacén único, aislamiento READ COMMITTED. El diseño serial inicial prioriza consistencia; no afirma capacidad de múltiples almacenes o alto volumen.
 
-## Mantenimiento preventivo — Fase 5
+## Mantenimiento preventivo por fecha y kilometraje
 
-Lectura para Administración/Logística/Mecánico. Mutaciones de planes y programación solo Logística; todos los cambios requieren sesión/Origin/CSRF. Sin DELETE ni intervalos precargados. `intervaloKm` entero 1–10,000,000; kilometrajes enteros 0–2,147,483,647. Los límites son técnicos. Nombre de servicio 3–100, único por unidad; checklist de 1–50 textos distintos de 3–200 caracteres, recortados. `ultimoServicioKm` inicial debe ser menor o igual al kilometraje actual de un autobús activo y no puede modificarse por PATCH.
+Administración, Logística y Mecánico pueden gestionar planes y órdenes preventivas, incluidos inicio, asignación, checklist y cierre. No se exige asignación propia para ejecutarlos. Todos los cambios requieren sesión/Origin/CSRF y conservan actor, versiones y auditoría. Las órdenes correctivas conservan sus permisos. Contabilidad solo consulta la ejecución vinculada a una orden; Operador no accede.
 
 | Método / recurso bajo /api/v1 | Contrato |
 |---|---|
-| GET /mantenimiento/planes | page/limit, autobusId, search nombre/unidad, activo=true/false, vencido=true/false; cálculo y filtro de vencimiento en servidor antes de paginar |
-| POST /mantenimiento/planes | autobusId, nombre, intervaloKm, ultimoServicioKm, checklist; alta activa y auditoría |
-| GET /mantenimiento/planes/:id | Plan, flota actual, proximoKm, restanKm, vencido y ejecucionActiva si existe |
-| PATCH /mantenimiento/planes/:id | nombre, intervaloKm, checklist completos + version/motivo; preserva snapshots de ejecuciones |
-| PATCH /mantenimiento/planes/:id/activacion | activo boolean + version/motivo; no elimina ni cancela ejecuciones abiertas |
-| POST /mantenimiento/planes/:id/programar | version/motivo y mecanicoIds activos únicos, 1–100; plan/unidad activos; crea orden ABIERTA y ejecución snapshot con asignación, sin fallas ficticias; 201 |
-| GET /mantenimiento/planes/:id/ejecuciones | page/limit; ejecuciones con checklist histórico y orden; fecha/ID descendente |
-| GET /mantenimiento/planes/:id/historial | page/limit; eventos, actor, fecha y motivo; orden descendente estable |
-| GET /mantenimiento/ejecuciones/:id | Snapshot, pasos, orden/version/estado/asignaciones y lectura actual de flota |
-| PATCH /mantenimiento/ejecuciones/:id/checklist | Solo Mecánico asignado, orden EN_PROCESO; version de orden, motivo, pasos completos (id/completado/observaciones); observaciones hasta 500, puede ser vacío. Guarda avance e incrementa versión de orden |
+| GET /mantenimiento/mecanicos | ID/nombre de mecánicos activos; los tres perfiles gestores |
+| GET /mantenimiento/resumen | vencidos, proximos (7 días), enProceso (trabajos abiertos), finalizadosMes y mes actual |
+| GET /mantenimiento/servicios | Solo finalizados; page/limit, search nombre/unidad, autobusId y mes=AAAA-MM opcional sobre fechaServicio |
+| GET /mantenimiento/planes | page/limit, autobusId, search, activo y vencido; filtro antes de paginar |
+| POST /mantenimiento/planes | autobusId, nombre, checklist, proximaFecha AAAA-MM-DD; intervaloKm nullable/opcional. mecanicoIds opcional crea orden y asignaciones en la misma transacción. La interfaz siempre lo envía. Para intervaloKm numérico, ultimoServicioKm es obligatorio y no supera la lectura actual |
+| GET /mantenimiento/planes/:id | Plan, fechas, flota actual, proximoKm/restanKm nullable, vencido y ejecucionActiva con estado/tareas |
+| PATCH /mantenimiento/planes/:id | nombre/checklist + version/motivo; proximaFecha e intervaloKm opcionales; null desactiva control por km. Preserva tareas históricas |
+| PATCH /mantenimiento/planes/:id/activacion | activo + version/motivo; conserva historial y trabajo abierto |
+| POST /mantenimiento/planes/:id/programar | version/motivo, mecanicoIds activos únicos y fechaProgramada opcional; crea orden ABIERTA, conserva snapshot y actualiza la fecha del plan si se envía |
+| GET /mantenimiento/planes/:id/ejecuciones | page/limit; ejecuciones y tareas históricas |
+| GET /mantenimiento/planes/:id/historial | page/limit; eventos con actor y fecha de captura |
+| GET /mantenimiento/ejecuciones/:id | Snapshot, fechaProgramada, fechaServicio, proximaFecha, tareas, orden y lectura actual |
+| PATCH /mantenimiento/ejecuciones/:id/checklist | Orden EN_PROCESO; version/motivo, todos los pasos id/completado/observaciones. Permite avances parciales e incrementa versión |
 
-Plan vencido = plan activo + unidad activa + kilometraje actual >= ultimoServicioKm + intervaloKm. No se utilizan fechas para vencimiento. Programar antes del objetivo es posible con motivo; no cambia la base hasta terminar. Una ejecución abierta por plan mediante clave única nullable. Reintento de programación con versión anterior produce 409 y no crea otra orden; consultar ejecucionActiva para recuperar la orden ya creada.
+Fechas de calendario almacenadas como DATE y evaluadas en America/Mexico_City. Vencido incluye hoy: plan/unidad activos y fecha alcanzada o kilometraje alcanzado cuando exista intervalo. Un plan por fecha necesita proximaFecha; no se inventa último servicio ni intervalo. Sin fecha histórica se muestra esa ausencia. La migración deriva la fecha realizada de cierres existentes en UTC-6 y conserva sus datos e intervalos.
 
-`GET /ordenes/:id` añade `preventivo: {id,planId}|null` y kilometraje actual en su proyección de autobús. Inicio, espera, asignación logística, piezas y cierre usan el flujo existente. Para una orden preventiva, `/ordenes/:id/finalizar` exige además `kilometrajePreventivo` entero igual al kilometraje actual revisado de flota y todos los pasos completos. La transacción cierra ejecución/orden, conserva lectura/UTC/responsable, libera la clave activa y actualiza ultimoServicioKm/version del plan. Si la lectura cambió o falta checklist:409 sin cierre parcial. No modifica odómetro ni estado de autobús y no registra otro consumo/costo.
+El cierre `/ordenes/:id/finalizar` exige todos los pasos completos y kilometrajePreventivo igual a la lectura actual revisada. Acepta fechaServicio (predeterminado hoy) y proximaFecha (predeterminado un mes calendario después, ajustado al último día del mes). Rechaza fecha realizada futura, anterior al último servicio o próxima fecha menor/igual a la realizada. Actualiza ejecución, orden y fechas/base del plan en una transacción, registra responsable y libera activeKey. Checklist incompleto o lectura/version obsoleta produce 409 sin cierre parcial. No modifica odómetro, estado del autobús ni inventario. El cierre preventivo acepta observaciones vacías o breves; la interfaz envía “Sin observaciones” si están vacías. En correctivos se conserva el mínimo de tres caracteres.
 
-La edición de kilometraje en flota se serializa con programación/cierre y no puede retroceder por debajo de la mayor lectura de último servicio registrada en planes de esa unidad. No se permite corregir un cierre o reemplazar odómetro por este mecanismo. La reasignación de órdenes preventivas es solo de Logística; la política previa de órdenes correctivas se conserva.
+Una sola ejecución abierta por plan; la clave única y el bloqueo de autobús/orden serializan operaciones. No se crea automáticamente otra orden al finalizar. Los avisos son consultas dentro de la aplicación; no envían correo ni alertas externas.
 
 ## Reportes y exportación — Fase 6
 

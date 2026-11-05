@@ -8,12 +8,15 @@ import { MaintenanceService } from './maintenance.service';
 @Injectable()
 export class MaintenanceGuard implements CanActivate {canActivate(c:ExecutionContext){const role=c.switchToHttp().getRequest<AuthRequest>().identity.role;if(!([Role.ADMINISTRACION,Role.LOGISTICA,Role.MECANICO] as Role[]).includes(role))throw new ForbiddenException('Acceso a mantenimiento no autorizado');return true;}}
 @Injectable()
-export class MaintenanceWriter implements CanActivate {canActivate(c:ExecutionContext){if(c.switchToHttp().getRequest<AuthRequest>().identity.role!==Role.LOGISTICA)throw new ForbiddenException('Solo Logística configura y programa mantenimiento');return true;}}
+export class MaintenanceWriter extends MaintenanceGuard {}
 @Injectable()
-export class MaintenanceMechanic implements CanActivate {canActivate(c:ExecutionContext){if(c.switchToHttp().getRequest<AuthRequest>().identity.role!==Role.MECANICO)throw new ForbiddenException('Solo el mecánico asignado registra su checklist');return true;}}
+export class MaintenanceMechanic extends MaintenanceGuard {}
 @ApiTags('Mantenimiento preventivo') @ApiCookieAuth() @Controller('mantenimiento') @UseGuards(SessionGuard,MaintenanceGuard)
 export class MaintenanceController {
  constructor(private readonly maintenance:MaintenanceService){}
+ @Get('mecanicos') mechanics(){return this.maintenance.mechanics();}
+ @Get('resumen') summary(){return this.maintenance.summary();}
+ @Get('servicios') services(@Query() q:PlanQueryDto){return this.maintenance.services(q);}
  @Get('planes') list(@Query() q:PlanQueryDto){return this.maintenance.list(q);}
  @Post('planes') @UseGuards(MaintenanceWriter) create(@Body() dto:CreatePlanDto,@Req() req:AuthRequest){return this.maintenance.create(dto,req.identity);}
  @Get('planes/:id') detail(@Param('id',ParseUUIDPipe) id:string){return this.maintenance.detail(id);}

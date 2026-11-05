@@ -27,9 +27,11 @@ export class RepairPartDto {
  @ApiProperty() @Transform(trim) @IsString() @MinLength(1) @MaxLength(30) unidad!:string;
 }
 export class FinishOrderDto extends OrderVersionDto {
+ @ApiPropertyOptional() @ValidateIf((_o,v:unknown)=>v!==undefined) @Matches(/^[1-9]\d{3}-\d{2}-\d{2}$/) @IsISO8601({strict:true}) fechaServicio?:string;
+ @ApiPropertyOptional() @ValidateIf((_o,v:unknown)=>v!==undefined) @Matches(/^[1-9]\d{3}-\d{2}-\d{2}$/) @IsISO8601({strict:true}) proximaFecha?:string;
  @ApiPropertyOptional({description:"Lectura revisada de flota para cierre preventivo"}) @ValidateIf((_o,v:unknown)=>v!==undefined) @IsInt() @Min(0) @Max(2147483647) kilometrajePreventivo?:number;
  @ApiProperty() @Transform(trim) @IsString() @MinLength(10) @MaxLength(2000) trabajoRealizado!:string;
- @ApiProperty() @Transform(trim) @IsString() @MinLength(3) @MaxLength(2000) observaciones!:string;
+ @ApiProperty() @Transform(trim) @IsString() @MaxLength(2000) observaciones!:string;
  @ApiProperty() @IsBoolean() aplicoManoObra!:boolean;
  @ApiProperty() @IsInt() @Min(0) @Max(1000000) manoObraMinutos!:number;
  @ApiProperty() @IsBoolean() aplicaronRefacciones!:boolean;

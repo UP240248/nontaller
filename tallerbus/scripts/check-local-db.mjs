@@ -8,6 +8,8 @@ try{
  await db.user.findFirst({select:{id:true,username:true}});
  await db.compra.findFirst({select:{id:true,vendedor:true}});
  await db.fichaRefaccion.findFirst({select:{id:true}});
+ await db.planPreventivo.findFirst({select:{proximaFecha:true,ultimoServicioFecha:true}});
+ await db.ejecucionPreventiva.findFirst({select:{fechaServicio:true,fechaProgramada:true,proximaFecha:true}});
  await db.operadorAutobus.findFirst({select:{operadorId:true}});
  await db.user.findFirst({select:{operatorFleetVersion:true}});
  console.log('Conexión SQL de la aplicación verificada; esquema de la aplicación disponible.');
