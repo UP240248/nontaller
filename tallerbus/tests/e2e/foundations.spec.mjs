@@ -1,3 +1,4 @@
+import {openNavigation} from './navigation.mjs';
 import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {readFileSync} from 'node:fs';
@@ -8,7 +9,7 @@ let users;
 test.beforeAll(async()=>{users=await seed();});
 test.afterAll(async()=>{await db.$disconnect();});
 async function login(page,role='ADMINISTRACION'){
- await page.goto('/login');await page.getByLabel('Usuario de acceso',{exact:true}).fill(users[role].username);await page.getByLabel('Contraseña',{exact:true}).fill(password);await page.getByRole('button',{name:'Entrar a TallerBus'}).click();await expect(page.getByRole('heading',{name:/Hola,/})).toBeVisible();
+ await page.goto('/login');await page.getByLabel('Usuario de acceso',{exact:true}).fill(users[role].username);await page.getByLabel('Contraseña',{exact:true}).fill(password);await page.getByRole('button',{name:'Entrar a TallerBus'}).click();await expect(page.getByRole('heading',{name:/Hola,/})).toBeVisible();await openNavigation(page);
 }
 async function accessible(page){const result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(result.violations).toEqual([]);}
 test('administración: alta, edición, activación, revocación y auditoría reales',async({page,browser})=>{

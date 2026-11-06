@@ -1,3 +1,4 @@
+import { MobileCardsDirective } from '../../shared/mobile-cards.directive';
 import { Component, ElementRef, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +9,7 @@ import { Event, Person, WorkOrder, WorkflowApi, orderLabels } from '../../core/w
 import { OrderRepairComponent, RepairUpdate } from '../../shared/order-repair.component';
 import { OrderChecklistComponent } from './order-checklist.component';
 import { WorkflowHistoryComponent } from '../../shared/workflow-history.component';
-@Component({standalone:true,imports:[DatePipe,FormsModule,RouterLink,OrderRepairComponent,OrderChecklistComponent,WorkflowHistoryComponent],templateUrl:'./plans.component.html',styleUrl:'./plans.component.css'})
+@Component({standalone:true,imports:[MobileCardsDirective,DatePipe,FormsModule,RouterLink,OrderRepairComponent,OrderChecklistComponent,WorkflowHistoryComponent],templateUrl:'./plans.component.html',styleUrl:'./plans.component.css'})
 export class PlansComponent implements OnInit {
  private readonly api=inject(MaintenanceApi);private readonly workflow=inject(WorkflowApi);readonly session=inject(SessionService);private readonly route=inject(ActivatedRoute);private readonly router=inject(Router);
  readonly labels=orderLabels;readonly tab=signal<'plans'|'history'>('plans');readonly plans=signal<PreventivePlan[]>([]);readonly total=signal(0);readonly loading=signal(false);readonly detailLoading=signal(false);readonly busy=signal(false);readonly error=signal('');readonly formError=signal('');readonly notice=signal('');readonly selected=signal<PreventivePlan|null>(null);readonly summary=signal<MaintenanceSummary|null>(null);readonly activeOrder=signal<WorkOrder|null>(null);

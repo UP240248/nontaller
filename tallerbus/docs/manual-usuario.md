@@ -169,3 +169,7 @@ En **Evidencias**, cada foto guardada aparece como miniatura. Pulsa **Ampliar fo
 Las fichas de refacciones también muestran vista previa al seleccionar una nueva fotografía. La selección se guarda únicamente al confirmar el formulario correspondiente.
 
 Para corregir una foto de una falla, pulsa **Eliminar foto** debajo de su miniatura y confirma. Operadores y mecánicos pueden eliminar únicamente las imágenes que ellos mismos subieron, en los reportes que pueden consultar. La foto deja de estar disponible y la eliminación queda en el historial; después puedes adjuntar otra. Si todavía no la guardaste, usa **Quitar foto seleccionada**.
+
+## Uso desde una pantalla de celular
+
+Pulsa **Abrir menú** para elegir el módulo. Las listas se presentan como tarjetas con sus datos y botones. En Fallas, Órdenes, Autobuses y Catálogo usa **Más filtros** si necesitas otras condiciones además de la búsqueda. Desliza las subpestañas de Inventario para encontrar cada sección. Los reportes permiten deslizar sus columnas; los formularios se desplazan verticalmente. Consulta [Interfaz para celular](interfaz-celular.md) para la comprobación y el acceso desde otros dispositivos.

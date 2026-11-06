@@ -1,3 +1,4 @@
+import {openNavigation} from './navigation.mjs';
 import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {readFileSync} from 'node:fs';
@@ -9,7 +10,7 @@ const photo=readFileSync('docs/images/inventario-compras.png');
 let users;
 test.beforeAll(async()=>{users=await seed();const bus=await db.autobus.create({data:{numeroEconomico:'FOTO-01',placas:'FTO001',marca:'Prueba',modelo:'Prueba',kilometraje:0,estadoOperativo:'HABILITADO'}});await db.operadorAutobus.create({data:{operadorId:users.OPERADOR.id,autobusId:bus.id}});await db.user.update({where:{id:users.OPERADOR.id},data:{operatorFleetVersion:1}});});
 test.afterAll(async()=>{await db.$disconnect();});
-async function login(page,role){await page.goto('/login');await page.getByLabel('Usuario de acceso',{exact:true}).fill(users[role].username);await page.getByLabel('Contraseña',{exact:true}).fill(password);await page.getByRole('button',{name:'Entrar a TallerBus'}).click();await expect(page.getByRole('heading',{name:/Hola,/})).toBeVisible({timeout:15000});}
+async function login(page,role){await page.goto('/login');await page.getByLabel('Usuario de acceso',{exact:true}).fill(users[role].username);await page.getByLabel('Contraseña',{exact:true}).fill(password);await page.getByRole('button',{name:'Entrar a TallerBus'}).click();await expect(page.getByRole('heading',{name:/Hola,/})).toBeVisible({timeout:15000});await openNavigation(page);}
 async function accessible(page){expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze()).violations).toEqual([]);}
 const file={name:'evidencia-prueba.png',mimeType:'image/png',buffer:photo};
 test('operador previsualiza al registrar, ve miniatura y amplía sin descargar; descarga opcional conserva bytes',async({page})=>{

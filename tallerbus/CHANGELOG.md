@@ -209,3 +209,9 @@
 - Proporciones de dos columnas, panel azul con globo y ondas decorativas, formulario con mejor espaciado, campos legibles y botón completo.
 - Vista móvil con cabecera compacta y sin desbordamiento horizontal.
 - El archivo original del logo queda pendiente; se evita publicar una imagen rota o una recreación. La autenticación y sus validaciones se conservan.
+
+### 2026-11-06 · Usar TallerBus desde una pantalla de celular
+- Menú compacto con botón visible, cierre al navegar y soporte de Escape.
+- Registros de fallas, órdenes, autobuses, usuarios, catálogos e inventario en tarjetas etiquetadas; tablas habituales en escritorio.
+- Búsqueda principal y botón Más filtros, subpestañas deslizables, campos legibles y formularios adaptados al ancho disponible.
+- Reportes con indicación de desplazamiento de columnas; permisos y reglas del servidor conservados.

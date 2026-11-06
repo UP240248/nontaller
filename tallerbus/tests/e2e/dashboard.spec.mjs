@@ -1,3 +1,4 @@
+import {openNavigation} from './navigation.mjs';
 import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {readFileSync} from 'node:fs';
@@ -7,7 +8,7 @@ const {db,password,seed}=await import('../fixtures.mjs');
 let users;
 test.beforeAll(async()=>{users=await seed();});
 test.afterAll(async()=>db.$disconnect());
-async function login(page,role='LOGISTICA'){await page.goto('/login');await page.getByLabel('Usuario de acceso',{exact:true}).fill(users[role].username);await page.getByLabel('Contraseña',{exact:true}).fill(password);await page.getByRole('button',{name:'Entrar a TallerBus'}).click();await expect(page.getByRole('heading',{name:/Hola,/})).toBeVisible();}
+async function login(page,role='LOGISTICA'){await page.goto('/login');await page.getByLabel('Usuario de acceso',{exact:true}).fill(users[role].username);await page.getByLabel('Contraseña',{exact:true}).fill(password);await page.getByRole('button',{name:'Entrar a TallerBus'}).click();await expect(page.getByRole('heading',{name:/Hola,/})).toBeVisible();await openNavigation(page);}
 async function accessible(page){expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze()).violations).toEqual([]);}
 test('dashboard vacío y porcentajes con datos reales: disponibilidad sobre activas, estados sobre total',async({page})=>{
  await page.setViewportSize({width:1440,height:1050});await login(page);await expect(page.getByTestId('kpi-total')).toHaveText('0');await expect(page.getByTestId('fleet-availability')).toHaveText('—');await expect(page.getByText('Tu panorama comienza con la primera unidad')).toBeVisible();await accessible(page);

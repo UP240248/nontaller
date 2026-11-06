@@ -1,3 +1,4 @@
+import {openNavigation} from './navigation.mjs';
 import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {readFileSync} from 'node:fs';
@@ -10,7 +11,7 @@ const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Mexico_City',
 function nextMonth(day){const d=new Date(day+'T00:00:00Z'),month=d.getUTCMonth()+1,year=d.getUTCFullYear();return new Date(Date.UTC(year,month,Math.min(d.getUTCDate(),new Date(Date.UTC(year,month+1,0)).getUTCDate()))).toISOString().slice(0,10);}
 test.beforeAll(async()=>{users=await seed();await db.autobus.create({data:{numeroEconomico:'PREV-E2E',placas:'PVE123',marca:'Prueba',modelo:'Prueba',kilometraje:10499,estadoOperativo:'HABILITADO'}});});
 test.afterAll(async()=>{await db.$disconnect();});
-async function login(page,role){await page.goto('/login');await page.getByLabel('Usuario de acceso',{exact:true}).fill(users[role].username);await page.getByLabel('Contraseña',{exact:true}).fill(password);await page.getByRole('button',{name:'Entrar a TallerBus'}).click();await expect(page.getByRole('heading',{name:/Hola,/})).toBeVisible({timeout:15000});}
+async function login(page,role){await page.goto('/login');await page.getByLabel('Usuario de acceso',{exact:true}).fill(users[role].username);await page.getByLabel('Contraseña',{exact:true}).fill(password);await page.getByRole('button',{name:'Entrar a TallerBus'}).click();await expect(page.getByRole('heading',{name:/Hola,/})).toBeVisible({timeout:15000});await openNavigation(page);}
 async function accessible(page){expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze()).violations).toEqual([]);}
 async function create(page,name,role='ADMINISTRACION'){await login(page,role);await page.goto('/mantenimiento');await page.getByRole('button',{name:'+ Nuevo mantenimiento',exact:true}).click();await page.getByRole('radio',{name:/PREV-E2E/}).check();await page.getByLabel('Nombre del mantenimiento',{exact:true}).fill(name);await page.getByLabel('Tarea 1',{exact:true}).fill('Revisar filtros');await page.getByRole('button',{name:'+ Agregar tarea',exact:true}).click();await page.getByLabel('Tarea 2',{exact:true}).fill('Verificar fugas');await page.getByLabel('Prueba MECANICO',{exact:true}).check();}
 test('Administración guarda fecha, unidad, tareas y responsable en un solo paso',async({page})=>{
